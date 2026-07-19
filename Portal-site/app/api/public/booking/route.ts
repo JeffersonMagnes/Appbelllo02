@@ -10,6 +10,7 @@ const getSupabase = () =>
 export async function POST(request: Request) {
   const body = await request.json();
   const { establishment_id, service_id, employee_id, date, time, client_name, client_phone } = body;
+  const idempotencyKey = request.headers.get('idempotency-key') || body.idempotency_key || crypto.randomUUID();
 
   if (!establishment_id || !date || !time || !client_name || !client_phone) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -25,8 +26,12 @@ export async function POST(request: Request) {
     p_client_name: client_name,
     p_client_phone: client_phone,
     p_notes: null,
+    p_idempotency_key: idempotencyKey,
   });
 
+  if (error?.code === '23P01') {
+    return NextResponse.json({ error: 'Este horário não está mais disponível.' }, { status: 409 });
+  }
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ id: data }, { status: 201 });
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import {
   Location, Scissor, Clock, ArrowLeft2, ArrowRight2, User, Call, Message, TickCircle,
@@ -89,6 +89,7 @@ function getLinkMeta(title: string, url: string, PRIMARY: string, icon?: string)
 
 // ── Component ──────────────────────────────────────────────────────────────────
 export default function ProfilePage() {
+  const bookingKey = useRef<string | null>(null);
   const params = useParams();
   const searchParams = useSearchParams();
   const slug = params.slug as string;
@@ -176,6 +177,7 @@ export default function ProfilePage() {
     setBooking(true);
     const supabase = createClient();
     const profNote = selectedProfessional?.id !== 'any' ? `Profissional: ${selectedProfessional?.name}` : 'Profissional: Qualquer disponível';
+    bookingKey.current ||= crypto.randomUUID();
     const { error: bookingError } = await (supabase as any).rpc('create_public_booking', {
       p_establishment_id: establishment.id,
       p_service_id: selectedService.id,
@@ -185,6 +187,7 @@ export default function ProfilePage() {
       p_client_name: clientName,
       p_client_phone: clientPhone,
       p_notes: [profNote, notes].filter(Boolean).join('\n'),
+      p_idempotency_key: bookingKey.current,
     });
     if (bookingError) {
       console.error('public booking failed:', bookingError);
@@ -195,6 +198,7 @@ export default function ProfilePage() {
       // Notification delivery must resolve recipients server-side. The public
       // browser never receives owner identifiers, push tokens or subscriptions.
     } catch { /* best-effort */ }
+    bookingKey.current = null;
     setBooking(false); setBooked(true);
   };
 

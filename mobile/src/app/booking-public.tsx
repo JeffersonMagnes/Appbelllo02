@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import {
   View, Text, ScrollView, Pressable, Image, TextInput,
   Dimensions, KeyboardAvoidingView, Platform, ActivityIndicator,
@@ -14,6 +14,7 @@ import {
 import { colors } from '@/lib/theme';
 import { toLocalDateStr } from '@/lib/utils/date';
 import * as Haptics from 'expo-haptics';
+import * as Crypto from 'expo-crypto';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { useAuthStore } from '@/lib/state/auth-store';
 import { useEstablishmentById } from '@/lib/hooks/use-establishment';
@@ -117,6 +118,7 @@ type BookStep = 'service' | 'professional' | 'datetime' | 'confirm';
 // ── Main Screen ───────────────────────────────────────────────────────────────
 
 export default function PublicBookingScreen() {
+  const bookingKey = useRef<string | null>(null);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { id: paramId } = useLocalSearchParams<{ id?: string }>();
@@ -210,6 +212,7 @@ export default function PublicBookingScreen() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     if (isSupabaseConfigured() && establishmentId && selSvc && selDate && selTime) {
       try {
+        bookingKey.current ||= Crypto.randomUUID();
         const { error } = await (supabase as any).rpc('create_public_booking', {
           p_establishment_id: establishmentId,
           p_service_id: selSvc,
@@ -219,8 +222,10 @@ export default function PublicBookingScreen() {
           p_client_name: name,
           p_client_phone: phone,
           p_notes: obs || null,
+          p_idempotency_key: bookingKey.current,
         });
         if (error) throw error;
+        bookingKey.current = null;
       } catch (error) {
         console.error('booking-public confirm failed:', error);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);

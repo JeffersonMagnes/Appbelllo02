@@ -32,6 +32,16 @@ describe('public data contracts', () => {
     expect(migration).toContain('drop policy if exists "clients_public_insert"');
     expect(migration).toContain('drop policy if exists "appointments_public_insert"');
   });
+
+  test('schedule writes are serialized and reject overlaps', () => {
+    const migration = readWorkspace('supabase/migrations/20260719183000_transactional_appointments.sql');
+    expect(migration).toContain('pg_advisory_xact_lock');
+    expect(migration).toContain('appointment_conflict');
+    expect(migration).toContain('appointment_blocked');
+    expect(migration).toContain('blocked_slot_conflicts_with_appointment');
+    expect(migration).toContain('idempotency_key');
+    expect(migration).toContain("default 'America/Sao_Paulo'");
+  });
 });
 
 describe('notification authorization', () => {
