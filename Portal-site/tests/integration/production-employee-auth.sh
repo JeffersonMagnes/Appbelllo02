@@ -3,7 +3,7 @@ set -euo pipefail
 
 ref="${SUPABASE_PROJECT_REF:-rfuvtsnnmoovscdteqnx}"
 supabase_url="https://${ref}.supabase.co"
-portal_url="${APPBELLO_SMOKE_URL:-https://appbello-portal.netlify.app}"
+portal_url="${APPBELLO_SMOKE_URL:-https://appbello.com.br}"
 keys="$(supabase projects api-keys --project-ref "$ref" -o json)"
 service="$(printf '%s' "$keys" | jq -r '.[] | select(.name == "service_role") | .api_key' | head -n 1)"
 pin="$(printf '%04d' $((RANDOM % 10000)))"

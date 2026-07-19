@@ -2,7 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://appbello-portal.netlify.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://appbello.com.br'),
   title: 'Appbello — Gerencie seu salão com inteligência',
   description: 'Plataforma completa de gestão para salões de beleza, barbearias e clínicas estéticas. Agendamentos, clientes, financeiro e muito mais.',
   manifest: '/manifest.json',

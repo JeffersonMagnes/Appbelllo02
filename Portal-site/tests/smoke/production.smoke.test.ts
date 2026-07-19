@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 
-const baseUrl = process.env.APPBELLO_SMOKE_URL ?? 'https://appbello-portal.netlify.app';
+const baseUrl = process.env.APPBELLO_SMOKE_URL ?? 'https://appbello.com.br';
 
 describe('production smoke', () => {
   test('health endpoint is available', async () => {
@@ -30,4 +30,3 @@ describe('production smoke', () => {
     });
   }
 });
-

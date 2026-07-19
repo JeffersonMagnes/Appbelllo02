@@ -85,7 +85,7 @@ export default function CatalogoPage() {
     filter === 'online' ? products.filter(p => p.sell_online) :
     products.filter(p => !p.sell_online);
 
-  const profileUrl = slug ? `https://appbello-portal.netlify.app/p/${slug}` : '';
+  const profileUrl = slug ? `https://appbello.com.br/p/${slug}` : '';
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">

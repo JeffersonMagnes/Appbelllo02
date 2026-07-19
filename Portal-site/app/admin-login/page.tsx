@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setResetLoading(true);
     await supabase.auth.resetPasswordForEmail(resetEmail, {
-      redirectTo: 'https://appbello-portal.netlify.app/nova-senha',
+      redirectTo: 'https://appbello.com.br/nova-senha',
     });
     setResetSent(true);
     setResetLoading(false);

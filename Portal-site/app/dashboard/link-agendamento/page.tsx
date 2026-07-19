@@ -47,7 +47,7 @@ export default function LinkAgendamentoPage() {
   const bannerRef = useRef<HTMLInputElement>(null);
   const logoRef = useRef<HTMLInputElement>(null);
 
-  const baseUrl = 'appbello-portal.netlify.app/p';
+  const baseUrl = 'appbello.com.br/p';
   const fullUrl = customSlug ? `https://${baseUrl}/${customSlug}` : '';
   const qrSvg = useMemo(() => fullUrl ? renderSVG(fullUrl) : '', [fullUrl]);
 
@@ -196,7 +196,7 @@ export default function LinkAgendamentoPage() {
     });
   };
 
-  const profileUrl = slug ? `https://appbello-portal.netlify.app/p/${slug}` : '';
+  const profileUrl = slug ? `https://appbello.com.br/p/${slug}` : '';
   const previewPrimary = primaryColor;
   const previewSecondary = secondaryColor;
   const previewLogo = logoPreview || logoUrl;

@@ -13,7 +13,7 @@ export default function IndiquePage() {
   const [copied, setCopied] = useState(false);
 
   const DISCOUNT = 20;
-  const referralUrl = slug ? `https://appbello-portal.netlify.app/cadastro?ref=${slug}` : '';
+  const referralUrl = slug ? `https://appbello.com.br/cadastro?ref=${slug}` : '';
 
   useEffect(() => {
     const load = async () => {

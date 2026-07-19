@@ -205,7 +205,7 @@ export default function UsuariosPage() {
     setResetSuccess(false);
     const supabase = createClient();
     await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://appbello-portal.netlify.app/nova-senha',
+      redirectTo: 'https://appbello.com.br/nova-senha',
     });
     setResetSending(false);
     setResetSuccess(true);
@@ -551,7 +551,7 @@ export default function UsuariosPage() {
                   .toLowerCase()
                   .normalize('NFD').replace(/[̀-ͯ]/g, '')
                   .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                const url = `https://appbello-portal.netlify.app/agendar/${slug}`;
+                const url = `https://appbello.com.br/agendar/${slug}`;
                 return (
                   <div className="bg-[#6666cc]/5 border border-[#6666cc]/20 rounded-xl p-3">
                     <p className="text-xs text-gray-400 mb-2 flex items-center gap-1">

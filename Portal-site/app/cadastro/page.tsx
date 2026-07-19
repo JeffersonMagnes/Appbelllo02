@@ -298,7 +298,7 @@ export default function CadastroPage() {
   };
 
   const handleCopyLink = () => {
-    const url = `https://appbello-portal.netlify.app/agendar/${estSlug}`;
+    const url = `https://appbello.com.br/agendar/${estSlug}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -313,7 +313,7 @@ export default function CadastroPage() {
 
   // ── Step 7: Conclusão ────────────────────────────────────────────────────────
   if (step === 7) {
-    const bookingUrl = `https://appbello-portal.netlify.app/agendar/${estSlug}`;
+    const bookingUrl = `https://appbello.com.br/agendar/${estSlug}`;
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#5333ED]/5 to-[#0BBDB6]/5 flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg p-8 text-center">

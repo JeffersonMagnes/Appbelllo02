@@ -20,7 +20,7 @@ const PAYMENT_METHODS = [
 import type { Establishment } from '@/lib/supabase/types';
 
 const DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-const BASE_URL = 'appbello-portal.netlify.app/p';
+const BASE_URL = 'appbello.com.br/p';
 
 export default function ConfiguracoesPage() {
   const [establishment, setEstablishment] = useState<Establishment | null>(null);
