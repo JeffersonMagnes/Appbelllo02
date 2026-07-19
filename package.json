@@ -1,0 +1,12 @@
+{
+  "name": "appbello-workspace",
+  "private": true,
+  "scripts": {
+    "quality": "zsh scripts/quality-check.sh",
+    "quality:web": "cd Portal-site && bun run test && bun run typecheck && bun run lint && bun run build",
+    "quality:mobile": "cd mobile && bun run typecheck && bun run lint && bun run build:validate",
+    "quality:backend": "cd backend && bun run typecheck",
+    "test:production:smoke": "cd Portal-site && bun run test:smoke",
+    "test:production:rls": "cd Portal-site && bun run test:integration:rls && bun run test:integration:domain"
+  }
+}

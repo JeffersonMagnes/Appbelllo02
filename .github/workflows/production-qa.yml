@@ -1,0 +1,45 @@
+name: Production QA
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: production-qa
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    name: Read-only production smoke
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Portal-site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.13
+      - run: bun run test:smoke
+        env:
+          APPBELLO_SMOKE_URL: https://appbello-portal.netlify.app
+
+  rls:
+    name: Temporary production RLS scenarios
+    runs-on: ubuntu-latest
+    environment: production-qa
+    defaults:
+      run:
+        working-directory: Portal-site
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rfuvtsnnmoovscdteqnx
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.13
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: bun run test:integration:rls
+      - run: bun run test:integration:domain

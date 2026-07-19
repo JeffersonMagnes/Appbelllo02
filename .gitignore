@@ -1,0 +1,48 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.jks
+*.mobileprovision
+
+# Dependencies and package caches
+**/node_modules/
+.npm-cache/
+
+# Web and backend builds
+**/.next/
+**/.netlify/
+**/dist/
+**/dist-ci/
+**/build/
+**/coverage/
+**/*.tsbuildinfo
+
+# Mobile generated projects and artifacts
+mobile/android/
+mobile/ios/
+mobile/.expo/
+mobile/web-build/
+*.aab
+*.apk
+*.ipa
+
+# Temporary QA files and logs
+**/.employee-*
+**/.qa-*
+**/.claude/settings.local.json
+supabase/.temp/
+*.log
+
+# OS and editors
+.DS_Store
+.idea/
+.vscode/
+*.swp
