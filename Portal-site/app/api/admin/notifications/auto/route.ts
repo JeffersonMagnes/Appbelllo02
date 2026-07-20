@@ -109,8 +109,8 @@ export async function GET(req: NextRequest) {
       .in('key', ['notifications', 'geral']);
 
     const notifSettings = (settingsRows?.find(r => r.key === 'notifications')?.value ?? {}) as Record<string, boolean>;
-    const geralSettings = (settingsRows?.find(r => r.key === 'geral')?.value ?? { trialDays: 14 }) as { trialDays?: number };
-    const trialDays = geralSettings.trialDays ?? 14;
+    const geralSettings = (settingsRows?.find(r => r.key === 'geral')?.value ?? { trialDays: 30 }) as { trialDays?: number };
+    const trialDays = geralSettings.trialDays ?? 30;
 
     // Carrega service account FCM
     const saRaw = process.env.FIREBASE_SERVICE_ACCOUNT;

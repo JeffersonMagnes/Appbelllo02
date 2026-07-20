@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type SubscriptionStatus = 'trial' | 'active' | 'expired' | 'none';
 
-export type PlanType = 'starter' | 'pro' | 'premium';
+export type PlanType = 'starter' | 'pro';
 
 export interface Plan {
   id: PlanType;
@@ -20,45 +20,33 @@ export const PLANS: Plan[] = [
   {
     id: 'starter',
     name: 'Starter',
-    price: 'R$ 79/mês',
-    priceMonthly: 79,
+    price: 'R$ 49/mês',
+    priceMonthly: 49,
     description: 'Ideal para profissionais autônomos',
     features: [
-      'Até 2 profissionais',
-      'Agenda online',
-      'Cadastro de clientes',
-      'Relatórios básicos',
+      'Até 5 profissionais',
+      'Agenda ilimitada',
+      'Gestão de clientes',
+      'Controle financeiro',
+      'Relatórios',
+      'Controle de estoque',
+      'Comissões',
     ],
   },
   {
     id: 'pro',
     name: 'Pro',
-    price: 'R$ 149/mês',
-    priceMonthly: 149,
+    price: 'R$ 99/mês',
+    priceMonthly: 99,
     description: 'Para salões em crescimento',
     features: [
-      'Até 10 profissionais',
       'Tudo do Starter',
-      'Controle financeiro',
-      'Gestão de estoque',
-      'Fichas de anamnese',
+      'Profissionais ilimitados',
+      'Assistente IA',
+      'Link de agendamento premium',
       'Suporte prioritário',
     ],
     highlighted: true,
-  },
-  {
-    id: 'premium',
-    name: 'Premium',
-    price: 'R$ 249/mês',
-    priceMonthly: 249,
-    description: 'Para grandes estabelecimentos',
-    features: [
-      'Profissionais ilimitados',
-      'Tudo do Pro',
-      'Multi-unidades',
-      'API personalizada',
-      'Gerente de conta dedicado',
-    ],
   },
 ];
 

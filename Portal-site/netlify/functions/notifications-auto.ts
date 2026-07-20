@@ -100,7 +100,7 @@ export default async function handler() {
 
   const notif = (settingsRows?.find(r => r.key === 'notifications')?.value ?? {}) as Record<string, boolean>;
   const geral = (settingsRows?.find(r => r.key === 'geral')?.value ?? {}) as { trialDays?: number };
-  const trialDays = geral.trialDays ?? 14;
+  const trialDays = geral.trialDays ?? 30;
 
   const saRaw = process.env.FIREBASE_SERVICE_ACCOUNT;
   if (!saRaw) {

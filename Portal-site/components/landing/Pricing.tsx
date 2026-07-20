@@ -3,22 +3,20 @@ import { TickSquare } from 'iconsax-react';
 
 const plans = [
   {
-    name: 'Grátis',
+    name: 'Teste gratuito',
     price: 'R$ 0',
-    period: '/mês',
-    description: 'Para quem está começando',
+    period: 'por 30 dias',
+    description: 'Conheça o Appbello antes de escolher um plano',
     highlight: false,
     features: [
-      'Até 50 agendamentos/mês',
-      '1 profissional',
+      'Sem cobrança durante o teste',
+      'Agenda ilimitada',
       'Gestão de clientes',
-      'Catálogo de serviços',
-      'Agendamento online',
-      'Suporte por e-mail',
+      'Controle financeiro',
     ],
   },
   {
-    name: 'Profissional',
+    name: 'Starter',
     price: 'R$ 49',
     period: '/mês',
     description: 'Para negócios em crescimento',
@@ -28,26 +26,24 @@ const plans = [
       'Agendamentos ilimitados',
       'Até 5 profissionais',
       'Controle financeiro completo',
-      'Relatórios avançados',
+      'Relatórios',
       'Controle de estoque',
       'Comissões automáticas',
       'Suporte prioritário',
     ],
   },
   {
-    name: 'Empresarial',
+    name: 'Pro',
     price: 'R$ 99',
     period: '/mês',
-    description: 'Para múltiplos estabelecimentos',
+    description: 'Para salões em crescimento',
     highlight: false,
     features: [
-      'Tudo do Profissional',
+      'Tudo do Starter',
       'Profissionais ilimitados',
-      'Multi-estabelecimento',
       'Assistente IA',
-      'API de integração',
-      'Relatórios personalizados',
-      'Gerente de conta dedicado',
+      'Link de agendamento premium',
+      'Suporte prioritário',
     ],
   },
 ];
@@ -109,7 +105,7 @@ export default function Pricing() {
                       : 'bg-gray-50 text-gray-800 border border-gray-200 hover:border-[#6666cc] hover:text-[#6666cc]'
                   }`}
                 >
-                  {plan.name === 'Grátis' ? 'Criar conta grátis' : `Assinar ${plan.name}`}
+                  {plan.name === 'Teste gratuito' ? 'Começar teste gratuito' : `Conhecer ${plan.name}`}
                 </button>
               </Link>
             </div>

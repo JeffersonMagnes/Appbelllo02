@@ -35,7 +35,7 @@ export default function NotificationBanners() {
         // Carrega dias de trial configurados pelo admin
         const settingsRes = await fetch('/api/admin/app-settings');
         const settings = settingsRes.ok ? await settingsRes.json() as { geral?: { trialDays?: number } } : {};
-        const trialDays = settings.geral?.trialDays ?? 14;
+        const trialDays = settings.geral?.trialDays ?? 30;
 
         const plan = (est as { subscription_plan?: string }).subscription_plan ?? 'trial';
         const trialStartedAt = (est as { trial_started_at?: string }).trial_started_at;

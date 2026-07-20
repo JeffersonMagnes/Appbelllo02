@@ -33,6 +33,8 @@ interface PaywallProps {
   mode?: 'trial_expired' | 'upgrade';
 }
 
+const REFERRALS_ENABLED = false;
+
 export default function PaywallScreen({ mode = 'trial_expired' }: PaywallProps) {
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('pro');
   const [loading] = useState(false);
@@ -130,7 +132,7 @@ export default function PaywallScreen({ mode = 'trial_expired' }: PaywallProps) 
   const isExpired = mode === 'trial_expired';
   const selectedPlanData = PLANS.find(p => p.id === selectedPlan);
   const originalPrice = selectedPlanData?.priceMonthly ?? 0;
-  const finalPrice = appliedReferralCode ? getDiscountedPrice(originalPrice) : originalPrice;
+  const finalPrice = REFERRALS_ENABLED && appliedReferralCode ? getDiscountedPrice(originalPrice) : originalPrice;
   const savings = originalPrice - finalPrice;
 
   return (
@@ -261,7 +263,7 @@ export default function PaywallScreen({ mode = 'trial_expired' }: PaywallProps) 
             )}
 
             {/* Referral Code Section */}
-            <Animated.View
+            {REFERRALS_ENABLED && <Animated.View
               entering={FadeInDown.delay(220).duration(400)}
               style={{ marginHorizontal: 20, marginTop: 20 }}
             >
@@ -415,7 +417,7 @@ export default function PaywallScreen({ mode = 'trial_expired' }: PaywallProps) 
                   <ArrowRight2 size={14} color="rgba(255,255,255,0.3)" style={{ marginLeft: 4 }}  variant="Outline" />
                 </Pressable>
               )}
-            </Animated.View>
+            </Animated.View>}
 
             {/* Plans */}
             <View style={{ paddingHorizontal: 20, marginTop: 24 }}>
@@ -432,7 +434,7 @@ export default function PaywallScreen({ mode = 'trial_expired' }: PaywallProps) 
 
               {PLANS.map((plan, index) => {
                 const isSelected = selectedPlan === plan.id;
-                const discountedPrice = appliedReferralCode
+                const discountedPrice = REFERRALS_ENABLED && appliedReferralCode
                   ? getDiscountedPrice(plan.priceMonthly)
                   : plan.priceMonthly;
                 const hasDiscount = discountedPrice !== plan.priceMonthly;
@@ -634,7 +636,7 @@ export default function PaywallScreen({ mode = 'trial_expired' }: PaywallProps) 
             }}
           >
             {/* Price summary if discount */}
-            {appliedReferralCode && (
+            {REFERRALS_ENABLED && appliedReferralCode && (
               <Animated.View
                 entering={FadeIn.duration(300)}
                 style={{

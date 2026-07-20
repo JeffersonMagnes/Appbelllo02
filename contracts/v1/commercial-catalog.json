@@ -1,0 +1,26 @@
+{
+  "version": "2026-07-20.1",
+  "status": "official",
+  "currency": "BRL",
+  "billingPeriod": "month",
+  "trialDays": 30,
+  "couponsEnabled": false,
+  "gracePeriodDays": 0,
+  "onlineCheckoutEnabled": false,
+  "plans": [
+    {
+      "id": "starter",
+      "name": "Starter",
+      "priceMonthlyCents": 4900,
+      "professionalLimit": 5,
+      "features": ["Agenda ilimitada", "Gestão de clientes", "Controle financeiro", "Relatórios", "Controle de estoque", "Comissões"]
+    },
+    {
+      "id": "pro",
+      "name": "Pro",
+      "priceMonthlyCents": 9900,
+      "professionalLimit": null,
+      "features": ["Tudo do Starter", "Profissionais ilimitados", "Assistente IA", "Link de agendamento premium", "Suporte prioritário"]
+    }
+  ]
+}

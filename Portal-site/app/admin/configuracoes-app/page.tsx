@@ -36,7 +36,7 @@ const DEFAULT_GERAL: GeralSettings = {
   appName: 'AppBello',
   supportEmail: 'suporte@appbello.com.br',
   supportPhone: '(11) 4000-0000',
-  trialDays: 14,
+  trialDays: 30,
   maintenanceMode: false,
 };
 

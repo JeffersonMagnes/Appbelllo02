@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 const REFERRAL_DISCOUNT_PERCENT = 20;
+const REFERRALS_ENABLED = false;
 
 const PLANS = [
   {
@@ -84,7 +85,7 @@ export default function AssinaturaPage() {
   }, []);
 
   const getDiscountedPrice = (price: number) => {
-    if (!appliedReferralCode || price === 0) return price;
+    if (!REFERRALS_ENABLED || !appliedReferralCode || price === 0) return price;
     return Math.round(price * (1 - REFERRAL_DISCOUNT_PERCENT / 100));
   };
 
@@ -240,7 +241,7 @@ export default function AssinaturaPage() {
         </div>
 
         {/* Referral Code Section */}
-        {false && <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+        {REFERRALS_ENABLED && <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           {appliedReferralCode ? (
             // Applied code badge
             <div className="flex items-center gap-3 p-4 rounded-xl bg-green-50 border border-green-200">
