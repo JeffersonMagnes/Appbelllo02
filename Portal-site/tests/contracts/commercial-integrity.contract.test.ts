@@ -13,7 +13,9 @@ describe('commercial integrity', () => {
     expect(page).not.toContain("last4: '1234'");
     expect(page).not.toContain('minhachave@pix.com');
     expect(page).not.toContain("status: 'paid'");
-    expect(page).toContain('gateway de pagamento está em implantação');
+    expect(page).toContain("fetch('/api/billing/checkout'");
+    expect(page).toContain('Aguardando a confirmação segura do Mercado Pago');
+    expect(page).not.toContain('subscription_plan:');
   });
 
   test('mobile paywall and billing do not activate or cancel plans locally', () => {
@@ -48,4 +50,3 @@ describe('commercial integrity', () => {
     ]) expect(files.toLowerCase()).not.toContain(forbidden.toLowerCase());
   });
 });
-

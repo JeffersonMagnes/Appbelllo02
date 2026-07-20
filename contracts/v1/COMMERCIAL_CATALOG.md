@@ -9,8 +9,8 @@ Decisão aprovada em 20/07/2026 para eliminar a divergência entre Site, Web e M
 | Pro | R$ 99/mês; profissionais ilimitados |
 | Premium | indisponível até definição comercial futura |
 | Cupons/indicação | indisponíveis até validação server-side |
-| Checkout | indisponível; nenhum botão ativa plano ou gera cobrança |
+| Checkout | Mercado Pago habilitado em modo de teste; ativação somente após webhook assinado |
 | Cancelamento/upgrade/downgrade | indisponíveis até o domínio de assinaturas e gateway |
 | Grace period | zero até definição comercial futura |
 
-O arquivo `commercial-catalog.json` é a representação legível por máquina. Alterações exigem nova versão, registro no backend e teste de paridade Web/Mobile. Mercado Pago não integra esta versão.
+O arquivo `commercial-catalog.json` é a representação legível por máquina. Alterações exigem nova versão, registro no backend e teste de paridade Web/Mobile. Nesta versão, o Mercado Pago está habilitado somente para testes no Web; o Mobile permanece sem checkout.

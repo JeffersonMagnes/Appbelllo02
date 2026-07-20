@@ -1,12 +1,14 @@
 {
-  "version": "2026-07-20.1",
+  "version": "2026-07-20.2",
   "status": "official",
   "currency": "BRL",
   "billingPeriod": "month",
   "trialDays": 30,
   "couponsEnabled": false,
   "gracePeriodDays": 0,
-  "onlineCheckoutEnabled": false,
+  "onlineCheckoutEnabled": true,
+  "checkoutMode": "test",
+  "paymentProvider": "mercado_pago",
   "plans": [
     {
       "id": "starter",

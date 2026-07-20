@@ -47,6 +47,7 @@ export default function AssinaturaPage() {
   const [trialStarted, setTrialStarted] = useState<string | null>(null);
   const [trialDaysLeft, setTrialDaysLeft] = useState(30);
   const [commercialNotice, setCommercialNotice] = useState('');
+  const [checkoutPlan, setCheckoutPlan] = useState<string | null>(null);
 
   // Referral code state
   const [showReferralInput, setShowReferralInput] = useState(false);
@@ -56,6 +57,9 @@ export default function AssinaturaPage() {
   const [referralError, setReferralError] = useState('');
 
   useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('retorno') === 'mercado-pago') {
+      setCommercialNotice('Retorno recebido. Aguardando a confirmação segura do Mercado Pago; o plano ainda não foi ativado.');
+    }
     const load = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
@@ -131,8 +135,27 @@ export default function AssinaturaPage() {
     setAppliedReferralCode(null);
   };
 
-  const handleUpgrade = (_planId: string) => {
-    setCommercialNotice('A contratação online está em implantação. Nenhum plano foi ativado e nenhuma cobrança foi realizada.');
+  const handleUpgrade = async (planId: string) => {
+    setCheckoutPlan(planId);
+    setCommercialNotice('');
+    try {
+      const response = await fetch('/api/billing/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error ?? 'Não foi possível iniciar a assinatura.');
+
+      const checkoutUrl = new URL(result.checkoutUrl);
+      const trustedHost = checkoutUrl.hostname === 'mercadopago.com.br'
+        || checkoutUrl.hostname.endsWith('.mercadopago.com.br');
+      if (checkoutUrl.protocol !== 'https:' || !trustedHost) throw new Error('Endereço de checkout inválido.');
+      window.location.assign(checkoutUrl.toString());
+    } catch (error) {
+      setCommercialNotice(error instanceof Error ? error.message : 'Não foi possível iniciar a assinatura.');
+      setCheckoutPlan(null);
+    }
   };
 
   if (loading) return (
@@ -225,9 +248,12 @@ export default function AssinaturaPage() {
                 {!isActive && (
                   <button
                     onClick={() => handleUpgrade(plan.id)}
-                    className="w-full h-11 rounded-xl gradient-primary text-white font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+                    disabled={checkoutPlan !== null}
+                    className="w-full h-11 rounded-xl gradient-primary text-white font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-60"
                   >
-                    {hasDiscount ? `Assinar por R$${discountedPrice}/mes` : `Assinar ${plan.name}`} <ArrowRight2 className="w-4 h-4" />
+                    {checkoutPlan === plan.id
+                      ? <><Loader2 className="w-4 h-4 animate-spin" /> Abrindo Mercado Pago...</>
+                      : <>{hasDiscount ? `Assinar por R$${discountedPrice}/mes` : `Assinar ${plan.name}`} <ArrowRight2 className="w-4 h-4" /></>}
                   </button>
                 )}
                 {isActive && (
@@ -314,7 +340,7 @@ export default function AssinaturaPage() {
             <h3 className="font-bold text-gray-900">Formas de Pagamento</h3>
           </div>
           <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-            A integração com o gateway de pagamento está em implantação. Nenhum cartão ou chave PIX está cadastrado nesta tela.
+            Ambiente de teste do Mercado Pago. Nenhuma cobrança real será realizada nesta etapa.
           </div>
         </div>
 
@@ -327,7 +353,7 @@ export default function AssinaturaPage() {
           <div className="py-8 text-center">
             <Clock className="w-8 h-8 text-gray-300 mx-auto mb-2" variant="Outline" />
             <p className="text-sm text-gray-500">Nenhuma cobrança confirmada pelo backend.</p>
-            <p className="text-xs text-gray-400 mt-1">O histórico será exibido após a integração oficial do gateway.</p>
+            <p className="text-xs text-gray-400 mt-1">O histórico será exibido somente após confirmações recebidas pelo servidor.</p>
           </div>
         </div>
 

@@ -13,11 +13,11 @@ const catalog = JSON.parse(source('contracts/v1/commercial-catalog.json')) as {
 };
 
 describe('official commercial catalog', () => {
-  test('is versioned and keeps billing disabled', () => {
-    expect(catalog.version).toBe('2026-07-20.1');
+  test('is versioned and enables only the test checkout', () => {
+    expect(catalog.version).toBe('2026-07-20.2');
     expect(catalog.trialDays).toBe(30);
     expect(catalog.couponsEnabled).toBe(false);
-    expect(catalog.onlineCheckoutEnabled).toBe(false);
+    expect(catalog.onlineCheckoutEnabled).toBe(true);
   });
 
   test('contains only the approved Starter and Pro prices', () => {
