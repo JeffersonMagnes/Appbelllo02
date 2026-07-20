@@ -1,5 +1,7 @@
 # Plano de execução das 31 tarefas restantes — dois agentes
 
+> **Progresso em 20/07/2026:** `DB-002` concluída em produção pelo Agente A. Restam **30 tarefas** deste plano.
+
 **Atualizado em:** 20/07/2026  
 **Base:** `PLANO_DESENVOLVIMENTO_APPBELLO.md`  
 **Objetivo:** executar o backlog restante em paralelo, sem migrations concorrentes, regras duplicadas ou publicação sem validação.

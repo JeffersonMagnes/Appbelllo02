@@ -44,6 +44,20 @@ As migrations versionam explicitamente apenas parte delas. O código chama `get_
 - A chave anônima em `Portal-site/.env` recebe HTTP 401 e está desatualizada ou revogada.
 - A chave pública atual obtida pela CLI funciona nos testes de integração.
 - Nenhuma chave foi impressa no relatório ou gravada em arquivo versionado.
+
+## Hardening multi-tenant — DB-002
+
+Em 20/07/2026, a auditoria de metadados confirmou duas tabelas sem RLS (`admin_users` e `app_settings`), leituras públicas diretas excessivas e ausência de índices não parciais em FKs/filtros tenant. A migration `20260720122000_harden_multitenant_rls_and_indexes.sql`:
+
+- habilitou RLS nas tabelas administrativas;
+- padronizou owner/admin com `USING` e `WITH CHECK` explícitos;
+- removeu leitura direta pública de empresas, profissionais, imagens de produto, pedidos e itens;
+- preservou o catálogo público somente pela RPC whitelist;
+- restringiu escrita de planos e anúncios a administradores validados;
+- adicionou 23 índices para filtros tenant, datas e FKs;
+- removeu a função temporária usada exclusivamente para auditar metadados.
+
+Testes em produção confirmaram cross-tenant zero, escritas comuns HTTP 403/SQLSTATE 42501, catálogo público HTTP 200, acesso administrativo HTTP 200 e limpeza dos usuários/dados temporários.
 - A introspecção OpenAPI pública está bloqueada; o inventário exigiu credencial administrativa temporária e retornou somente metadados.
 
 ## Próxima execução segura

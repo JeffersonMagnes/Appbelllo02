@@ -56,6 +56,20 @@ describe('public data contracts', () => {
     expect(webComandas).toContain("rpc('close_comanda'");
     expect(mobileHooks).toContain("rpc('close_comanda'");
   });
+
+  test('multi-tenant tables use explicit owner/admin checks and private direct reads', () => {
+    const migration = readWorkspace('supabase/migrations/20260720122000_harden_multitenant_rls_and_indexes.sql');
+    expect(migration).toContain('alter table public.admin_users enable row level security');
+    expect(migration).toContain('alter table public.app_settings enable row level security');
+    expect(migration).toContain('with check (public.can_manage_establishment(establishment_id))');
+    expect(migration).toContain('drop policy if exists establishments_public_select');
+    expect(migration).toContain('drop policy if exists orders_public_read');
+    expect(migration).toContain('drop policy if exists order_items_public_read');
+    expect(migration).toContain('drop policy if exists product_images_public_read');
+    expect(migration).toContain('partner_ads_admin_write');
+    expect(migration).toContain('idx_appointments_employee_date_time');
+    expect(migration).toContain('drop function if exists public.db002_schema_audit_snapshot');
+  });
 });
 
 describe('notification authorization', () => {
