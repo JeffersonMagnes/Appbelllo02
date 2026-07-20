@@ -9,14 +9,14 @@
 
 Durante o levantamento, o commit **`605be4f` — "security: harden multi-tenant RLS and indexes"** foi criado por outro agente (Codex/Agente A) diretamente no histórico compartilhado enquanto esta branch já existia; ele agora é ancestral de `origin/main`. Essa migration (`supabase/migrations/20260720122000_harden_multitenant_rls_and_indexes.sql`) substitui políticas RLS antigas (algumas `public`/`anon`) por políticas `for all to authenticated using (can_manage_establishment(...))` em praticamente todas as tabelas multiempresa.
 
-**Isto não foi aplicado a nenhum banco de produção neste inventário** — apenas commitado no repositório. Só o Codex pode confirmar se/quando ela será aplicada. Mas a leitura do código mostra que, **se aplicada como está**, ela quebra pelo menos quatro fluxos que hoje leem/escrevem como `anon` (chave anônima) em vez de usar sessão autenticada ou RPC pública:
+**Validação do Codex em 20/07/2026:** a migration foi aplicada em produção e os testes de isolamento DB-002 foram aprovados. Portanto, os quatro fluxos abaixo não são riscos condicionais à aplicação: o código cliente está incompatível com as políticas atualmente ativas e deve ser corrigido em `PAR-002`:
 
 1. Login de funcionário no Mobile (`mobile/src/app/employee-login.tsx`) — nunca autentica via Supabase Auth, roda como `anon`; após a migration, suas leituras em `establishments`/`employees` retornam zero linhas.
 2. Tela de agendamento público do Mobile (`mobile/src/app/booking-public.tsx`) — lê `establishments`/`services`/`employees` diretamente em vez de usar a RPC pública `get_public_storefront`; após a migration, essas leituras diretas ficam vazias para um cliente anônimo real.
 3. Pedido público de produto no Web (`Portal-site/app/api/public/orders/route.ts`) — insere em `online_orders`/`online_order_items` usando a chave anônima; a migration remove a policy pública de insert e não a substitui por RPC, então o insert deve passar a falhar por RLS.
 4. Leitura da tabela `plans` pelo hook de feature gate do Mobile (`mobile/src/lib/hooks/use-plan-features.ts`) — a migration restringe `plans` a `is_app_admin()`; um dono de estabelecimento comum deixaria de conseguir ler os limites do próprio plano.
 
-Essas quatro linhas estão marcadas como `não comprovado` (dependem de teste contra banco real) mas com prioridade **P0** e gap explícito, porque a causa raiz já está comprovada por código. Recomenda-se que o Codex valide isso antes de aplicar a migration em produção ou trate como bloqueador do Gate O2.
+As quatro linhas permanecem marcadas como `não comprovado` apenas quanto ao teste ponta a ponta específico de cada tela. A incompatibilidade entre o código e as políticas ativas está comprovada e é bloqueadora do Gate O2.
 
 Esta tarefa (PAR-001) é somente inventário: **nenhum código funcional foi alterado**.
 
