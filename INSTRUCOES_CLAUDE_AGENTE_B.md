@@ -30,11 +30,20 @@ Não reverta, duplique nem substitua essas implementações.
 
 ## Regras obrigatórias
 
-1. Trabalhe em branch própria, nunca diretamente em `main`:
-   ```bash
-   git switch -c agent-b/paridade-ux
-   ```
-2. Antes de começar, sincronize sua branch com `origin/main` sem reescrever histórico compartilhado.
+### Isolamento obrigatório entre agentes
+
+Codex e Claude trabalham simultaneamente no mesmo repositório. Uma simples troca de branch no mesmo diretório altera o workspace para os dois agentes. Por isso:
+
+- o diretório `/Volumes/Documents/Appbello` é reservado ao Claude;
+- o Claude deve permanecer na branch `agent-b/par-001-matriz-paridade` enquanto executa `PAR-001`;
+- o Codex trabalha em outro Git worktree, atualmente `/private/tmp/appbello-codex-main`, na branch `main`;
+- não execute `git switch main`, `git checkout main`, `git worktree add/remove`, `git reset` ou alteração forçada de branch;
+- antes de editar, confirme `git branch --show-current`; se não começar com `agent-b/`, pare e avise;
+- não faça merge em `main`; entregue apenas o hash do commit da sua branch;
+- para uma nova tarefa, aguarde o Codex indicar se deve continuar na branch atual ou criar outra branch/worktree.
+
+1. Trabalhe somente na branch própria já preparada. Para `PAR-001`, use `agent-b/par-001-matriz-paridade`; não a recrie e não troque para `main`.
+2. Não sincronize ou faça merge de `origin/main` enquanto houver arquivos não commitados. Se uma atualização for necessária, peça primeiro a coordenação do Codex.
 3. Não altere nem aplique:
    - `supabase/migrations/**`;
    - `Portal-site/app/api/**`;
@@ -268,7 +277,7 @@ Não faça merge em `main`. Entregue a branch/commit ao Codex, que revisará o d
 
 Comece exclusivamente por `PAR-001`.
 
-1. Crie a branch `agent-b/par-001-matriz-paridade`.
+1. Confirme que já está na branch `agent-b/par-001-matriz-paridade`; não execute troca de branch.
 2. Leia Mobile, Portal Web, backend, migrations e testes apenas para inventário.
 3. Crie `MATRIZ_PARIDADE_MOBILE_WEB.md`.
 4. Não altere código funcional.
