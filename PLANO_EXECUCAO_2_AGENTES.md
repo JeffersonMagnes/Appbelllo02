@@ -1,6 +1,6 @@
 # Plano de execução das 31 tarefas restantes — dois agentes
 
-> **Progresso em 20/07/2026:** `DB-002`, `ARC-001` e `PAR-001` concluídas e validadas. Restam **28 tarefas** deste plano.
+> **Progresso em 20/07/2026:** `DB-002`, `ARC-001`, `ARC-002` e `PAR-001` concluídas e validadas. Restam **27 tarefas** deste plano.
 
 **Atualizado em:** 20/07/2026  
 **Base:** `PLANO_DESENVOLVIMENTO_APPBELLO.md`  

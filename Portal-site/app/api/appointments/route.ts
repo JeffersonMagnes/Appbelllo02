@@ -1,5 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/api-auth';
+import { AppointmentRepository } from '@/lib/modules/appointments/repository';
+import { AppointmentService, type ServiceResult } from '@/lib/modules/appointments/service';
+
+function response<T>(result: ServiceResult<T>, successStatus = 200) {
+  if (!result.ok) return NextResponse.json({ error: { code: result.code, message: result.message } }, { status: result.status });
+  return NextResponse.json(result.value, { status: successStatus });
+}
 
 export async function GET(request: Request) {
   const { user, supabase, establishment } = await getAuthUser();
@@ -9,18 +16,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const date = searchParams.get('date');
 
-  let query = supabase
-    .from('appointments')
-    .select('*')
-    .eq('establishment_id', establishment.id)
-    .order('date')
-    .order('time');
-
-  if (date) query = query.eq('date', date);
-
-  const { data, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+  const service = new AppointmentService(new AppointmentRepository(supabase, establishment.id));
+  return response(await service.list(date));
 }
 
 export async function POST(request: Request) {
@@ -28,13 +25,6 @@ export async function POST(request: Request) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   if (!establishment) return NextResponse.json({ error: 'Establishment not found' }, { status: 404 });
 
-  const body = await request.json();
-  const { data, error } = await supabase
-    .from('appointments')
-    .insert({ ...body, establishment_id: establishment.id })
-    .select()
-    .single();
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data, { status: 201 });
+  const service = new AppointmentService(new AppointmentRepository(supabase, establishment.id));
+  return response(await service.create(await request.json()), 201);
 }
