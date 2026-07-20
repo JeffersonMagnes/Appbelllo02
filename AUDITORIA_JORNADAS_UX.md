@@ -356,7 +356,7 @@ Justificativa: esta é a jornada mais grave da auditoria. Falso-sucesso na UI (M
 ### Bloqueios, inconsistências e mensagens de erro
 - Beco sem saída **por definição do produto** (Mercado Pago não integrado agora, decisão documentada) — não é um bug, é um limite conhecido.
 - Mensagens verbatim confirmadas idênticas em espírito nas duas plataformas: "nenhuma cobrança foi realizada", "em implantação".
-- Seção de indicação/cupom no Web está morta por `{false && ...}` (`page.tsx:243`) — funcionalidade parcialmente construída e escondida, não removida.
+- Seção de indicação/cupom está desativada explicitamente por `REFERRALS_ENABLED = false` no Web e Mobile após `PROD-001`; nenhum desconto é oferecido enquanto não houver validação server-side.
 
 ### Acessibilidade observável no código
 - **Mobile**: zero atributos de acessibilidade nos cartões de plano/CTA (grep confirmado).
