@@ -22,6 +22,7 @@
 | AUTH-001 | **Concluída em produção** | Netlify conectado ao GitHub e build remoto do commit `3a2b7d0` publicado; Route Handlers ativos. Teste integrado: anônimo 401, login 200, cookie HttpOnly, sessão/dashboard/clientes 200, logout 200, pós-logout 401 e limpeza do funcionário temporário confirmada |
 | WEB-DOMAIN | **DNS concluído; HTTPS aguardando emissão** | `appbello.com.br` definido como principal e `www` como alias no Netlify; A/CNAME confirmados nos servidores autoritativos do Registro.br, Cloudflare e Google; URLs internas migradas. Falta o Netlify emitir o certificado específico e habilitar o redirecionamento HTTPS |
 | DOM-001 | **Concluída em produção** | trigger transacional serializa escritas por empresa/data e impede sobreposição de profissional e bloqueios; fuso explícito e idempotência adicionados. Teste simultâneo retornou 201/400 (somente uma reserva), conflitos retornaram SQLSTATE 23P01, repetição retornou o mesmo ID e a limpeza foi confirmada |
+| DOM-002 | **Concluída em produção** | comandas, itens, estoque e fechamento financeiro protegidos por triggers/RPCs atômicas e idempotentes; total calculado no banco. Teste: total 25, estoque 2→0, falta de estoque com rollback, criação/fechamento sem duplicação, duas transações exatas e limpeza confirmada |
 | MOB-001 | **Concluída** | `bun run typecheck` Mobile retorna código 0 |
 | BE-001 | **Concluída** | dependências do lockfile restauradas; `bun run typecheck` backend retorna código 0 |
 | WEB typecheck | **Concluído** | `bun run typecheck` Portal-site retorna código 0 |

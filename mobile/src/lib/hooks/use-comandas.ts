@@ -136,19 +136,6 @@ export function useAddComandaItem() {
         .select()
         .single();
       if (itemError) throw itemError;
-
-      // Update comanda total
-      const { data: comanda } = await (supabase as any)
-        .from('comandas')
-        .select('total')
-        .eq('id', payload.comanda_id)
-        .single();
-      const newTotal = (comanda?.total ?? 0) + payload.unit_price * payload.quantity;
-      await (supabase as any)
-        .from('comandas')
-        .update({ total: newTotal })
-        .eq('id', payload.comanda_id);
-
       return { item, establishmentId: payload.establishment_id };
     },
     onSuccess: ({ establishmentId }) => {
@@ -163,13 +150,39 @@ export function useDeleteComandaItem() {
     mutationFn: async ({ itemId, comandaId, unitPrice, quantity, establishmentId }: { itemId: string; comandaId: string; unitPrice: number; quantity: number; establishmentId: string }) => {
       const { error } = await (supabase as any).from('comanda_items').delete().eq('id', itemId);
       if (error) throw error;
-      const { data: comanda } = await (supabase as any).from('comandas').select('total').eq('id', comandaId).single();
-      const newTotal = Math.max(0, (comanda?.total ?? 0) - unitPrice * quantity);
-      await (supabase as any).from('comandas').update({ total: newTotal }).eq('id', comandaId);
       return establishmentId;
     },
     onSuccess: (establishmentId) => {
       queryClient.invalidateQueries({ queryKey: ['comandas', establishmentId] });
+    },
+  });
+}
+
+export function useCloseComanda() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      id, establishmentId, discount, payments, idempotencyKey,
+    }: {
+      id: string;
+      establishmentId: string;
+      discount: number;
+      payments: Array<{ method: string; amount: number }>;
+      idempotencyKey: string;
+    }) => {
+      const { data, error } = await (supabase as any).rpc('close_comanda', {
+        p_comanda_id: id,
+        p_discount: discount,
+        p_payments: payments,
+        p_idempotency_key: idempotencyKey,
+      });
+      if (error) throw error;
+      return { data, establishmentId };
+    },
+    onSuccess: ({ establishmentId }) => {
+      queryClient.invalidateQueries({ queryKey: ['comandas', establishmentId] });
+      queryClient.invalidateQueries({ queryKey: ['transactions', establishmentId] });
+      queryClient.invalidateQueries({ queryKey: ['products', establishmentId] });
     },
   });
 }

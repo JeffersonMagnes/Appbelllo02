@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FeatureGate } from '@/components/dashboard/FeatureGate';
 import { SearchNormal1, Add, ClipboardText, ArrowRight2, CloseCircle, Card, Money, Mobile, User, Printer, Trash, TickSquare } from 'iconsax-react';
 import { Loader2 } from 'lucide-react';
@@ -28,6 +28,8 @@ const METHODS = [
 const fmt = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 export default function ComandasPage() {
+  const createKey = useRef<string | null>(null);
+  const closeKey = useRef<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [estId, setEstId] = useState('');
   const [estName, setEstName] = useState('');
@@ -114,18 +116,23 @@ export default function ComandasPage() {
     setCustomItemPrice('');
   };
 
-  const newTotal = selectedItems.reduce((s, i) => s + i.unit_price * i.quantity, 0);
+  const newTotal = selectedItems.reduce((sum, item) => sum + item.unit_price * item.quantity, 0);
 
   const handleCreateComanda = async () => {
     if (!newClientName.trim() || selectedItems.length === 0) return;
     setSaving(true);
     const supabase = createClient();
-    const { data: cmd } = await (supabase as any).from('comandas').insert({
-      establishment_id: estId, client_name: newClientName, status: 'open', total: newTotal, discount: 0,
-    }).select().single();
-    if (cmd) {
-      await (supabase as any).from('comanda_items').insert(selectedItems.map(i => ({ comanda_id: cmd.id, ...i })));
-    }
+    createKey.current ||= crypto.randomUUID();
+    const { error } = await (supabase as any).rpc('create_comanda_with_items', {
+      p_establishment_id: estId,
+      p_client_id: null,
+      p_client_name: newClientName,
+      p_items: selectedItems,
+      p_notes: null,
+      p_idempotency_key: createKey.current,
+    });
+    if (error) { console.error('create comanda failed', error); setSaving(false); return; }
+    createKey.current = null;
     setSaving(false);
     setShowNew(false);
     setNewClientName('');
@@ -175,15 +182,15 @@ export default function ComandasPage() {
     setSaving(true);
     const supabase = createClient();
     const discount = computeDiscount(viewComanda.total);
-    const methodLabel = paymentSlices.length === 1 ? paymentSlices[0].method : 'misto';
-    await (supabase as any).from('comandas').update({ status: 'paid', payment_method: methodLabel, discount, closed_at: new Date().toISOString() }).eq('id', viewComanda.id);
-    for (const slice of paymentSlices) {
-      await (supabase as any).from('transactions').insert({
-        establishment_id: estId, type: 'income', amount: slice.amount,
-        description: `Comanda - ${viewComanda.client_name || 'Cliente'}`,
-        payment_method: slice.method, date: new Date().toISOString().split('T')[0],
-      });
-    }
+    closeKey.current ||= crypto.randomUUID();
+    const { error } = await (supabase as any).rpc('close_comanda', {
+      p_comanda_id: viewComanda.id,
+      p_discount: discount,
+      p_payments: paymentSlices,
+      p_idempotency_key: closeKey.current,
+    });
+    if (error) { console.error('close comanda failed', error); setSaving(false); return; }
+    closeKey.current = null;
     setReceiptData({ comanda: { ...viewComanda, status: 'paid', discount }, slices: paymentSlices, discount, finalTotal: payFinalTotal });
     setSaving(false);
     setShowPayment(false);

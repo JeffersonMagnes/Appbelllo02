@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View, Text, ScrollView, Pressable, Image, Modal,
   FlatList, TextInput, Share, ActivityIndicator, Alert,
@@ -13,7 +13,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ArrowLeft2, Add, User, Clock, DollarCircle, Printer, Card, CloseCircle, TickSquare, Money, Mobile, SearchNormal1, Scissor, Box, ArrowRight2, Filter, Calendar } from 'iconsax-react-native';
 import { colors } from '@/lib/theme';
-import { useComandas, useCreateComanda, useUpdateComanda, useAddComandaItem } from '@/lib/hooks/use-comandas';
+import { useComandas, useCreateComanda, useCloseComanda, useAddComandaItem } from '@/lib/hooks/use-comandas';
 import { useClients } from '@/lib/hooks/use-clients';
 import { useServices } from '@/lib/hooks/use-services';
 import { useProducts } from '@/lib/hooks/use-products';
@@ -22,6 +22,7 @@ import { Comanda, Client } from '@/lib/types';
 import * as Haptics from 'expo-haptics';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
+import * as Crypto from 'expo-crypto';
 
 // ── Tipos ────────────────────────────────────────────────────────────────────
 type PaymentMethod = 'pix' | 'credit' | 'debit' | 'cash' | 'cheque' | 'cortesia';
@@ -1161,6 +1162,7 @@ function ReceiptModal({ data, onClose }: { data: ReceiptData; onClose: () => voi
 
 // ── Tela Principal ────────────────────────────────────────────────────────────
 export default function ComandasScreen() {
+  const closeKey = useRef<string | null>(null);
   const router = useRouter();
   const establishmentId = useAuthStore(s => s.establishmentId);
   const { data: comandasData, isLoading: loadingComandas } = useComandas(establishmentId ?? undefined);
@@ -1169,7 +1171,7 @@ export default function ComandasScreen() {
   const { data: productsData, isLoading: loadingProducts } = useProducts(establishmentId ?? undefined);
 
   const createComanda = useCreateComanda();
-  const updateComanda = useUpdateComanda();
+  const closeComanda = useCloseComanda();
   const addComandaItem = useAddComandaItem();
 
   const isLoading = loadingComandas;
@@ -1257,13 +1259,15 @@ export default function ComandasScreen() {
     // Persist to Supabase
     if (establishmentId) {
       try {
-        await updateComanda.mutateAsync({
+        closeKey.current ||= Crypto.randomUUID();
+        await closeComanda.mutateAsync({
           id: paymentModal.comandaId,
           establishmentId,
-          status: 'paid',
-          total: receipt.finalTotal,
-          closed_at: new Date().toISOString(),
+          discount: receipt.discountAmt,
+          payments: receipt.slices.map(slice => ({ method: slice.method, amount: slice.amount })),
+          idempotencyKey: closeKey.current,
         });
+        closeKey.current = null;
       } catch (e) {
         console.log('[Comanda] Erro ao fechar pagamento:', e);
       }

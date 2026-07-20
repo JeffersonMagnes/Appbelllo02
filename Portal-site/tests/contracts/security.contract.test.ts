@@ -42,6 +42,20 @@ describe('public data contracts', () => {
     expect(migration).toContain('idempotency_key');
     expect(migration).toContain("default 'America/Sao_Paulo'");
   });
+
+  test('comanda settlement and inventory are transactional', () => {
+    const migration = readWorkspace('supabase/migrations/20260719190000_transactional_comandas_inventory.sql');
+    const webComandas = readPortal('app/dashboard/comandas/page.tsx');
+    const mobileHooks = readWorkspace('mobile/src/lib/hooks/use-comandas.ts');
+    expect(migration).toContain('guard_comanda_item_and_stock');
+    expect(migration).toContain('recalculate_comanda_total');
+    expect(migration).toContain('create_comanda_with_items');
+    expect(migration).toContain('close_comanda');
+    expect(migration).toContain('insufficient_stock');
+    expect(webComandas).toContain("rpc('create_comanda_with_items'");
+    expect(webComandas).toContain("rpc('close_comanda'");
+    expect(mobileHooks).toContain("rpc('close_comanda'");
+  });
 });
 
 describe('notification authorization', () => {
