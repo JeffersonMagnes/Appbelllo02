@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/api-auth';
 import { AppointmentRepository } from '@/lib/modules/appointments/repository';
 import { AppointmentService, type ServiceResult } from '@/lib/modules/appointments/service';
+import { apiError, apiSuccess } from '@/lib/server/observability';
 
 function response<T>(result: ServiceResult<T>, successStatus = 200) {
-  if (!result.ok) return NextResponse.json({ error: { code: result.code, message: result.message } }, { status: result.status });
-  return NextResponse.json(result.value, { status: successStatus });
+  if (!result.ok) return apiError(result.status, result.code, result.message, { module: 'appointments' });
+  return apiSuccess(result.value, successStatus);
 }
 
 export async function GET(request: Request) {
