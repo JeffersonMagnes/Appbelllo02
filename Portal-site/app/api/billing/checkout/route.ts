@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthUser } from '@/lib/api-auth';
+import { getBillingAuth } from '@/lib/server/billing/auth';
 import { createBillingAdminClient } from '@/lib/server/billing/admin';
 import { BILLING_PLANS, isBillingPlanId } from '@/lib/server/billing/catalog';
 import { createPreapproval } from '@/lib/server/billing/mercado-pago';
@@ -8,8 +8,11 @@ import { createPreapproval } from '@/lib/server/billing/mercado-pago';
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
-  const { user, establishment } = await getAuthUser();
-  if (!user || !establishment) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+  const { user, establishment } = await getBillingAuth(request);
+  if (!user || !establishment) {
+    console.info('billing.checkout.rejected', { reason: 'unauthorized' });
+    return NextResponse.json({ error: 'Sua sessão expirou. Entre novamente para assinar.' }, { status: 401 });
+  }
 
   const body: unknown = await request.json().catch(() => null);
   const planId = typeof body === 'object' && body !== null && 'planId' in body
@@ -38,6 +41,7 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (insertError || !subscription) {
+    console.info('billing.checkout.rejected', { reason: 'subscription_conflict', code: insertError?.code });
     return NextResponse.json({ error: 'Já existe uma assinatura em andamento ou não foi possível iniciá-la' }, { status: 409 });
   }
 

@@ -10,6 +10,7 @@ describe('billing security contract', () => {
     const route = source('app/api/billing/checkout/route.ts');
     const catalog = source('lib/server/billing/catalog.ts');
     expect(route).toContain('isBillingPlanId');
+    expect(route).toContain('getBillingAuth(request)');
     expect(route).toContain('BILLING_PLANS[planId]');
     expect(route).not.toContain('body.amount');
     expect(catalog).toContain('amountCents: 4900');

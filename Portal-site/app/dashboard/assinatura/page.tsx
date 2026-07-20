@@ -139,9 +139,15 @@ export default function AssinaturaPage() {
     setCheckoutPlan(planId);
     setCommercialNotice('');
     try {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error('Sua sessão expirou. Entre novamente para assinar.');
       const response = await fetch('/api/billing/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ planId }),
       });
       const result = await response.json().catch(() => ({}));
