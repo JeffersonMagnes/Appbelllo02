@@ -26,6 +26,20 @@ export async function POST(request: NextRequest) {
   const externalReference = `appbello:${establishment.id}:${randomUUID()}`;
   const admin = createBillingAdminClient();
 
+  const { data: existing } = await admin
+    .from('billing_subscriptions')
+    .select('plan_id, status, checkout_url')
+    .eq('establishment_id', establishment.id)
+    .in('status', ['pending', 'authorized', 'paused', 'past_due'])
+    .maybeSingle();
+
+  if (existing?.status === 'pending' && existing.plan_id === plan.id && existing.checkout_url) {
+    return NextResponse.json({ checkoutUrl: existing.checkout_url, reused: true });
+  }
+  if (existing) {
+    return NextResponse.json({ error: 'Já existe uma assinatura ativa ou em andamento para esta empresa.' }, { status: 409 });
+  }
+
   const { data: subscription, error: insertError } = await admin
     .from('billing_subscriptions')
     .insert({
