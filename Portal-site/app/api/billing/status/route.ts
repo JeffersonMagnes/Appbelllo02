@@ -8,6 +8,9 @@ export async function GET() {
     provider: 'mercado_pago',
     configured: mercadoPagoConfigured(),
     webhookConfigured: Boolean(process.env.MERCADO_PAGO_WEBHOOK_SECRET),
+    testPayerConfigured: process.env.MERCADO_PAGO_MODE === 'production'
+      ? true
+      : Boolean(process.env.MERCADO_PAGO_TEST_PAYER_EMAIL),
     mode: process.env.MERCADO_PAGO_MODE === 'production' ? 'production' : 'test',
   });
 }

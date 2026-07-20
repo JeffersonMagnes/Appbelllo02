@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getBillingAuth } from '@/lib/server/billing/auth';
 import { createBillingAdminClient } from '@/lib/server/billing/admin';
 import { BILLING_PLANS, isBillingPlanId } from '@/lib/server/billing/catalog';
-import { createPreapproval } from '@/lib/server/billing/mercado-pago';
+import { createPreapproval, mercadoPagoPayerEmail } from '@/lib/server/billing/mercado-pago';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,18 +25,29 @@ export async function POST(request: NextRequest) {
   const plan = BILLING_PLANS[planId];
   const externalReference = `appbello:${establishment.id}:${randomUUID()}`;
   const admin = createBillingAdminClient();
+  let payerEmail: string;
+  try {
+    payerEmail = mercadoPagoPayerEmail(user.email!);
+  } catch {
+    return NextResponse.json({ error: 'A conta compradora de teste ainda não foi configurada.' }, { status: 503 });
+  }
 
   const { data: existing } = await admin
     .from('billing_subscriptions')
-    .select('plan_id, status, checkout_url')
+    .select('id, plan_id, status, checkout_url, payer_email')
     .eq('establishment_id', establishment.id)
     .in('status', ['pending', 'authorized', 'paused', 'past_due'])
     .maybeSingle();
 
-  if (existing?.status === 'pending' && existing.plan_id === plan.id && existing.checkout_url) {
+  if (existing?.status === 'pending' && existing.payer_email !== payerEmail) {
+    await admin.from('billing_subscriptions').update({
+      status: 'expired',
+      provider_status: 'test_payer_replaced',
+      updated_at: new Date().toISOString(),
+    }).eq('id', existing.id);
+  } else if (existing?.status === 'pending' && existing.plan_id === plan.id && existing.checkout_url) {
     return NextResponse.json({ checkoutUrl: existing.checkout_url, reused: true });
-  }
-  if (existing) {
+  } else if (existing) {
     return NextResponse.json({ error: 'Já existe uma assinatura ativa ou em andamento para esta empresa.' }, { status: 409 });
   }
 
@@ -48,7 +59,7 @@ export async function POST(request: NextRequest) {
       plan_id: plan.id,
       status: 'pending',
       external_reference: externalReference,
-      payer_email: user.email,
+      payer_email: payerEmail,
       amount_cents: plan.amountCents,
     })
     .select('id')
@@ -62,7 +73,7 @@ export async function POST(request: NextRequest) {
   try {
     const preapproval = await createPreapproval({
       externalReference,
-      payerEmail: user.email!,
+      payerEmail,
       planName: plan.name,
       amountCents: plan.amountCents,
     });

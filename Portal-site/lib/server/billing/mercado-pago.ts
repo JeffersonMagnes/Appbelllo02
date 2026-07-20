@@ -37,6 +37,15 @@ export function mercadoPagoConfigured() {
   return Boolean(process.env.MERCADO_PAGO_ACCESS_TOKEN);
 }
 
+export function mercadoPagoPayerEmail(customerEmail: string) {
+  if (process.env.MERCADO_PAGO_MODE !== 'production') {
+    const testEmail = process.env.MERCADO_PAGO_TEST_PAYER_EMAIL?.trim();
+    if (!testEmail) throw new Error('Conta compradora de teste não configurada');
+    return testEmail;
+  }
+  return customerEmail;
+}
+
 export async function createPreapproval(input: {
   externalReference: string;
   payerEmail: string;

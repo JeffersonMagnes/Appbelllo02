@@ -13,6 +13,7 @@ describe('billing security contract', () => {
     expect(route).toContain('getBillingAuth(request)');
     expect(route).toContain('BILLING_PLANS[planId]');
     expect(route).toContain('existing.checkout_url');
+    expect(route).toContain('mercadoPagoPayerEmail(user.email!)');
     expect(route).not.toContain('body.amount');
     expect(catalog).toContain('amountCents: 4900');
     expect(catalog).toContain('amountCents: 9900');
