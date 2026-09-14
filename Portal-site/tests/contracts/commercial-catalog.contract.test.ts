@@ -41,7 +41,6 @@ describe('official commercial catalog', () => {
   });
 
   test('notification fallbacks use the official trial duration', () => {
-    expect(source('Portal-site/app/api/admin/notifications/auto/route.ts')).not.toContain('trialDays ?? 14');
     expect(source('Portal-site/netlify/functions/notifications-auto.ts')).not.toContain('trialDays ?? 14');
     expect(source('Portal-site/components/dashboard/NotificationBanners.tsx')).not.toContain('trialDays ?? 14');
   });

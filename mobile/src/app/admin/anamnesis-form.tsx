@@ -28,6 +28,7 @@ import {
 import { uploadFile } from '@/lib/upload';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { useOnboardingStore } from '@/lib/state/onboarding-store';
+import { useAuthStore } from '@/lib/state/auth-store';
 
 export default function AnamnesisFormScreen() {
   const router = useRouter();
@@ -40,6 +41,7 @@ export default function AnamnesisFormScreen() {
 
   const { templates, filledAnamnesis: allFilledAnamnesis, addFilledAnamnesis } = useAnamnesisStore();
   const { business } = useOnboardingStore();
+  const establishmentId = useAuthStore((s) => s.establishmentId);
   const establishmentName = business.businessName || 'Appbello';
 
   const template = useMemo(
@@ -194,31 +196,43 @@ export default function AnamnesisFormScreen() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setIsSharing(true);
     try {
-      if (isSupabaseConfigured() && savedShareToken) {
+      if (isSupabaseConfigured() && savedShareToken && establishmentId) {
         try {
-          await (supabase as any).storage.createBucket('public-fichas', { public: true }).catch(() => {});
           const html = buildFichaHtml();
+          const storagePath = `${establishmentId}/${savedShareToken}.html`;
           const { error } = await (supabase as any).storage
             .from('public-fichas')
-            .upload(`${savedShareToken}.html`, html, {
+            .upload(storagePath, html, {
               contentType: 'text/html; charset=utf-8',
               cacheControl: '86400',
               upsert: true,
             });
           if (!error) {
-            const { data: urlData } = (supabase as any).storage
-              .from('public-fichas')
-              .getPublicUrl(`${savedShareToken}.html`);
-            if (urlData?.publicUrl) {
-              await Share.share({
-                message: `📋 *${template.name}*${params.clientName ? `\n👤 ${params.clientName}` : ''}\n\nAcesse sua ficha:\n${urlData.publicUrl}`,
-                url: urlData.publicUrl,
+            // The bucket is private — a signed, expiring URL must be minted
+            // server-side after verifying we actually manage this
+            // establishment (see Portal-site/app/api/fichas/signed-url).
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.access_token) {
+              const res = await fetch('https://appbello.com.br/api/fichas/signed-url', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({ shareToken: savedShareToken, establishmentId }),
               });
-              return;
+              if (res.ok) {
+                const { url } = (await res.json()) as { url: string };
+                await Share.share({
+                  message: `📋 *${template.name}*${params.clientName ? `\n👤 ${params.clientName}` : ''}\n\nAcesse sua ficha:\n${url}`,
+                  url,
+                });
+                return;
+              }
             }
           }
         } catch (error) {
-          console.error('Failed to share anamnesis via public link, falling back to text:', error);
+          console.error('Failed to share anamnesis via signed link, falling back to text:', error);
         }
       }
       await shareAsText();

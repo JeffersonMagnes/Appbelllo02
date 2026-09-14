@@ -1,0 +1,21 @@
+-- Fase 2 closure: a shared anamnesis ficha can contain sensitive health
+-- information (allergies, medications, pregnancy, medical conditions). A
+-- public bucket + hard-to-guess token (the previous model) still means
+-- anyone who ever sees the URL — a screenshot, a forwarded WhatsApp message,
+-- a browser history sync — can read it forever, and there is no way to
+-- revoke that. Flipping the bucket to private closes that: every read now
+-- requires a signed URL minted server-side (see
+-- Portal-site/app/api/fichas/signed-url/route.ts), which expires and is
+-- authorized per-establishment for anything uploaded after this migration.
+--
+-- This does NOT touch existing objects or their paths — nothing is moved,
+-- renamed or deleted. Objects uploaded before this migration used a flat
+-- `${shareToken}.html` path with no tenant information in it, so the
+-- signed-url endpoint cannot verify tenant ownership for those retroactively
+-- and falls back to "any authenticated Appbello user" for that legacy shape
+-- — still strictly narrower than before (previously no auth at all was
+-- required). Objects uploaded after this migration use
+-- `${establishmentId}/${shareToken}.html`, which the endpoint uses to run a
+-- real per-tenant `can_manage_establishment` check before minting a link.
+
+update storage.buckets set public = false where id = 'public-fichas';
