@@ -52,41 +52,29 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
         setOpen(false);
       }
     }
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === 'Escape' && open) {
-        setOpen(false);
-        dropdownRef.current?.querySelector<HTMLButtonElement>('[aria-label="Notificações"]')?.focus();
-      }
-    }
     document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleEscape);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, [open]);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   function markAllRead() {
     setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
   }
 
   return (
-    <header className="min-h-[64px] shrink-0 bg-white border-b border-gray-100 flex items-center gap-4 px-4 sm:px-6 sticky top-0 z-40">
+    <header className="h-16 bg-white border-b border-gray-100 flex items-center gap-4 px-4 sm:px-6 sticky top-0 z-40">
       <button
-        aria-label="Abrir menu"
-        className="md:hidden p-2.5 rounded-lg text-gray-500 hover:bg-gray-50"
+        className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-50"
         onClick={handleMenuClick}
       >
         <HambergerMenu className="w-5 h-5" variant="Outline" />
       </button>
 
-      <h1 className="min-w-0 truncate font-semibold tracking-tight text-gray-900 text-base sm:text-lg">{title}</h1>
+      <h1 className="font-bold text-gray-900 text-lg hidden sm:block">{title}</h1>
 
       <div className="flex-1 max-w-md hidden lg:block">
         <div className="relative">
           <SearchNormal1 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" variant="Outline" />
           <Input
-            aria-label="Buscar no sistema"
             placeholder="Buscar..."
             className="pl-9 h-9 bg-gray-50 border-gray-100 rounded-xl text-sm"
           />
@@ -97,8 +85,6 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
         {/* Notification bell */}
         <div className="relative">
           <Button
-            aria-label="Notificações"
-            aria-expanded={open}
             variant="ghost"
             size="icon"
             className="rounded-xl text-gray-500 hover:text-gray-700 relative"
@@ -111,7 +97,7 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
           </Button>
 
           {open && (
-            <div className="absolute -right-10 sm:right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+            <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                 <span className="font-bold text-gray-900 text-sm">Notificações</span>
                 {unreadCount > 0 && (
@@ -125,10 +111,9 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
               </div>
               <div className="divide-y divide-gray-50 max-h-72 overflow-y-auto">
                 {notifications.map(notif => (
-                  <button
-                    type="button"
+                  <div
                     key={notif.id}
-                    className={`w-full text-left flex gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors ${notif.unread ? 'bg-violet-50/40' : ''}`}
+                    className={`flex gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors ${notif.unread ? 'bg-violet-50/40' : ''}`}
                     onClick={() => {
                       setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, unread: false } : n));
                       setOpen(false);
@@ -146,7 +131,7 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
                     {notif.unread && (
                       <span className="w-2 h-2 bg-violet-500 rounded-full flex-shrink-0 mt-1.5" />
                     )}
-                  </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -154,7 +139,7 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
         </div>
 
         {/* User avatar */}
-        <div className="w-8 h-8 bg-[#5959b5] rounded-xl flex items-center justify-center text-white text-sm font-bold select-none">
+        <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-violet-700 rounded-xl flex items-center justify-center text-white text-sm font-bold cursor-pointer select-none">
           {initial}
         </div>
       </div>

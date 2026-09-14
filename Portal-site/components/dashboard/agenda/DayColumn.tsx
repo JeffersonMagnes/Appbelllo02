@@ -1,8 +1,7 @@
 'use client';
 
-import { AppointmentTile } from './AppointmentTile';
 import { X } from 'lucide-react';
-import { statusColors, statusLabels, HOUR_PX } from '@/lib/agenda-format';
+import { statusColors, HOUR_PX } from '@/lib/agenda-format';
 import { layoutItems } from '@/lib/agenda-timeline-layout';
 import type { Appointment } from '@/lib/supabase/types';
 
@@ -80,7 +79,7 @@ export function DayColumn({
               >
                 <div className="flex items-center justify-between gap-1">
                   <span className="font-semibold text-[10px] truncate">{block.start_time?.slice(0, 5)}-{block.end_time?.slice(0, 5)}</span>
-                  <button aria-label="Remover bloqueio de horário" onClick={(e) => { e.stopPropagation(); onDeleteBlock(block.id); }} className="p-0.5 rounded hover:bg-gray-300 flex-shrink-0">
+                  <button onClick={(e) => { e.stopPropagation(); onDeleteBlock(block.id); }} className="p-0.5 rounded hover:bg-gray-300 flex-shrink-0">
                     <X className="w-2.5 h-2.5 text-gray-500" />
                   </button>
                 </div>
@@ -92,13 +91,13 @@ export function DayColumn({
 
         const apt = item.data as Appointment;
         return (
-          <button type="button" key={apt.id} style={style}
-            title={`${apt.time} · ${getClientName(apt)} · ${getServiceName(apt)} · ${statusLabels[apt.status] || apt.status}`}
-            aria-label={`${apt.time}, ${getClientName(apt)}, ${getServiceName(apt)}, ${statusLabels[apt.status] || apt.status}`}
-            onClick={(e) => { e.stopPropagation(); onSelectAppointment(apt); }}>
-            <AppointmentTile time={apt.time} client={getClientName(apt)} service={getServiceName(apt)}
-              color={statusColors[apt.status] || 'bg-gray-600'} compact={narrow} singleLine={height < 38} showService={height > 50} />
-          </button>
+          <div key={apt.id} style={style} onClick={(e) => { e.stopPropagation(); onSelectAppointment(apt); }}>
+            <div className={`${statusColors[apt.status] || 'bg-gray-400'} h-full text-white rounded-lg p-1 cursor-pointer hover:opacity-80 transition-opacity overflow-hidden`}>
+              <div className="font-bold text-[10px] leading-tight truncate">{apt.time}</div>
+              <div className="text-white/90 text-[9px] leading-tight truncate font-medium">{getClientName(apt).split(' ')[0]}</div>
+              {height > 36 && <div className="text-white/70 text-[8px] leading-tight truncate">{getServiceName(apt)}</div>}
+            </div>
+          </div>
         );
       })}
     </div>

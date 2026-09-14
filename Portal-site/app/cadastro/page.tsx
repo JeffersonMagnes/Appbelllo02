@@ -49,16 +49,16 @@ function Wrapper({ title, subtitle, step, error, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="auth-shell min-h-screen bg-[#f8f8fc] flex items-center justify-center p-4 sm:p-8">
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm w-full max-w-lg p-5 sm:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#5333ED]/5 to-[#0BBDB6]/5 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg p-8">
         <div className="mb-6">
-          <div className="w-32 h-12 relative">
-            <Link href="/" aria-label="AppBello — início"><Image src="/logo.png" alt="AppBello" width={128} height={52} className="h-auto w-32" priority /></Link>
+          <div className="w-16 h-16 relative">
+            <Image src="/Appbello-white.svg" alt="Appbello" fill className="object-contain" style={{ filter: 'invert(1) sepia(1) saturate(5) hue-rotate(220deg)' }} onError={()=>{}} />
           </div>
         </div>
         <ProgressBar step={step <= 5 ? step : 6} total={6} />
         <div className="mt-6 mb-2">
-          <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
+          <h1 className="text-2xl font-black text-gray-900">{title}</h1>
           {subtitle && <p className="text-gray-500 text-sm mt-1">{subtitle}</p>}
         </div>
         {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm mt-3">{error}</div>}
@@ -76,10 +76,10 @@ function ProgressBar({ step, total }: { step: number; total: number }) {
         <span>Etapa {step} de {total}</span>
         <span>{Math.round((step / total) * 100)}%</span>
       </div>
-      <div role="progressbar" aria-label="Progresso do cadastro" aria-valuenow={step} aria-valuemin={0} aria-valuemax={total} className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
         <div
-          className="h-full rounded-full transition-[width] duration-200"
-          style={{ width: `${(step / total) * 100}%`, background: '#5959b5' }}
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${(step / total) * 100}%`, background: 'linear-gradient(90deg,#5333ED,#0BBDB6)' }}
         />
       </div>
     </div>
@@ -315,8 +315,8 @@ export default function CadastroPage() {
   if (step === 7) {
     const bookingUrl = `https://appbello.com.br/agendar/${estSlug}`;
     return (
-      <div className="auth-shell min-h-screen bg-[#f8f8fc] flex items-center justify-center p-4 sm:p-8">
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm w-full max-w-lg p-5 sm:p-8 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#5333ED]/5 to-[#0BBDB6]/5 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg p-8 text-center">
           {/* Success icon */}
           <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5"
             style={{ background: `linear-gradient(135deg,${primaryColor},${secondaryColor})` }}>

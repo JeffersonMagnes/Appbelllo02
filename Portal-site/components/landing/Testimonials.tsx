@@ -1,24 +1,66 @@
-import { CalendarCheck, ClipboardList, ChartNoAxesCombined } from 'lucide-react';
-
-const benefits = [
-  { icon: CalendarCheck, title: 'Mais clareza para atender', text: 'Horários, profissionais e clientes reunidos em uma agenda que acompanha sua rotina.' },
-  { icon: ClipboardList, title: 'Menos informação espalhada', text: 'Serviços, comandas e produtos organizados para consultar quando precisar.' },
-  { icon: ChartNoAxesCombined, title: 'Mais contexto para decidir', text: 'Entradas, despesas e relatórios para entender o movimento do seu negócio.' },
+const testimonials = [
+  {
+    quote: 'O Appbello transformou completamente minha rotina. Antes eu perdia horas com agendamentos no telefone. Agora tudo é automático e meus clientes adoram poder agendar online!',
+    name: 'ANA PAULA FERREIRA',
+    business: 'Salão Beleza & Arte',
+  },
+  {
+    quote: 'O controle financeiro é incrível. Agora sei exatamente quanto ganhei, quais serviços vendem mais e onde posso melhorar. Meu faturamento cresceu 40% em 3 meses com o Appbello!',
+    name: 'CARLOS EDUARDO MENDES',
+    business: 'Barbearia Vintage',
+  },
+  {
+    quote: 'A gestão de equipe com comissões automáticas me economiza horas por semana. E o suporte é excelente — qualquer dúvida é respondida rapidamente.',
+    name: 'MARIANA COSTA',
+    business: 'Clínica Estética Harmonia',
+  },
 ];
 
+let current = 0;
+
 export default function Testimonials() {
-  return <section id="beneficios" className="border-y border-[#e8e8f1] bg-[#f5f5fb] py-16 sm:py-20">
-    <div className="mx-auto max-w-7xl px-5 sm:px-8">
-      <div className="mb-10 max-w-xl">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#5959b5]">Na prática</p>
-        <h2 className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">Uma gestão que abre espaço para o seu talento.</h2>
+  const t = testimonials[0];
+
+  return (
+    <section id="depoimentos" className="py-20 bg-[#fdf8f5]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Left heading */}
+          <div>
+            <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
+              Quem inova em beleza e bem-estar conta com o Appbello
+            </h2>
+            <div className="flex items-center gap-3">
+              <div className="h-px w-16 bg-gray-300" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#6666cc]" />
+            </div>
+          </div>
+
+          {/* Right — testimonial card */}
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+            <div className="text-5xl text-[#6666cc] font-serif leading-none mb-4">&ldquo;</div>
+            <p className="text-gray-700 text-lg leading-relaxed mb-8 italic">
+              {t.quote}
+            </p>
+            <div className="flex items-center gap-4">
+              <div>
+                <div className="font-bold text-gray-900 text-sm tracking-wide">{t.name}</div>
+                <div className="text-gray-500 text-sm">{t.business}</div>
+              </div>
+            </div>
+
+            {/* Dots */}
+            <div className="flex items-center gap-2 mt-6">
+              {testimonials.map((_, i) => (
+                <div
+                  key={i}
+                  className={`rounded-full transition-all ${i === 0 ? 'w-6 h-2 bg-[#6666cc]' : 'w-2 h-2 bg-gray-200'}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="grid gap-8 md:grid-cols-3">{benefits.map(({ icon: Icon, title, text }) =>
-        <div key={title} className="border-l-2 border-[#d4d4eb] pl-5">
-          <Icon size={22} className="mb-4 text-[#5959b5]" aria-hidden="true" />
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
-          <p className="text-sm leading-relaxed text-gray-600">{text}</p>
-        </div>)}</div>
-    </div>
-  </section>;
+    </section>
+  );
 }

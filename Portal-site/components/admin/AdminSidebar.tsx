@@ -1,12 +1,11 @@
 'use client';
 
-import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { Card, Notification, Setting2, DocumentText, ArrowDown2, Mobile, Receipt } from 'iconsax-react';
-import { LayoutDashboard, Megaphone, BarChart2, UserCog, PanelLeftClose, PanelLeftOpen, LogOut, Users, CreditCard, Menu } from 'lucide-react';
+import { LayoutDashboard, Megaphone, BarChart2, UserCog, PanelLeftClose, PanelLeftOpen, LogOut, Users, CreditCard } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 const NAV = [
@@ -47,7 +46,6 @@ export default function AdminSidebar() {
   const pathname  = usePathname();
   const router    = useRouter();
   const supabase  = createClient();
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [openGroups, setOpenGroups] = useState<string[]>(['Planos & Financeiro']);
 
@@ -62,7 +60,8 @@ export default function AdminSidebar() {
   const isActive = (href: string) =>
     href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
 
-  const content = <>
+  return (
+    <aside className={`flex flex-col bg-[#0F0E17] border-r border-white/[0.06] transition-all duration-300 ${collapsed ? 'w-[64px]' : 'w-[220px]'} shrink-0 min-h-screen`}>
 
       {/* Logo */}
       <div className="flex items-center justify-between border-b border-white/[0.06] h-16 px-3">
@@ -71,21 +70,21 @@ export default function AdminSidebar() {
         </div>
         {!collapsed && (
           <button
-            aria-label="Recolher menu" onClick={() => setCollapsed(c => !c)}
-            className="hidden lg:block p-2 text-white/60 hover:text-white transition-colors"
+            onClick={() => setCollapsed(c => !c)}
+            className="text-white/25 hover:text-white/60 transition-colors"
           >
             <PanelLeftClose className="w-4 h-4" />
           </button>
         )}
         {collapsed && (
-          <button aria-label="Expandir menu" onClick={() => setCollapsed(false)} className="hidden lg:block p-2 text-white/60 hover:text-white transition-colors">
+          <button onClick={() => setCollapsed(false)} className="text-white/25 hover:text-white/60 transition-colors">
             <PanelLeftOpen className="w-4 h-4" />
           </button>
         )}
       </div>
 
       {/* Nav */}
-      <nav aria-label="Navegação administrativa" className="flex-1 py-3 overflow-y-auto px-2 space-y-0.5">
+      <nav className="flex-1 py-3 overflow-y-auto px-2 space-y-0.5">
         {NAV.map(item => {
           if (item.children) {
             const isOpen   = openGroups.includes(item.label);
@@ -94,12 +93,10 @@ export default function AdminSidebar() {
             return (
               <div key={item.label}>
                 <button
-                  aria-expanded={isOpen}
-                  aria-label={item.label}
                   onClick={() => !collapsed && toggleGroup(item.label)}
                   title={collapsed ? item.label : undefined}
-                  className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium transition-colors duration-200
-                    ${anyActive ? 'text-white' : 'text-white/70 hover:text-white/70 hover:bg-white/[0.04]'}`}
+                  className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold transition-all
+                    ${anyActive ? 'text-white' : 'text-white/40 hover:text-white/70 hover:bg-white/[0.04]'}`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
                   {!collapsed && (
@@ -112,8 +109,8 @@ export default function AdminSidebar() {
                 {!collapsed && isOpen && (
                   <div className="ml-[26px] mt-0.5 space-y-0.5 border-l border-white/[0.08] pl-3">
                     {item.children.map(child => (
-                      <Link key={child.href} href={child.href} aria-current={isActive(child.href) ? "page" : undefined} onClick={() => setMobileOpen(false)}
-                        className={`block px-2 py-2 rounded-lg text-sm transition-colors duration-200
+                      <Link key={child.href} href={child.href}
+                        className={`block px-2 py-1.5 rounded-lg text-xs transition-all
                           ${isActive(child.href)
                             ? 'text-[#A89DF7] bg-[#7C6EFA]/15 font-semibold'
                             : 'text-white/70 hover:text-white hover:bg-white/[0.06]'}`}>
@@ -129,11 +126,11 @@ export default function AdminSidebar() {
           const Icon = item.icon!;
           const active = isActive(item.href!);
           return (
-            <Link key={item.href} href={item.href!} aria-label={item.label} aria-current={active ? "page" : undefined} onClick={() => setMobileOpen(false)} title={collapsed ? item.label : undefined}
-              className={`flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium transition-colors duration-200
+            <Link key={item.href} href={item.href!} title={collapsed ? item.label : undefined}
+              className={`flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold transition-all
                 ${active
                   ? 'bg-[#7C6EFA]/15 text-[#A89DF7] border border-[#7C6EFA]/20'
-                  : 'text-white/70 hover:text-white/70 hover:bg-white/[0.04]'}`}>
+                  : 'text-white/40 hover:text-white/70 hover:bg-white/[0.04]'}`}>
               <Icon className="w-4 h-4 shrink-0" />
               {!collapsed && <span>{item.label}</span>}
               {active && !collapsed && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#7C6EFA]" />}
@@ -144,20 +141,12 @@ export default function AdminSidebar() {
 
       {/* Logout */}
       <div className="p-2 border-t border-white/[0.06]">
-        <button aria-label="Sair" onClick={handleLogout}
-          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-white/70 hover:text-white/60 hover:bg-white/[0.04] transition-all">
+        <button onClick={handleLogout}
+          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-white/30 hover:text-white/60 hover:bg-white/[0.04] transition-all">
           <LogOut className="w-4 h-4 shrink-0" />
           {!collapsed && <span>Sair</span>}
         </button>
-      </div></>;
-  return <>
-    <div className="lg:hidden sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-4">
-      <Image src="/logo.png" alt="AppBello" width={110} height={45} className="h-auto w-[110px]" />
-      <button onClick={() => { setCollapsed(false); setMobileOpen(true); }} aria-label="Abrir menu administrativo" className="rounded-lg p-3 text-gray-700 hover:bg-gray-100"><Menu size={20} /></button>
-    </div>
-    <aside className={`hidden lg:flex flex-col bg-[#191927] border-r border-white/[0.06] transition-[width] duration-200 ${collapsed ? 'w-[64px]' : 'w-[220px]'} shrink-0 h-[100dvh] sticky top-0`}>{content}</aside>
-    <Sheet open={mobileOpen} onOpenChange={setMobileOpen}><SheetContent side="left" className="flex w-72 max-w-[calc(100vw-3rem)] flex-col bg-[#191927] p-0 text-white [&>button]:text-white">
-      <SheetTitle className="sr-only">Menu administrativo</SheetTitle><SheetDescription className="sr-only">Navegue pelas áreas administrativas do AppBello.</SheetDescription>{content}
-    </SheetContent></Sheet>
-  </>;
+      </div>
+    </aside>
+  );
 }

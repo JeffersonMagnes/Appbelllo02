@@ -1,7 +1,5 @@
 'use client';
 
-import { ModalFrame } from '@/components/ui/modal-frame';
-
 import { Link2, SearchNormal1 } from 'iconsax-react';
 import { X } from 'lucide-react';
 import { statusColors, statusLabels, fmtBRL } from '@/lib/agenda-format';
@@ -35,8 +33,8 @@ export function OnlineAppointmentsModal({
   if (!visible) return null;
 
   return (
-    <ModalFrame title="Agendamentos online" onClose={onClose} className="max-w-2xl">
-      <div className="w-full">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40">
+      <div className="bg-white w-full sm:max-w-2xl sm:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col max-h-[85vh]">
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-[#6666cc]/10 flex items-center justify-center">
@@ -47,7 +45,7 @@ export function OnlineAppointmentsModal({
               <p className="text-xs text-gray-400">Feitos pelo link público</p>
             </div>
           </div>
-          <button aria-label="Fechar" onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100 text-gray-400">
+          <button onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100 text-gray-400">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -100,6 +98,6 @@ export function OnlineAppointmentsModal({
           )}
         </div>
       </div>
-    </ModalFrame>
+    </div>
   );
 }

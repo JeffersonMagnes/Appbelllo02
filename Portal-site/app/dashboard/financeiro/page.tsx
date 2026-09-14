@@ -184,42 +184,53 @@ export default function FinanceiroPage() {
                 { v: 'mes' as Period, l: 'Mês' },
                 { v: 'custom' as Period, l: 'Personalizado' },
               ]).map(p => (
-                <button key={p.v} aria-pressed={period === p.v} onClick={() => setPeriod(p.v)}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${period === p.v ? 'bg-brand-primary text-white shadow' : 'text-gray-500 hover:text-gray-700'}`}>
+                <button key={p.v} onClick={() => setPeriod(p.v)}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${period === p.v ? 'bg-brand-primary text-white shadow' : 'text-gray-500 hover:text-gray-700'}`}>
                   {p.l}
                 </button>
               ))}
             </div>
           </div>
           {period === 'custom' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-lg">
-              <input aria-label="Data inicial" type="date" value={customStart} onChange={e => setCustomStart(e.target.value)}
+            <div className="flex gap-2">
+              <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)}
                 className="h-9 px-3 rounded-lg border border-gray-200 text-sm" />
-              <input aria-label="Data final" type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)}
+              <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)}
                 className="h-9 px-3 rounded-lg border border-gray-200 text-sm" />
             </div>
           )}
         </div>
 
-        {/* A compact financial summary; keep the period totals together. */}
-        <dl className="grid sm:grid-cols-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
-          <div className="min-w-0 flex items-center justify-between gap-3 border-b border-gray-100 p-4 sm:block sm:border-b-0 sm:border-r">
-            <dt className="flex items-center gap-2 text-sm text-gray-600"><TrendingUp className="w-4 h-4 text-green-700" variant="Outline" />Receitas</dt>
-            <dd className="break-words text-xl xl:text-2xl font-semibold tabular-nums tracking-tight text-green-700 sm:mt-3">{fmt(totalReceitas)}</dd>
+        {/* Summary cards */}
+        <div className="grid sm:grid-cols-3 gap-4">
+          <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center"><TrendingUp className="w-5 h-5 text-green-600" variant="Outline" /></div>
+              <div className="text-sm text-gray-500">Receitas</div>
+            </div>
+            <div className="text-2xl font-extrabold text-green-600">{fmt(totalReceitas)}</div>
           </div>
-          <div className="min-w-0 flex items-center justify-between gap-3 border-b border-gray-100 p-4 sm:block sm:border-b-0 sm:border-r">
-            <dt className="flex items-center gap-2 text-sm text-gray-600"><TrendingDown className="w-4 h-4 text-red-700" variant="Outline" />Despesas</dt>
-            <dd className="break-words text-xl xl:text-2xl font-semibold tabular-nums tracking-tight text-red-700 sm:mt-3">{fmt(totalDespesas)}</dd>
+          <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center"><TrendingDown className="w-5 h-5 text-red-500" variant="Outline" /></div>
+              <div className="text-sm text-gray-500">Despesas</div>
+            </div>
+            <div className="text-2xl font-extrabold text-red-500">{fmt(totalDespesas)}</div>
           </div>
-          <div className="min-w-0 flex items-center justify-between gap-3 bg-[#f8f8fc] p-4 sm:block">
-            <dt className="flex items-center gap-2 text-sm text-gray-600"><DollarCircle className="w-4 h-4 text-[#5959b5]" />Lucro Líquido</dt>
-            <dd className={`break-words text-xl xl:text-2xl font-semibold tabular-nums tracking-tight sm:mt-3 ${lucro >= 0 ? 'text-[#5959b5]' : 'text-red-700'}`}>{fmt(lucro)}</dd>
+          <div className={`bg-white rounded-2xl p-5 border-2 shadow-sm ${lucro >= 0 ? 'border-green-100' : 'border-red-100'}`}>
+            <div className="flex items-center gap-3 mb-2">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${lucro >= 0 ? 'bg-brand-primary/10' : 'bg-red-50'}`}>
+                <DollarCircle className={`w-5 h-5 ${lucro >= 0 ? 'text-brand-primary' : 'text-red-500'}`} />
+              </div>
+              <div className="text-sm text-gray-500">Lucro Líquido</div>
+            </div>
+            <div className={`text-2xl font-extrabold ${lucro >= 0 ? 'text-brand-primary' : 'text-red-500'}`}>{fmt(lucro)}</div>
           </div>
-        </dl>
+        </div>
 
         {/* Fees card */}
         {totalFees > 0 && (
-          <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200 flex flex-wrap items-center gap-3">
+          <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200 flex items-center gap-4">
             <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
               <Warning2 className="w-5 h-5 text-amber-600" variant="Outline" />
             </div>
@@ -290,10 +301,10 @@ export default function FinanceiroPage() {
 
         {/* Transactions */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="flex flex-wrap gap-3 items-center justify-between p-4 sm:p-5 border-b border-gray-50">
+          <div className="flex items-center justify-between p-4 sm:p-5 border-b border-gray-50">
             <div className="flex bg-gray-100 rounded-xl p-1 gap-1">
               {(['todos', 'receita', 'despesa'] as const).map((f) => (
-                <button key={f} aria-pressed={filter === f} onClick={() => setFilter(f)} className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${filter === f ? 'bg-white shadow text-brand-primary' : 'text-gray-500'}`}>
+                <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${filter === f ? 'bg-white shadow text-brand-primary' : 'text-gray-500'}`}>
                   {f === 'todos' ? 'Todos' : f === 'receita' ? 'Receitas' : 'Despesas'}
                 </button>
               ))}
@@ -321,12 +332,12 @@ export default function FinanceiroPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold text-gray-900 text-sm">{t.description || (isReceita ? 'Receita' : 'Despesa')}</div>
-                      <div className="text-xs text-gray-500 flex flex-wrap gap-x-2">
+                      <div className="text-xs text-gray-500 flex gap-2">
                         <span>{new Date(t.date + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
                         {t.payment_method && <span>• {paymentLabels[t.payment_method] || t.payment_method}</span>}
                       </div>
                     </div>
-                    <div className={`font-semibold tabular-nums text-sm flex-shrink-0 ${isReceita ? 'text-green-700' : 'text-red-700'}`}>
+                    <div className={`font-bold text-sm flex-shrink-0 ${isReceita ? 'text-green-600' : 'text-red-500'}`}>
                       {isReceita ? '+' : '-'}{fmt(t.amount)}
                     </div>
                   </div>

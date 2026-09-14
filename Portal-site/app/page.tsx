@@ -4,26 +4,24 @@ import BusinessTypes from '@/components/landing/BusinessTypes';
 import BenefitsTabs from '@/components/landing/BenefitsTabs';
 import Features from '@/components/landing/Features';
 import HowItWorks from '@/components/landing/HowItWorks';
+import Testimonials from '@/components/landing/Testimonials';
 import Pricing from '@/components/landing/Pricing';
-import OperationModules from '@/components/landing/OperationModules';
-import WebMobile from '@/components/landing/WebMobile';
+import Blog from '@/components/landing/Blog';
 import CTA from '@/components/landing/CTA';
-import FAQ from '@/components/landing/FAQ';
 import Footer from '@/components/landing/Footer';
 
 export default function Home() {
   return (
-    <main className="marketing-site min-h-screen font-outfit">
+    <main className="min-h-screen font-outfit">
       <Navbar />
       <Hero />
-      <Features />
-      <BenefitsTabs />
-      <OperationModules />
-      <WebMobile />
       <BusinessTypes />
+      <BenefitsTabs />
+      <Features />
       <HowItWorks />
+      <Testimonials />
       <Pricing />
-      <FAQ />
+      <Blog />
       <CTA />
       <Footer />
     </main>

@@ -197,7 +197,7 @@ export default function ClientesPage() {
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <SearchNormal1 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" variant="Outline" />
-            <Input aria-label="Buscar clientes" value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar por nome, e-mail ou telefone..." className="pl-9 h-10 rounded-xl border-gray-200" />
+            <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar por nome, e-mail ou telefone..." className="pl-9 h-10 rounded-xl border-gray-200" />
           </div>
           <Button onClick={openNew} className="bg-[#6666cc] hover:bg-[#5555aa] text-white border-0 rounded-xl h-10">
             <Add className="w-4 h-4 mr-1.5" variant="Outline" /> Novo cliente
@@ -212,7 +212,6 @@ export default function ClientesPage() {
             return (
               <button
                 key={t.id}
-                aria-pressed={tab === t.id}
                 onClick={() => setTab(t.id)}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors flex-shrink-0 ${tab === t.id ? 'bg-[#6666cc] text-white' : 'text-gray-500 hover:bg-gray-50'}`}
               >
@@ -228,9 +227,9 @@ export default function ClientesPage() {
 
         {/* Descrição da aba */}
         {tab === 'sumidos' && (
-          <div className="bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5 flex flex-wrap gap-2 items-center justify-between">
+          <div className="bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5 flex items-center justify-between">
             <span className="text-xs text-amber-700 font-medium">Clientes sem visita — boa hora para entrar em contato!</span>
-            <select aria-label="Tempo sem visitas" value={sumidosDays} onChange={e => setSumidosDays(Number(e.target.value))}
+            <select value={sumidosDays} onChange={e => setSumidosDays(Number(e.target.value))}
               className="text-xs font-semibold bg-white border border-amber-200 rounded-lg px-2 py-1 text-amber-700 outline-none">
               <option value={30}>há 30+ dias</option>
               <option value={60}>há 60+ dias</option>
@@ -240,9 +239,9 @@ export default function ClientesPage() {
           </div>
         )}
         {tab === 'retornos' && (
-          <div className="bg-green-50 border border-green-100 rounded-xl px-4 py-2.5 flex flex-wrap gap-2 items-center justify-between">
+          <div className="bg-green-50 border border-green-100 rounded-xl px-4 py-2.5 flex items-center justify-between">
             <span className="text-xs text-green-700 font-medium">Clientes que retornaram no período</span>
-            <select aria-label="Período dos retornos" value={retornosDays} onChange={e => setRetornosDays(Number(e.target.value))}
+            <select value={retornosDays} onChange={e => setRetornosDays(Number(e.target.value))}
               className="text-xs font-semibold bg-white border border-green-200 rounded-lg px-2 py-1 text-green-700 outline-none">
               <option value={15}>Últimos 15 dias</option>
               <option value={30}>Últimos 30 dias</option>

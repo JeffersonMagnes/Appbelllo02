@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Appbello — Gerencie seu salão com inteligência',
   description: 'Plataforma completa de gestão para salões de beleza, barbearias e clínicas estéticas. Agendamentos, clientes, financeiro e muito mais.',
   manifest: '/manifest.json',
-  themeColor: '#6666cc',
+  themeColor: '#5333ED',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -19,11 +19,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Appbello — Gerencie seu salão com inteligência',
     description: 'Plataforma completa de gestão para salões de beleza, barbearias e clínicas estéticas.',
-    images: [{ url: '/brand-preview.webp', width: 1200, height: 1200, alt: 'AppBello — gestão para negócios de beleza' }],
+    images: [{ url: '/Banner.png' }],
   },
   twitter: {
     card: 'summary_large_image',
-    images: [{ url: '/brand-preview.webp', width: 1200, height: 1200, alt: 'AppBello — gestão para negócios de beleza' }],
+    images: [{ url: '/Banner.png' }],
   },
 };
 
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap"
           rel="stylesheet"
         />
         <link rel="apple-touch-icon" href="/icon-192.png" />

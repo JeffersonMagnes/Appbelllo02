@@ -2,26 +2,27 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import ProductPreview from '@/components/landing/ProductPreview';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import { ArrowRight, Add, Minus, Calendar, DollarCircle, Profile2User, DocumentText, Card } from 'iconsax-react';
 import { Megaphone } from 'lucide-react';
 
 const TABS = [
-  { id: 'agenda', label: 'Agenda online', Icon: Calendar, title: 'Cada horário no seu lugar', subtitle: 'Organize os atendimentos por profissional.', body: 'Consulte horários, bloqueios e status. Compartilhe o link público para receber solicitações de agendamento.', image: '/product/agenda.webp' },
-  { id: 'clientes', label: 'Clientes', Icon: Profile2User, title: 'Conheça quem volta ao seu negócio', subtitle: 'Informações que ajudam a preparar cada atendimento.', body: 'Reúna contatos e consulte o histórico disponível, aniversariantes e clientes que não retornam há algum tempo.', image: '/product/clientes.webp' },
-  { id: 'financeiro', label: 'Financeiro', Icon: DollarCircle, title: 'Entenda o movimento do seu negócio', subtitle: 'Entradas e despesas com contexto.', body: 'Consulte transações, formas de recebimento e saldo por período. Organize os registros do seu caixa.', image: '/product/financeiro.webp' },
-  { id: 'equipe', label: 'Equipe', Icon: Profile2User, title: 'Organize quem atende com você', subtitle: 'Profissionais e comissões cadastradas.', body: 'Cadastre profissionais, especialidades e valores de comissão. Consulte os atendimentos de cada profissional na agenda.', image: '/product/equipe.webp' },
+  { id: 'agenda', label: 'Agenda online', Icon: Calendar, title: 'Agenda inteligente para clínicas de estética', subtitle: 'Múltiplos profissionais, uma agenda só.', body: 'Gerencie as agendas de todos os seus profissionais sem conflitos. Seus pacientes agendam online e recebem confirmação automática. Controle total de salas e equipamentos.', image: 'https://images.pexels.com/photos/3997990/pexels-photo-3997990.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'prontuario', label: 'Prontuário digital', Icon: DocumentText, title: 'Organize o histórico de atendimento', subtitle: 'Informações do paciente reunidas em um só fluxo.', body: 'Registre procedimentos, alergias e observações com acesso vinculado aos usuários autorizados do estabelecimento.', image: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'financeiro', label: 'Otimização financeira', Icon: DollarCircle, title: 'Financeiro da clínica sob controle', subtitle: 'Saiba exatamente quanto cada procedimento gera.', body: 'Acompanhe receitas, custos por procedimento, ticket médio e taxa de retorno. Relatórios detalhados para tomada de decisão mais rápida e inteligente.', image: 'https://images.pexels.com/photos/3943882/pexels-photo-3943882.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'clientes', label: 'Gestão de pacientes', Icon: Profile2User, title: 'Fidelize seus pacientes com facilidade', subtitle: 'Acompanhe a evolução de cada tratamento.', body: 'Visualize o histórico completo, frequência de retorno e estágio de cada tratamento. Envie mensagens personalizadas de acompanhamento pós-procedimento.', image: 'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'marketing', label: 'Comunicação e marketing', Icon: Megaphone, title: 'Comunique-se com seus pacientes automaticamente', subtitle: 'Lembretes pré e pós-procedimento no automático.', body: 'Envie lembretes de preparo antes dos procedimentos, cuidados pós-tratamento e mensagens de reativação para pacientes que não retornam há algum tempo.', image: 'https://images.pexels.com/photos/4056535/pexels-photo-4056535.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'pagamentos', label: 'Pagamentos', Icon: Card, title: 'Registre formas de recebimento', subtitle: 'Organize os recebimentos informados pela clínica.', body: 'O processamento integrado de Pix, cartão e parcelamento ainda está em implantação.', image: 'https://images.pexels.com/photos/3764537/pexels-photo-3764537.jpeg?auto=compress&cs=tinysrgb&w=800' },
 ];
 
-const BENEFITS = ['Cadastro guiado', 'Agenda online', 'Gestão de clientes', 'Cadastro de serviços', 'Gestão de equipe', 'Visão financeira'];
+const BENEFITS = ['Atendimento por e-mail', 'Acesso controlado', 'Recursos para direitos do titular', 'Cadastro guiado', 'Gestão de atendimentos', 'Atualizações da plataforma'];
 
 const FAQS = [
-  { q: 'Posso organizar os atendimentos de uma equipe?', a: 'Sim. Cadastre os profissionais e filtre seus atendimentos na agenda. Os limites de equipe variam conforme o plano.' },
-  { q: 'Meus clientes podem solicitar horários online?', a: 'Sim. Compartilhe o link público do estabelecimento e acompanhe as solicitações na agenda.' },
-  { q: 'Consigo cadastrar meus serviços?', a: 'Sim. Informe nome, valor e duração para organizar o catálogo de serviços.' },
-  { q: 'Posso consultar o financeiro?', a: 'Sim. Consulte entradas, despesas e transações registradas, com filtros por período.' },
+  { q: 'O Appbello é adequado para clínicas com múltiplos profissionais?', a: 'Sim! Você pode cadastrar todos os seus profissionais, cada um com agenda, especialidade e sala independentes.' },
+  { q: 'Como o AppBello trata dados pessoais?', a: 'A plataforma aplica controles de acesso e disponibiliza uma Política de Privacidade. A clínica continua responsável por suas obrigações legais como agente de tratamento.' },
+  { q: 'Posso registrar fotos antes e depois dos procedimentos?', a: 'Sim, o prontuário digital suporta upload de imagens e permite comparar a evolução do tratamento ao longo do tempo.' },
+  { q: 'O sistema funciona para clínicas de qualquer especialidade estética?', a: 'Sim, o Appbello é flexível e se adapta a qualquer especialidade: estética facial, corporal, laser, depilação, entre outras.' },
 ];
 
 export default function ClinicaEsteticaPage() {
@@ -31,7 +32,7 @@ export default function ClinicaEsteticaPage() {
   const ActiveIcon = active.Icon;
 
   return (
-    <main className="marketing-site min-h-screen bg-white">
+    <main className="min-h-screen bg-white">
       <Navbar />
 
       <section className="pt-24 pb-16 bg-white overflow-hidden">
@@ -52,7 +53,7 @@ export default function ClinicaEsteticaPage() {
               <div className="relative">
                 <div className="absolute -left-8 top-8 w-48 h-48 bg-emerald-100 rounded-full -z-10" />
                 <div className="absolute -right-4 bottom-8 w-32 h-32 bg-teal-200 rounded-full -z-10" />
-                <div className="relative overflow-hidden shadow-sm" style={{ borderRadius: '50% 50% 55% 45% / 55% 45% 55% 45%', width: 'min(420px, calc(100vw - 3rem))', aspectRatio: '7 / 8' }}>
+                <div className="relative overflow-hidden shadow-2xl" style={{ borderRadius: '50% 50% 55% 45% / 55% 45% 55% 45%', width: '420px', height: '480px' }}>
                   <img src="https://images.pexels.com/photos/3997990/pexels-photo-3997990.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Clínica de estética" className="w-full h-full object-cover" />
                 </div>
                 <div className="absolute bottom-16 -right-4 bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg">
@@ -70,7 +71,7 @@ export default function ClinicaEsteticaPage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative">
               <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-emerald-100 rounded-full -z-10" />
-              <ProductPreview />
+              <img src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Sistema para clínica" className="rounded-3xl shadow-2xl w-full object-cover" style={{ aspectRatio: '4/3' }} />
             </div>
             <div className="space-y-5">
               <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight">
@@ -112,7 +113,7 @@ export default function ClinicaEsteticaPage() {
                   <Link href="/cadastro" className="inline-flex items-center gap-1.5 text-emerald-500 font-bold text-sm">Saiba mais <ArrowRight className="w-3.5 h-3.5"  variant="Outline" /></Link>
                 </div>
                 <div className="relative overflow-hidden" style={{ minHeight: '300px' }}>
-                  <img loading="lazy" decoding="async" src={active.image} alt={active.title} className="w-full h-full object-cover absolute inset-0" />
+                  <img src={active.image} alt={active.title} className="w-full h-full object-cover absolute inset-0" />
                 </div>
               </div>
             </div>
@@ -140,7 +141,7 @@ export default function ClinicaEsteticaPage() {
               </Link>
             </div>
             <div>
-              <img loading="lazy" decoding="async" src="https://images.pexels.com/photos/3757952/pexels-photo-3757952.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Clínica" className="rounded-3xl shadow-sm w-full object-cover" style={{ aspectRatio: '3/4' }} />
+              <img src="https://images.pexels.com/photos/3757952/pexels-photo-3757952.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Clínica" className="rounded-3xl shadow-xl w-full object-cover" style={{ aspectRatio: '3/4' }} />
             </div>
           </div>
         </div>
@@ -166,7 +167,7 @@ export default function ClinicaEsteticaPage() {
       <section>
         <div className="grid lg:grid-cols-2 min-h-[300px]">
           <div className="relative">
-            <img loading="lazy" decoding="async" src="https://images.pexels.com/photos/3997990/pexels-photo-3997990.jpeg?auto=compress&cs=tinysrgb&w=900" alt="CTA" className="w-full h-full object-cover" style={{ minHeight: '300px' }} />
+            <img src="https://images.pexels.com/photos/3997990/pexels-photo-3997990.jpeg?auto=compress&cs=tinysrgb&w=900" alt="CTA" className="w-full h-full object-cover" style={{ minHeight: '300px' }} />
             <div className="absolute inset-0 bg-black/30" />
           </div>
           <div className="bg-emerald-500 flex flex-col justify-center px-10 py-14 space-y-4">

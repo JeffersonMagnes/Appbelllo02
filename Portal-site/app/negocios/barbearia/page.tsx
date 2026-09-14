@@ -2,26 +2,27 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import ProductPreview from '@/components/landing/ProductPreview';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import { ArrowRight, Add, Minus, Calendar, DollarCircle, Profile2User, Box, Card } from 'iconsax-react';
 import { Megaphone } from 'lucide-react';
 
 const TABS = [
-  { id: 'agenda', label: 'Agenda online', Icon: Calendar, title: 'Cada horário no seu lugar', subtitle: 'Organize os atendimentos por profissional.', body: 'Consulte horários, bloqueios e status. Compartilhe o link público para receber solicitações de agendamento.', image: '/product/agenda.webp' },
-  { id: 'clientes', label: 'Clientes', Icon: Profile2User, title: 'Conheça quem volta ao seu negócio', subtitle: 'Informações que ajudam a preparar cada atendimento.', body: 'Reúna contatos e consulte o histórico disponível, aniversariantes e clientes que não retornam há algum tempo.', image: '/product/clientes.webp' },
-  { id: 'financeiro', label: 'Financeiro', Icon: DollarCircle, title: 'Entenda o movimento do seu negócio', subtitle: 'Entradas e despesas com contexto.', body: 'Consulte transações, formas de recebimento e saldo por período. Organize os registros do seu caixa.', image: '/product/financeiro.webp' },
-  { id: 'equipe', label: 'Equipe', Icon: Profile2User, title: 'Organize quem atende com você', subtitle: 'Profissionais e comissões cadastradas.', body: 'Cadastre profissionais, especialidades e valores de comissão. Consulte os atendimentos de cada profissional na agenda.', image: '/product/equipe.webp' },
+  { id: 'agenda', label: 'Agenda online', Icon: Calendar, title: 'Fila digital e agendamento para barbearias', subtitle: 'Chega de ligações e confusão na agenda.', body: 'Seus clientes entram na fila pelo celular ou agendam com antecedência. Você controla tudo em tempo real e ainda pode gerenciar a agenda de cada barbeiro de forma independente.', image: 'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'comissoes', label: 'Controle de comissões', Icon: DollarCircle, title: 'Comissões calculadas automaticamente', subtitle: 'Sem planilhas, sem erros, sem discussão.', body: 'Defina as regras de comissão de cada barbeiro e o sistema calcula tudo automaticamente. Relatórios detalhados por profissional e por período.', image: 'https://images.pexels.com/photos/1570807/pexels-photo-1570807.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'clientes', label: 'Gestão de clientes', Icon: Profile2User, title: 'Conheça cada cliente pelo nome', subtitle: 'Histórico completo de cada visita.', body: 'Registre preferências de corte, produtos usados e frequência de cada cliente. Surpreenda com um atendimento personalizado que faz as pessoas voltarem sempre.', image: 'https://images.pexels.com/photos/3998429/pexels-photo-3998429.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'estoque', label: 'Controle de estoque', Icon: Box, title: 'Nunca mais fique sem produto', subtitle: 'Alertas automáticos de estoque baixo.', body: 'Controle o consumo de produtos por serviço, receba alertas e saiba exatamente o que precisa repor. Integrado ao financeiro para controle de custos.', image: 'https://images.pexels.com/photos/3993444/pexels-photo-3993444.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'marketing', label: 'Comunicação', Icon: Megaphone, title: 'Organize o contato com seus clientes', subtitle: 'Use os dados cadastrados para acompanhar o relacionamento.', body: 'O envio automatizado de campanhas por WhatsApp ainda não faz parte do fluxo comercial disponível.', image: 'https://images.pexels.com/photos/3738338/pexels-photo-3738338.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'pagamentos', label: 'Recebimentos', Icon: Card, title: 'Registre as formas de recebimento', subtitle: 'Pix, cartão e dinheiro como informações do caixa.', body: 'O AppBello registra a forma informada pelo estabelecimento; não processa Pix ou cartão integrado neste momento.', image: 'https://images.pexels.com/photos/4386431/pexels-photo-4386431.jpeg?auto=compress&cs=tinysrgb&w=800' },
 ];
 
-const BENEFITS = ['Cadastro guiado', 'Agenda online', 'Gestão de clientes', 'Cadastro de serviços', 'Gestão de equipe', 'Visão financeira'];
+const BENEFITS = ['Atendimento por e-mail', 'Cadastro guiado', 'Sem cartão para criar a conta', 'Agenda online', 'Gestão de equipe', 'Atualizações da plataforma'];
 
 const FAQS = [
-  { q: 'Posso organizar os atendimentos de uma equipe?', a: 'Sim. Cadastre os profissionais e filtre seus atendimentos na agenda. Os limites de equipe variam conforme o plano.' },
-  { q: 'Meus clientes podem solicitar horários online?', a: 'Sim. Compartilhe o link público do estabelecimento e acompanhe as solicitações na agenda.' },
-  { q: 'Consigo cadastrar meus serviços?', a: 'Sim. Informe nome, valor e duração para organizar o catálogo de serviços.' },
-  { q: 'Posso consultar o financeiro?', a: 'Sim. Consulte entradas, despesas e transações registradas, com filtros por período.' },
+  { q: 'O sistema funciona para barbearias com vários barbeiros?', a: 'Sim! Você pode cadastrar toda sua equipe com agendas, metas e comissões independentes para cada profissional.' },
+  { q: 'Como funciona o agendamento digital?', a: 'O cliente acessa o link da barbearia, escolhe serviço, profissional e horário e envia a solicitação de agendamento.' },
+  { q: 'Consigo ver o ranking de desempenho dos barbeiros?', a: 'Sim! O painel mostra o desempenho de cada barbeiro com métricas de atendimentos, receita gerada e avaliações dos clientes.' },
+  { q: 'É possível usar o sistema no celular?', a: 'Sim, o Appbello funciona perfeitamente em smartphones, tablets e computadores, de qualquer lugar.' },
 ];
 
 export default function BarbeariaPage() {
@@ -31,7 +32,7 @@ export default function BarbeariaPage() {
   const ActiveIcon = active.Icon;
 
   return (
-    <main className="marketing-site min-h-screen bg-white">
+    <main className="min-h-screen bg-white">
       <Navbar />
 
       <section className="pt-24 pb-16 bg-white overflow-hidden">
@@ -42,7 +43,7 @@ export default function BarbeariaPage() {
                 Os recursos que a sua <span className="text-blue-500">barbearia</span> precisa?<br />Está tudo aqui
               </h1>
               <p className="text-gray-600 text-lg leading-relaxed max-w-lg">
-                Organize os horários dos barbeiros, acompanhe seus clientes e consulte comandas e financeiro em uma só plataforma.
+                Organize sua agenda, gerencie sua equipe e venda mais com o sistema para barbearia que conta com: fila digital, controle de comissões automático, gestão financeira completa e muito mais.
               </p>
               <Link href="/cadastro" className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm px-8 py-4 rounded-full transition-colors">
                 CRIAR CONTA DE AVALIAÇÃO <ArrowRight className="w-4 h-4"  variant="Outline" />
@@ -52,7 +53,7 @@ export default function BarbeariaPage() {
               <div className="relative">
                 <div className="absolute -left-8 top-8 w-48 h-48 bg-blue-100 rounded-full -z-10" />
                 <div className="absolute -right-4 bottom-8 w-32 h-32 bg-cyan-200 rounded-full -z-10" />
-                <div className="relative overflow-hidden shadow-sm" style={{ borderRadius: '55% 45% 60% 40% / 45% 55% 45% 55%', width: 'min(420px, calc(100vw - 3rem))', aspectRatio: '7 / 8' }}>
+                <div className="relative overflow-hidden shadow-2xl" style={{ borderRadius: '55% 45% 60% 40% / 45% 55% 45% 55%', width: '420px', height: '480px' }}>
                   <img src="https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Barbearia" className="w-full h-full object-cover" />
                 </div>
                 <div className="absolute bottom-16 -right-4 bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg">
@@ -70,14 +71,14 @@ export default function BarbeariaPage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative">
               <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-blue-100 rounded-full -z-10" />
-              <ProductPreview />
+              <img src="https://images.pexels.com/photos/3998391/pexels-photo-3998391.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Barbearia sistema" className="rounded-3xl shadow-2xl w-full object-cover" style={{ aspectRatio: '4/3' }} />
             </div>
             <div className="space-y-5">
               <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight">
                 <span className="text-blue-500">Controle sua barbearia</span> e dê autonomia para seus barbeiros
               </h2>
               <p className="text-gray-600 leading-relaxed">
-                Da agenda ao fechamento, acompanhe os atendimentos da equipe e mantenha os registros do seu negócio organizados.
+                Com o Appbello, você tem tudo para fazer sua barbearia crescer: fila digital, agendamento online, controle financeiro e ranking de desempenho da equipe. Chega de perder tempo com planilhas e ligações.
               </p>
               <Link href="/cadastro" className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm px-8 py-4 rounded-full transition-colors">
                 CRIAR CONTA DE AVALIAÇÃO <ArrowRight className="w-4 h-4"  variant="Outline" />
@@ -112,7 +113,7 @@ export default function BarbeariaPage() {
                   <Link href="/cadastro" className="inline-flex items-center gap-1.5 text-blue-500 font-bold text-sm">Saiba mais <ArrowRight className="w-3.5 h-3.5"  variant="Outline" /></Link>
                 </div>
                 <div className="relative overflow-hidden" style={{ minHeight: '300px' }}>
-                  <img loading="lazy" decoding="async" src={active.image} alt={active.title} className="w-full h-full object-cover absolute inset-0" />
+                  <img src={active.image} alt={active.title} className="w-full h-full object-cover absolute inset-0" />
                 </div>
               </div>
             </div>
@@ -140,7 +141,7 @@ export default function BarbeariaPage() {
               </Link>
             </div>
             <div>
-              <img loading="lazy" decoding="async" src="https://images.pexels.com/photos/1570807/pexels-photo-1570807.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Barbearia" className="rounded-3xl shadow-sm w-full object-cover" style={{ aspectRatio: '3/4' }} />
+              <img src="https://images.pexels.com/photos/1570807/pexels-photo-1570807.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Barbearia" className="rounded-3xl shadow-xl w-full object-cover" style={{ aspectRatio: '3/4' }} />
             </div>
           </div>
         </div>
@@ -166,7 +167,7 @@ export default function BarbeariaPage() {
       <section>
         <div className="grid lg:grid-cols-2 min-h-[300px]">
           <div className="relative">
-            <img loading="lazy" decoding="async" src="https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=900" alt="CTA" className="w-full h-full object-cover" style={{ minHeight: '300px' }} />
+            <img src="https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=900" alt="CTA" className="w-full h-full object-cover" style={{ minHeight: '300px' }} />
             <div className="absolute inset-0 bg-black/30" />
           </div>
           <div className="bg-blue-500 flex flex-col justify-center px-10 py-14 space-y-4">

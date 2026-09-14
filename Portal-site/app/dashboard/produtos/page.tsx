@@ -209,8 +209,8 @@ export default function ProdutosPage() {
           </div>
         ) : (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="overflow-x-auto overscroll-x-contain" tabIndex={0} role="region" aria-label="Estoque de produtos. Role para ver todas as colunas.">
-              <table className="w-full min-w-[680px] text-sm tabular-nums">
+            <div className="overflow-x-auto">
+              <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-50">
                     <th className="text-left p-4 text-xs font-semibold text-gray-500 uppercase">Produto</th>

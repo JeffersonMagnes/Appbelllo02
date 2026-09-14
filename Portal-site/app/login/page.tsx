@@ -60,7 +60,7 @@ export default function LoginPage() {
       <form onSubmit={handleSubmit} className="space-y-4">
 
         {error && (
-          <div role="alert" className="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+          <div className="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
             <span className="mt-0.5 flex-shrink-0">⚠️</span>
             {error}
           </div>
@@ -68,9 +68,8 @@ export default function LoginPage() {
 
         {/* E-mail */}
         <div className="space-y-1.5">
-          <label htmlFor="login-email" className="block text-sm font-semibold text-gray-700">E-mail</label>
+          <label className="block text-sm font-semibold text-gray-700">E-mail</label>
           <input
-            id="login-email"
             type="email"
             placeholder="seu@email.com"
             value={email}
@@ -84,14 +83,13 @@ export default function LoginPage() {
         {/* Senha */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label htmlFor="login-password" className="block text-sm font-semibold text-gray-700">Senha</label>
+            <label className="block text-sm font-semibold text-gray-700">Senha</label>
             <Link href="/recuperar-senha" className="text-xs text-[#5333ED] hover:underline font-semibold">
               Esqueci minha senha
             </Link>
           </div>
           <div className="relative">
             <input
-              id="login-password"
               type={showPw ? 'text' : 'password'}
               placeholder="••••••••"
               value={password}
@@ -102,10 +100,8 @@ export default function LoginPage() {
             />
             <button
               type="button"
-              aria-label={showPw ? "Ocultar senha" : "Mostrar senha"}
-              aria-pressed={showPw}
               onClick={() => setShowPw(!showPw)}
-              className="absolute right-2 p-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
             >
               {showPw
                 ? <EyeSlash className="w-5 h-5" variant="Outline" />

@@ -53,7 +53,7 @@ export default function Pricing() {
     <section id="precos" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
-          <h2 className="text-3xl lg:text-4xl font-semibold text-gray-900 mb-3">Planos e preços</h2>
+          <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-3">Planos e preços</h2>
           <p className="text-gray-500 max-w-xl mx-auto">
             Escolha o plano ideal para o seu negócio. Cancele quando quiser.
           </p>
@@ -63,9 +63,9 @@ export default function Pricing() {
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative bg-white rounded-2xl p-5 lg:p-8 flex flex-col transition-all duration-300 ${
+              className={`relative bg-white rounded-2xl p-8 flex flex-col transition-all duration-300 ${
                 plan.highlight
-                  ? 'border-2 border-[#6666cc] shadow-sm'
+                  ? 'border-2 border-[#6666cc] shadow-xl shadow-[#6666cc]/10'
                   : 'border border-gray-100 hover:shadow-md'
               }`}
             >
@@ -78,7 +78,7 @@ export default function Pricing() {
               <div className="mb-6">
                 <div className="text-sm font-semibold text-gray-500 mb-1">{plan.name}</div>
                 <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-4xl font-semibold tabular-nums text-gray-900">{plan.price}</span>
+                  <span className="text-4xl font-extrabold text-gray-900">{plan.price}</span>
                   <span className="text-gray-400 font-medium text-sm">{plan.period}</span>
                 </div>
                 <p className="text-gray-500 text-sm">{plan.description}</p>
@@ -97,14 +97,16 @@ export default function Pricing() {
                 ))}
               </ul>
 
-              <Link href="/cadastro"
-                  className={`block text-center w-full py-3 rounded-xl font-bold text-sm transition-all ${
+              <Link href="/cadastro">
+                <button
+                  className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${
                     plan.highlight
                       ? 'gradient-primary text-white hover:opacity-90 shadow-md shadow-[#6666cc]/20'
                       : 'bg-gray-50 text-gray-800 border border-gray-200 hover:border-[#6666cc] hover:text-[#6666cc]'
                   }`}
                 >
                   {plan.name === 'Teste gratuito' ? 'Começar teste gratuito' : `Conhecer ${plan.name}`}
+                </button>
               </Link>
             </div>
           ))}

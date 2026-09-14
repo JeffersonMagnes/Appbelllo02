@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <MobileMenuContext.Provider value={{ toggle: () => setMobileOpen(prev => !prev) }}>
-      <div className="app-shell flex h-screen bg-gray-50 font-outfit overflow-hidden">
+      <div className="flex h-screen bg-gray-50 font-outfit overflow-hidden">
         <Sidebar
           collapsed={collapsed}
           onCollapse={setCollapsed}
