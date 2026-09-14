@@ -99,8 +99,6 @@ export default async function handler() {
     .in('key', ['notifications', 'geral']);
 
   const notif = (settingsRows?.find(r => r.key === 'notifications')?.value ?? {}) as Record<string, boolean>;
-  const geral = (settingsRows?.find(r => r.key === 'geral')?.value ?? {}) as { trialDays?: number };
-  const trialDays = geral.trialDays ?? 30;
 
   const saRaw = process.env.FIREBASE_SERVICE_ACCOUNT;
   if (!saRaw) {
@@ -121,6 +119,11 @@ export default async function handler() {
 
   if (!establishments?.length) return;
 
+  // Single server-side source of truth for trial days remaining — replaces
+  // this job's own copy of the trial-length/extra-days formula.
+  const { data: accessRows } = await (supabase as any).rpc('admin_list_establishment_access');
+  const accessById = new Map(((accessRows as any[]) ?? []).map((a: any) => [a.establishment_id, a]));
+
   const ownerIds = establishments.map(e => e.owner_id as string);
   const { data: profiles } = await supabase
     .from('profiles')
@@ -139,12 +142,14 @@ export default async function handler() {
     const webSub = webSubMap.get(est.owner_id as string);
     if (!pushToken && !webSub) continue;
     const plan = (est.subscription_plan as string) ?? 'trial';
+    const access = accessById.get(est.id as string);
+    const daysLeftShared = access?.status === 'trial' || access?.status === 'trial_expired'
+      ? access.trial_days_left ?? null
+      : null;
 
     // Trial expirando em 3 dias
     if (notif.trialReminder3 && plan === 'trial' && est.trial_started_at) {
-      const trialEnd = new Date(new Date(est.trial_started_at as string).getTime() + trialDays * 86400000);
-      trialEnd.setHours(0, 0, 0, 0);
-      const daysLeft = Math.round((trialEnd.getTime() - today.getTime()) / 86400000);
+      const daysLeft = daysLeftShared;
       if (daysLeft === 3) {
         await sendPush(sa.project_id, accessToken, pushToken,
           '⏳ Seu trial expira em 3 dias',
@@ -158,9 +163,7 @@ export default async function handler() {
 
     // Trial expirando amanhã
     if (notif.trialReminder1 && plan === 'trial' && est.trial_started_at) {
-      const trialEnd = new Date(new Date(est.trial_started_at as string).getTime() + trialDays * 86400000);
-      trialEnd.setHours(0, 0, 0, 0);
-      const daysLeft = Math.round((trialEnd.getTime() - today.getTime()) / 86400000);
+      const daysLeft = daysLeftShared;
       if (daysLeft === 1) {
         await sendPush(sa.project_id, accessToken, pushToken,
           '🚨 Último dia do seu trial!',

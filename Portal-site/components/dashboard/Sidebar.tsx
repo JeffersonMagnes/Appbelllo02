@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { Calendar, Profile2User, Scissor, UserTick, DollarCircle, Box, Setting2, ArrowLeft2, ArrowRight2, MagicStar, Crown, Gift, Note, Wallet, Chart, Link2, ClipboardText, Printer, ShoppingBag, ProfileCircle } from 'iconsax-react';
 import { LayoutDashboard, LogOut, X } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -68,14 +68,16 @@ export default function Sidebar({ collapsed = false, onCollapse, mobileOpen = fa
         {mobile ? (
           <button
             onClick={onMobileClose}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors"
+            aria-label="Fechar menu"
+            className="p-2.5 rounded-lg text-gray-500 hover:text-gray-600 hover:bg-gray-50 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         ) : (
           <button
+            aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
             onClick={() => onCollapse?.(!collapsed)}
-            className="p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors flex-shrink-0"
+            className="p-2 rounded-lg text-gray-500 hover:text-gray-600 hover:bg-gray-50 transition-colors flex-shrink-0"
           >
             {collapsed ? <ArrowRight2 className="w-4 h-4" variant="Outline" /> : <ArrowLeft2 className="w-4 h-4" variant="Outline" />}
           </button>
@@ -83,7 +85,7 @@ export default function Sidebar({ collapsed = false, onCollapse, mobileOpen = fa
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+      <nav aria-label="Navegação principal" className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item);
@@ -91,15 +93,17 @@ export default function Sidebar({ collapsed = false, onCollapse, mobileOpen = fa
             <Link
               key={item.href}
               href={item.href}
+              aria-current={active ? "page" : undefined}
+              aria-label={item.label}
               onClick={mobile ? onMobileClose : undefined}
               className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group',
+                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors duration-200 group',
                 active
-                  ? 'gradient-primary text-white shadow-md shadow-brand-primary/20'
+                  ? 'bg-[#eeeef9] text-[#4d4d9c] font-semibold'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
               )}
               title={!mobile && collapsed ? item.label : undefined}>
-              <Icon className={cn('w-5 h-5 flex-shrink-0', active ? 'text-white' : 'text-gray-500 group-hover:text-gray-700')} variant="Outline" />
+              <Icon className={cn('w-5 h-5 flex-shrink-0', active ? 'text-[#5959b5]' : 'text-gray-500 group-hover:text-gray-700')} variant="Outline" />
               {(mobile || !collapsed) && <span>{item.label}</span>}
             </Link>
           );
@@ -125,27 +129,20 @@ export default function Sidebar({ collapsed = false, onCollapse, mobileOpen = fa
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          'hidden md:flex flex-col bg-white border-r border-gray-100 h-screen sticky top-0 transition-all duration-300',
+          'hidden md:flex flex-col bg-white border-r border-gray-100 h-[100dvh] sticky top-0 shrink-0 transition-[width] duration-200',
           collapsed ? 'w-16' : 'w-60'
         )}
       >
         {sidebarContent(false)}
       </aside>
 
-      {/* Mobile sidebar overlay */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={onMobileClose}
-          />
-          {/* Sidebar panel */}
-          <aside className="absolute inset-y-0 left-0 w-72 flex flex-col bg-white shadow-2xl animate-in slide-in-from-left duration-200">
-            {sidebarContent(true)}
-          </aside>
-        </div>
-      )}
+      <Sheet open={mobileOpen} onOpenChange={(open) => { if (!open) onMobileClose?.(); }}>
+        <SheetContent side="left" className="w-72 max-w-[calc(100vw-3rem)] p-0 flex flex-col [&>button]:hidden">
+          <SheetTitle className="sr-only">Menu principal</SheetTitle>
+          <SheetDescription className="sr-only">Navegue pelas áreas do AppBello.</SheetDescription>
+          {sidebarContent(true)}
+        </SheetContent>
+      </Sheet>
     </>
   );
 }

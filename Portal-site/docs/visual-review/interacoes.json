@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Mobile hero, menu, focus return",
+    "passed": true
+  },
+  {
+    "name": "Product tabs, keyboard and optimized images",
+    "passed": true
+  },
+  {
+    "name": "FAQ and editorial details expand",
+    "passed": true
+  },
+  {
+    "name": "Login labels and password visibility",
+    "passed": true
+  },
+  {
+    "name": "Desktop dropdown keyboard navigation",
+    "passed": true
+  },
+  {
+    "name": "Agenda create dialog fits, inline client and Escape",
+    "passed": true
+  },
+  {
+    "name": "Agenda block dialog and views",
+    "passed": true
+  },
+  {
+    "name": "Appointment details keyboard and nested document dialog",
+    "passed": true
+  },
+  {
+    "name": "Dashboard navigation drawer, keyboard focus and notifications",
+    "passed": true
+  },
+  {
+    "name": "Clients search and empty state",
+    "passed": true
+  },
+  {
+    "name": "Finance period and transaction form",
+    "passed": true
+  },
+  {
+    "name": "Stock table scrolls without page overflow",
+    "passed": true
+  },
+  {
+    "name": "Admin navigation uses a mobile drawer",
+    "passed": true
+  },
+  {
+    "name": "Reduced motion is respected",
+    "passed": true
+  }
+]

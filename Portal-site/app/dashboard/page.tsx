@@ -89,10 +89,10 @@ export default function DashboardPage() {
 
       const { data: estRaw } = await supabase
         .from('establishments')
-        .select('id, name, address, logo_url, hours_json, monthly_goal, trial_started_at, extra_trial_days')
+        .select('id, name, address, logo_url, hours_json, monthly_goal')
         .eq('owner_id', user.id)
         .maybeSingle();
-      const est = estRaw as { id: string; name?: string; address?: string; logo_url?: string; hours_json?: any; monthly_goal?: number; trial_started_at?: string; extra_trial_days?: number } | null;
+      const est = estRaw as { id: string; name?: string; address?: string; logo_url?: string; hours_json?: any; monthly_goal?: number } | null;
       if (!est) { setLoading(false); return; }
       setEstId(est.id);
       setEstName(est.name || '');
@@ -104,14 +104,12 @@ export default function DashboardPage() {
         localStorage.setItem(demoKey, 'true');
       }
       if (est.monthly_goal) setMonthlyGoal(est.monthly_goal);
-      if (est.trial_started_at) {
-        const totalTrialDays = 30 + (est.extra_trial_days ?? 0);
-        const trialStart = new Date(est.trial_started_at);
-        const trialEnd = new Date(trialStart);
-        trialEnd.setDate(trialEnd.getDate() + totalTrialDays);
-        const diffMs = trialEnd.getTime() - Date.now();
-        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-        setTrialDaysLeft(Math.max(0, diffDays));
+
+      // Single server-side source of truth for trial/subscription status —
+      // never computed from the device clock.
+      const { data: access } = await (supabase as any).rpc('get_my_establishment_access');
+      if (access) {
+        setTrialDaysLeft(access.status === 'subscription_active' ? null : (access.trial_days_left ?? 0));
       }
 
       const today = new Date();

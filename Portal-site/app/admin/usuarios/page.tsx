@@ -53,18 +53,6 @@ function businessTypeLabel(bt: string | null): string {
   return map[bt ?? ''] ?? 'Estabelecimento';
 }
 
-function deriveStatus(u: { active: boolean; created_at: string }): string {
-  if (!u.active) return 'bloqueado';
-  const days = daysAgo(u.created_at);
-  if (days <= 30) return 'trial';
-  return 'ativo';
-}
-
-const PLAN_BY_DAYS: (days: number) => string = (days) => {
-  if (days <= 30) return 'trial';
-  return 'pro';
-};
-
 const STATUS_FILTERS = ['Todos', 'Trial', 'Ativo', 'Bloqueado'];
 const BT_FILTERS = ['Todos', 'Salão', 'Barbearia', 'Clínica'];
 
@@ -117,24 +105,31 @@ export default function UsuariosPage() {
     setLoading(true);
     setError(null);
     const supabase = createClient();
-    const { data, error: err } = await supabase.rpc('get_admin_establishments');
+    const [{ data, error: err }, { data: accessRows }] = await Promise.all([
+      supabase.rpc('get_admin_establishments'),
+      (supabase as any).rpc('admin_list_establishment_access'),
+    ]);
     if (err) {
       setError(err.message);
       setLoading(false);
       return;
     }
-    const rows = (data as any[]) ?? [];
+    // Single server-side source of truth for trial/subscription status —
+    // every establishment here reads the same formula the dashboard/mobile use.
+    const accessById = new Map(((accessRows as any[]) ?? []).map((a: any) => [a.establishment_id, a]));
+    const rows = (data as unknown as any[]) ?? [];
     const mapped: AdminUser[] = rows.map((row: any) => {
       const days = daysAgo(row.created_at);
-      const extraDays = row.extra_trial_days ?? 0;
-      const status = deriveStatus({ active: row.active, created_at: row.created_at });
-      const trialDaysLeft = Math.max(0, 30 + extraDays - days);
+      const access = accessById.get(row.id);
+      const status = !row.active ? 'bloqueado' : access?.status === 'subscription_active' ? 'ativo' : 'trial';
+      const plan = access?.status === 'subscription_active' ? (access.plan_id || 'pro') : 'trial';
+      const trialDaysLeft = access?.trial_days_left ?? 0;
       return {
         ...row,
-        extra_trial_days: extraDays,
+        extra_trial_days: row.extra_trial_days ?? 0,
         daysUsing: days,
         timeUsingLabel: timeLabel(days),
-        plan: PLAN_BY_DAYS(days),
+        plan,
         status,
         trialDaysLeft,
       };
@@ -163,8 +158,8 @@ export default function UsuariosPage() {
     if (!target) return;
     const supabase = createClient();
     await (supabase.from('establishments') as any).update({ active: !target.active }).eq('id', banId);
-    setUsers(prev => prev.map(u => u.id === banId ? { ...u, active: !u.active, status: !target.active ? deriveStatus({ ...u, active: true }) : 'bloqueado' } : u));
     setBanId(null);
+    fetchUsers();
   };
 
   const handleExtendTrial = async () => {

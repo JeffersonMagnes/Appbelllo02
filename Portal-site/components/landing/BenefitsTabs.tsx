@@ -1,158 +1,44 @@
 'use client';
 
-import { useState } from 'react';
-import { Calendar, Profile2User, Clock, Book1 } from 'iconsax-react';
-import { Headphones as HeadphonesIcon, Users, BookOpen } from 'lucide-react';
+import Image from 'next/image';
+import { CalendarDays, Users, Wallet, Package, Check } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-const tabs = [
-  {
-    id: 'vantagens',
-    label: 'Vantagens',
-    icon: Calendar,
-    heading: 'Mais agendamentos, menos cancelamentos',
-    description:
-      'Com o Appbello, seus clientes podem solicitar agendamentos online a qualquer hora. Você acompanha e organiza os atendimentos na agenda do estabelecimento.',
-    image: 'https://images.pexels.com/photos/3738338/pexels-photo-3738338.jpeg?auto=compress&cs=tinysrgb&w=800',
-    points: [
-      'Agendamento online disponível 24h',
-      'Registro centralizado de agendamentos',
-      'Acompanhamento do status do atendimento',
-      'Histórico completo de atendimentos',
-    ],
-  },
-  {
-    id: 'comunidade',
-    label: 'Comunidade',
-    icon: Users,
-    heading: 'Gestão compartilhada com sua equipe',
-    description:
-      'Cadastre profissionais, organize permissões e mantenha as informações essenciais do estabelecimento centralizadas.',
-    image: 'https://images.pexels.com/photos/3993304/pexels-photo-3993304.jpeg?auto=compress&cs=tinysrgb&w=800',
-    points: [
-      'Cadastro de profissionais',
-      'Permissões por integrante',
-      'Agenda por profissional',
-      'Dados centralizados',
-    ],
-  },
-  {
-    id: 'suporte',
-    label: 'Suporte',
-    icon: HeadphonesIcon,
-    heading: 'Suporte humano quando você mais precisa',
-    description:
-      'Entre em contato pelo canal oficial de e-mail para dúvidas sobre cadastro, configuração e uso da plataforma.',
-    image: 'https://images.pexels.com/photos/3771807/pexels-photo-3771807.jpeg?auto=compress&cs=tinysrgb&w=800',
-    points: [
-      'Atendimento por e-mail',
-      'Orientações de configuração',
-      'Ajuda sobre os fluxos do produto',
-      'Canal oficial identificado',
-    ],
-  },
-  {
-    id: 'disponibilidade',
-    label: 'Disponibilidade',
-    icon: Clock,
-    heading: 'Acesso pela web e pelo aplicativo',
-    description:
-      'A plataforma utiliza serviços de infraestrutura em nuvem. Indicadores formais de disponibilidade e recuperação serão publicados quando houver SLA contratado.',
-    image: 'https://images.pexels.com/photos/3973330/pexels-photo-3973330.jpeg?auto=compress&cs=tinysrgb&w=800',
-    points: [
-      'Infraestrutura em nuvem',
-      'Acesso Web e Mobile',
-      'Monitoramento em evolução',
-      'Política de disponibilidade transparente',
-    ],
-  },
-  {
-    id: 'treinamento',
-    label: 'Treinamento',
-    icon: BookOpen,
-    heading: 'Configure o AppBello no seu ritmo',
-    description:
-      'O onboarding do produto orienta o cadastro das informações essenciais para iniciar a operação.',
-    image: 'https://images.pexels.com/photos/3769747/pexels-photo-3769747.jpeg?auto=compress&cs=tinysrgb&w=800',
-    points: [
-      'Cadastro guiado',
-      'Configuração do estabelecimento',
-      'Inclusão de serviços e equipe',
-      'Acompanhamento do progresso inicial',
-    ],
-  },
+const views = [
+  { id: 'agenda', label: 'Agenda', icon: CalendarDays, title: 'Cada horário no seu lugar.', description: 'Visualize o dia, a semana ou o mês. Consulte os atendimentos, filtre por profissional e acompanhe cada status sem perder o contexto.', points: ['Visões de dia, semana, mês e ano', 'Filtros por profissional', 'Solicitações do agendamento online'], image: '/product/agenda.webp' },
+  { id: 'clientes', label: 'Clientes', icon: Users, title: 'Um atendimento começa antes da visita.', description: 'Reúna contatos e informações dos seus clientes. Encontre quem está voltando, os aniversariantes e quem faz tempo que não aparece.', points: ['Busca por nome, e-mail ou telefone', 'Histórico e informações centralizadas', 'Listas de retornos e aniversariantes'], image: '/product/clientes.webp' },
+  { id: 'financeiro', label: 'Financeiro', icon: Wallet, title: 'Entenda o movimento do seu negócio.', description: 'Acompanhe entradas, despesas e resultado por período. Consulte o histórico de transações e a distribuição por forma de recebimento.', points: ['Receitas, despesas e saldo em destaque', 'Histórico de transações', 'Comparação entre períodos'], image: '/product/financeiro.webp' },
+  { id: 'produtos', label: 'Estoque', icon: Package, title: 'Seus produtos também fazem parte da gestão.', description: 'Consulte produtos, quantidades e valores em uma lista organizada. Tenha as informações necessárias para planejar suas reposições.', points: ['Cadastro de produtos', 'Quantidades e estoque mínimo', 'Preços e custos para consulta'], image: '/product/produtos.webp' },
 ];
-
 export default function BenefitsTabs() {
-  const [active, setActive] = useState('vantagens');
-  const tab = tabs.find((t) => t.id === active)!;
-  const Icon = tab.icon;
-
-  return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <p className="text-[#6666cc] font-semibold text-sm uppercase tracking-widest mb-3">Por que escolher o Appbello</p>
-          <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">
-            Outros{' '}
-            <span className="gradient-text">benefícios</span>
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Mais do que um sistema, uma parceria para o crescimento do seu negócio.
-          </p>
-        </div>
-
-        {/* Tab nav */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {tabs.map((t) => {
-            const TabIcon = t.icon;
-            return (
-              <button
-                key={t.id}
-                onClick={() => setActive(t.id)}
-                className={`flex items-center gap-2 px-5 py-3 rounded-full font-semibold text-sm transition-all duration-200 ${
-                  active === t.id
-                    ? 'gradient-primary text-white shadow-lg shadow-[#6666cc]/30'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                <TabIcon className="w-4 h-4" />
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Tab content */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <div className="w-12 h-12 gradient-primary rounded-2xl flex items-center justify-center">
-              <Icon className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-3xl font-extrabold text-gray-900 leading-tight">{tab.heading}</h3>
-            <p className="text-gray-600 text-lg leading-relaxed">{tab.description}</p>
-            <ul className="space-y-3">
-              {tab.points.map((p) => (
-                <li key={p} className="flex items-center gap-3 text-gray-700">
-                  <div className="w-5 h-5 rounded-full bg-[#6666cc]/10 flex items-center justify-center flex-shrink-0">
-                    <div className="w-2 h-2 rounded-full bg-[#6666cc]" />
-                  </div>
-                  {p}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="relative rounded-3xl overflow-hidden shadow-2xl h-96 lg:h-[480px]">
-            <img
-              key={tab.id}
-              src={tab.image}
-              alt={tab.heading}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent" />
-          </div>
-        </div>
+  return <section id="produto" className="bg-white py-16 sm:py-20">
+    <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      <div className="mb-8 max-w-2xl">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#5959b5]">Por dentro do AppBello</p>
+        <h2 className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">Menos ferramentas soltas.<br />Mais visão do todo.</h2>
+        <p className="mt-4 leading-relaxed text-gray-600">Explore as telas que ajudam a organizar sua operação, do atendimento ao fechamento.</p>
       </div>
-    </section>
-  );
+      <Tabs defaultValue="agenda">
+        <TabsList className="mb-8 h-auto w-full justify-start gap-1 overflow-x-auto rounded-xl bg-[#f3f3f9] p-1 sm:w-auto">{views.map(({ id, label, icon: Icon }) =>
+          <TabsTrigger key={id} value={id} className="gap-2 rounded-lg px-3 py-2.5 sm:px-5">
+            <Icon size={16} aria-hidden="true" />{label}</TabsTrigger>)}</TabsList>{views.map(view =>
+              <TabsContent key={view.id} value={view.id} className="ui-fade mt-0">
+                <div className="grid items-center gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:gap-12">
+                  <div>
+                    <h3 className="text-2xl font-semibold leading-tight tracking-tight text-gray-900 sm:text-3xl">{view.title}</h3>
+                    <p className="mt-4 leading-relaxed text-gray-600">{view.description}</p>
+                    <ul className="mt-6 space-y-3">{view.points.map(point =>
+                      <li key={point} className="flex items-start gap-2 text-sm text-gray-700">
+                        <Check size={16} className="mt-0.5 shrink-0 text-[#287a78]" aria-hidden="true" />{point}</li>)}</ul>
+                  </div>
+                  <figure className="min-w-0">
+                    <div className="overflow-hidden rounded-xl border border-gray-200 bg-[#f7f8fb]">
+                      <Image src={view.image} alt={`Tela de ${view.label.toLowerCase()} do AppBello com dados fictícios de demonstração`} width={1440} height={950} sizes="(max-width: 1023px) 100vw, 720px" className="h-auto w-full object-contain" />
+                    </div>
+                    <figcaption className="mt-3 text-xs text-gray-500">Tela do AppBello renderizada com dados fictícios para demonstração.</figcaption>
+                  </figure>
+                </div>
+              </TabsContent>)}</Tabs>
+    </div>
+  </section>;
 }

@@ -1,14 +1,15 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Scissor, MagicStar, Tree, Star1 } from 'iconsax-react';
 
 const types = [
   {
     title: 'Salão de Beleza',
     slug: 'salao-de-beleza',
-    description: 'Controle total de agendamentos, equipe e fidelização de clientes.',
+    description: 'Agendamentos, equipe e informações dos clientes em um só lugar.',
     image: 'https://images.pexels.com/photos/3065209/pexels-photo-3065209.jpeg?auto=compress&cs=tinysrgb&w=700',
-    tag: 'Mais popular',
-    features: ['Agendamento online 24h', 'Gestão de equipe', 'Fidelização de clientes'],
+    tag: 'Salões',
+    features: ['Agendamento online 24h', 'Gestão de equipe', 'Histórico de atendimentos'],
     icon: Scissor,
     color: 'from-pink-500 to-rose-400',
   },
@@ -17,8 +18,8 @@ const types = [
     slug: 'barbearia',
     description: 'Organize sua agenda e equipe para vender mais com menos esforço.',
     image: 'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=700',
-    tag: 'Trending',
-    features: ['Fila de espera digital', 'Controle de comissões', 'App para clientes'],
+    tag: 'Barbearias',
+    features: ['Agenda por profissional', 'Controle de comissões', 'Link de agendamento'],
     icon: Star1,
     color: 'from-blue-500 to-cyan-400',
   },
@@ -27,18 +28,18 @@ const types = [
     slug: 'clinica-de-estetica',
     description: 'Gerencie profissionais e atraia mais clientes para sua clínica.',
     image: 'https://images.pexels.com/photos/3997990/pexels-photo-3997990.jpeg?auto=compress&cs=tinysrgb&w=700',
-    tag: 'Completo',
-    features: ['Prontuário digital', 'Lembretes automáticos', 'Relatórios financeiros'],
+    tag: 'Estética',
+    features: ['Fichas de anamnese', 'Cadastro de serviços', 'Relatórios financeiros'],
     icon: Tree,
     color: 'from-emerald-500 to-teal-400',
   },
   {
     title: 'Studios',
     slug: 'studios',
-    description: 'Perfeito para studios de pilates, yoga, nail art e muito mais.',
+    description: 'Para nail designers, espaços de beleza e profissionais autônomos.',
     image: 'https://images.pexels.com/photos/4056535/pexels-photo-4056535.jpeg?auto=compress&cs=tinysrgb&w=700',
-    tag: 'Novo',
-    features: ['Aulas em grupo', 'Pacotes e mensalidades', 'Check-in digital'],
+    tag: 'Studios',
+    features: ['Atendimentos individuais', 'Serviços e valores', 'Cadastro de clientes'],
     icon: MagicStar,
     color: 'from-amber-500 to-orange-400',
   },
@@ -67,28 +68,29 @@ export default function BusinessTypes() {
               <Link
                 key={type.title}
                 href={`/negocios/${type.slug}`}
-                className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-blue-200 hover:shadow-xl transition-all duration-300 flex flex-col">
+                className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-blue-200 hover:shadow-sm transition-all duration-300 flex flex-col">
                 <div className="relative overflow-hidden" style={{ aspectRatio: '3/2' }}>
-                  <img
+                  <Image
+                    sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 300px" width={700} height={467}
                     src={type.image}
                     alt={type.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-200"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                  <span className={`absolute top-3 left-3 text-xs font-bold text-white bg-gradient-to-r ${type.color} px-2.5 py-1 rounded-full`}>
+                  <span className={`absolute top-3 left-3 text-xs font-bold text-white bg-[#5959b5] px-2.5 py-1 rounded-full`}>
                     {type.tag}
                   </span>
                 </div>
 
                 <div className="p-4 flex flex-col flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${type.color} flex items-center justify-center flex-shrink-0`}>
+                    <div className={`w-7 h-7 rounded-lg bg-[#5959b5] flex items-center justify-center flex-shrink-0`}>
                       <Icon className="w-3.5 h-3.5 text-white" />
                     </div>
                     <h3 className="text-base font-bold text-gray-900">{type.title}</h3>
                   </div>
 
-                  <p className="text-gray-500 text-xs leading-relaxed mb-3">{type.description}</p>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-3">{type.description}</p>
 
                   <ul className="space-y-1.5 mb-4 flex-1">
                     {type.features.map((f) => (

@@ -21,7 +21,9 @@ export function MonthView({
   for (let i = 1; i <= last.getDate(); i++) days.push(new Date(currentDate.getFullYear(), currentDate.getMonth(), i));
 
   return (
-    <div>
+    <div className="overflow-x-auto overscroll-x-contain" tabIndex={0} role="region" aria-label="Agenda mensal. Role horizontalmente para ver todos os dias.">
+      <p className="xl:hidden border-b border-gray-100 px-4 py-2 text-xs text-gray-500">Deslize para consultar os outros dias.</p>
+      <div className="min-w-[700px]">
       <div className="grid grid-cols-7 border-b border-gray-100">
         {DAYS.map(d => <div key={d} className="p-3 text-center text-xs font-semibold text-gray-500">{d}</div>)}
       </div>
@@ -36,15 +38,16 @@ export function MonthView({
                 {d.getDate()}
               </div>
               {apts.slice(0, 2).map(apt => (
-                <div key={apt.id} onClick={() => onSelectAppointment(apt)}
-                  className={`${statusColors[apt.status] || 'bg-gray-400'} text-white text-xs rounded px-1.5 py-0.5 mb-0.5 truncate cursor-pointer hover:opacity-80`}>
+                <button type="button" key={apt.id} title={`${apt.time} ${getClientName(apt)}`} onClick={() => onSelectAppointment(apt)}
+                  className={`${statusColors[apt.status] || 'bg-gray-400'} w-full text-left text-white text-xs rounded px-1.5 py-1.5 mb-0.5 truncate cursor-pointer hover:opacity-80`}>
                   {apt.time} {getClientName(apt)}
-                </div>
+                </button>
               ))}
               {apts.length > 2 && <div className="text-xs text-gray-400">+{apts.length - 2} mais</div>}
             </div>
           );
         })}
+      </div>
       </div>
     </div>
   );

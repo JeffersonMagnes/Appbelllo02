@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { X, AlertTriangle, CreditCard, Clock } from 'lucide-react';
+import { X, AlertTriangle, Clock } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 type Banner = {
@@ -26,30 +26,24 @@ export default function NotificationBanners() {
 
         const { data: est } = await supabase
           .from('establishments')
-          .select('id, subscription_plan, trial_started_at')
+          .select('id')
           .eq('owner_id', user.id)
           .maybeSingle();
 
         if (!est) return;
 
-        // Carrega dias de trial configurados pelo admin
-        const settingsRes = await fetch('/api/admin/app-settings');
-        const settings = settingsRes.ok ? await settingsRes.json() as { geral?: { trialDays?: number } } : {};
-        const trialDays = settings.geral?.trialDays ?? 30;
+        // Single server-side source of truth for trial/subscription status —
+        // never computed from the device clock or a locally-configured constant.
+        const { data: access } = await (supabase as any).rpc('get_my_establishment_access');
+        if (!access) return;
 
-        const plan = (est as { subscription_plan?: string }).subscription_plan ?? 'trial';
-        const trialStartedAt = (est as { trial_started_at?: string }).trial_started_at;
+        const plan = access.status === 'subscription_active' ? 'active' : 'trial';
+        const daysLeft = access.trial_days_left ?? 0;
 
         const found: Banner[] = [];
 
         // ── Trial expirando ──────────────────────────────────────────────
-        if (plan === 'trial' && trialStartedAt) {
-          const trialEnd = new Date(new Date(trialStartedAt).getTime() + trialDays * 86400000);
-          trialEnd.setHours(0, 0, 0, 0);
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          const daysLeft = Math.round((trialEnd.getTime() - today.getTime()) / 86400000);
-
+        if (plan === 'trial') {
           if (daysLeft <= 0) {
             found.push({
               id: 'trial-expired',
@@ -78,18 +72,6 @@ export default function NotificationBanners() {
               action: { label: 'Ver planos', href: '/dashboard/assinatura' },
             });
           }
-        }
-
-        // ── Falha no pagamento ───────────────────────────────────────────
-        if (plan === 'payment_failed') {
-          found.push({
-            id: 'payment-failed',
-            type: 'error',
-            icon: <CreditCard className="w-4 h-4" />,
-            title: 'Falha no pagamento',
-            message: 'Não conseguimos processar sua cobrança. Atualize seu método de pagamento.',
-            action: { label: 'Atualizar pagamento', href: '/dashboard/assinatura' },
-          });
         }
 
         setBanners(found);

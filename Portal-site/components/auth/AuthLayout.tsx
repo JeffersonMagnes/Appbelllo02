@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import ProductPreview from '@/components/landing/ProductPreview';
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -9,54 +10,34 @@ interface AuthLayoutProps {
 
 export default function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen flex font-outfit">
-
-      {/* ── Painel esquerdo ─────────────────────────────────────── */}
-      <div className="hidden lg:flex lg:w-[55%] h-screen sticky top-0 bg-white flex-col px-10 py-10 relative overflow-hidden">
-
-        {/* Card da imagem — ocupa todo o espaço com margem harmoniosa */}
-        <div className="flex-1 flex items-center justify-center">
-          <div className="w-[85%] rounded-3xl overflow-hidden shadow-xl" style={{ height: '85%' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/Banner.png"
-              alt="Profissional Appbello"
-              className="w-full h-full object-cover object-center"
-            />
-          </div>
+    <div className="auth-shell min-h-screen bg-white font-outfit lg:grid lg:grid-cols-2">
+      <aside className="hidden min-h-screen flex-col justify-center border-r border-[#e5e5ef] bg-[#f8f8fc] px-10 py-10 lg:flex xl:px-16">
+        <div className="mx-auto w-full max-w-lg">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#5959b5]">Beleza na rotina. Clareza na gestão.</p>
+          <h2 className="mb-4 text-3xl font-semibold tracking-tight text-[#23233f]">Seu negócio merece<br />uma rotina mais leve.</h2>
+          <p className="mb-8 max-w-md text-sm leading-relaxed text-gray-600">Da primeira reserva ao fechamento do dia, organize agenda, clientes e financeiro com o AppBello.</p>
+          <ProductPreview />
         </div>
-
-      </div>
-
-      {/* ── Painel direito — formulário ─────────────────────────── */}
-      <div className="flex-1 flex flex-col bg-white border-l border-gray-100">
-
-        {/* Logo mobile */}
-        <div className="lg:hidden flex items-center px-6 py-4 border-b border-gray-100">
-          <Link href="/">
-            <Image src="/logo.png" alt="Appbello" width={110} height={36} className="h-9 w-auto" />
+      </aside>
+      <div className="flex min-w-0 flex-col">
+        <div className="flex items-center justify-between gap-4 border-b border-gray-100 px-5 py-3 lg:border-0 lg:px-10 lg:py-6">
+          <Link href="/" aria-label="AppBello — início">
+            <Image src="/logo.png" alt="AppBello" width={132} height={54} className="h-auto w-[132px]" priority />
           </Link>
+          <Link href="/" className="text-xs text-gray-500 hover:text-[#5959b5]">Voltar ao site</Link>
         </div>
-
-        <div className="flex-1 flex items-center justify-center px-8 py-10 lg:px-16">
+        <div className="flex flex-1 items-center justify-center px-5 py-10 sm:px-10">
           <div className="w-full max-w-[400px]">
-
-            <div className="hidden lg:block mb-8">
-              <Link href="/">
-                <Image src="/logo.png" alt="Appbello" width={180} height={60} className="h-16 w-auto" />
-              </Link>
-            </div>
-
-            <div className="mb-7">
-              <h1 className="text-[28px] font-extrabold text-gray-900 mb-1.5 tracking-tight">{title}</h1>
-              <p className="text-gray-500 text-sm">{subtitle}</p>
-            </div>
-
-            {children}
-          </div>
+            <div className="mb-8">
+              <h1 className="mb-2 text-[28px] font-semibold tracking-tight text-gray-900">{title}</h1>
+              <p className="text-sm leading-relaxed text-gray-600">{subtitle}</p>
+            </div>{children}</div>
+        </div>
+        <div className="flex justify-center gap-5 px-5 py-6 text-xs text-gray-500">
+          <Link href="/privacidade" className="hover:underline">Privacidade</Link>
+          <Link href="/termos" className="hover:underline">Termos de uso</Link>
         </div>
       </div>
-
     </div>
   );
 }

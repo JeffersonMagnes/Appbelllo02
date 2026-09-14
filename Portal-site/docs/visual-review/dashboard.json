@@ -1,0 +1,667 @@
+[
+  {
+    "phase": "final",
+    "route": "dashboard",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/agenda",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/agenda",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/agenda",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/agenda",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/agenda",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/clientes",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/clientes",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/clientes",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/clientes",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/clientes",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/equipe",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/equipe",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/equipe",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/equipe",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/equipe",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/servicos",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/servicos",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/servicos",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/servicos",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/servicos",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/financeiro",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/financeiro",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/financeiro",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/financeiro",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/financeiro",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/comandas",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/comandas",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/comandas",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/comandas",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/comandas",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/produtos",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/produtos",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/produtos",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/produtos",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/produtos",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/configuracoes",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/configuracoes",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/configuracoes",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/configuracoes",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/configuracoes",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/caixa",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/caixa",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/caixa",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/caixa",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/caixa",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/relatorios",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/relatorios",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/relatorios",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/relatorios",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/relatorios",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/anamnese",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/anamnese",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/anamnese",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/anamnese",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/anamnese",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/pedidos",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/pedidos",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/pedidos",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/pedidos",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/pedidos",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/link-agendamento",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/link-agendamento",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/link-agendamento",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/link-agendamento",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/link-agendamento",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/assinatura",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/assinatura",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/assinatura",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/assinatura",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/assinatura",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/impressao",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/impressao",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/impressao",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/impressao",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/impressao",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/indique",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/indique",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/indique",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/indique",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/indique",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/assistente",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/assistente",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/assistente",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/assistente",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/assistente",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/top-clientes",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/top-clientes",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/top-clientes",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/top-clientes",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "dashboard/top-clientes",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  }
+]

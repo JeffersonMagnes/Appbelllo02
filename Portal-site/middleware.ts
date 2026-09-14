@@ -37,11 +37,24 @@ export async function middleware(req: NextRequest) {
 
   const isDashboard = req.nextUrl.pathname.startsWith('/dashboard') || req.nextUrl.pathname.startsWith('/profissional');
   const isAdminArea = req.nextUrl.pathname.startsWith('/admin');
+  const isSubscriptionPage = req.nextUrl.pathname.startsWith('/dashboard/assinatura');
 
   if (isDashboard && !session) {
     const redirect = NextResponse.redirect(new URL('/login', req.url));
     redirect.headers.set('x-correlation-id', requestCorrelationId);
     return redirect;
+  }
+
+  // Single server-side source of truth for trial/subscription access. A new
+  // owner mid-onboarding has no establishment row yet — the RPC errors in that
+  // case, and we let the request through rather than redirect-looping them.
+  if (isDashboard && session && !isSubscriptionPage) {
+    const { data: access, error: accessError } = await supabase.rpc('get_my_establishment_access');
+    if (!accessError && access && (access as { has_access?: boolean }).has_access === false) {
+      const redirect = NextResponse.redirect(new URL('/dashboard/assinatura', req.url));
+      redirect.headers.set('x-correlation-id', requestCorrelationId);
+      return redirect;
+    }
   }
 
   if (isAdminArea) {

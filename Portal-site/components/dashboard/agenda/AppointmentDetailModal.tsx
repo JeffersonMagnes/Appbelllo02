@@ -1,5 +1,7 @@
 'use client';
 
+import { ModalFrame } from '@/components/ui/modal-frame';
+
 import { CloseCircle, TickSquare } from 'iconsax-react';
 import { Loader2, FileText, Receipt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -54,15 +56,15 @@ export function AppointmentDetailModal({
   if (!apt) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm max-h-[90vh] overflow-y-auto">
+    <ModalFrame title="Detalhes do agendamento" onClose={onClose} className="max-w-sm">
+      <div className="w-full">
         <div className="sticky top-0 bg-white p-5 border-b border-gray-100 z-10">
           <div className="flex justify-between items-start">
             <div>
               <p className="font-black text-lg text-gray-900">{getServiceName(apt)}</p>
               <p className="text-gray-500 text-sm">{getClientName(apt)}</p>
             </div>
-            <button onClick={onClose}><CloseCircle className="w-5 h-5 text-gray-400" variant="Outline" /></button>
+            <button aria-label="Fechar" className="p-2 rounded-lg hover:bg-gray-100" onClick={onClose}><CloseCircle className="w-5 h-5 text-gray-400" variant="Outline" /></button>
           </div>
           <span className={`inline-block mt-2 px-2.5 py-1 rounded-lg text-xs font-semibold ${statusBadgeColors[apt.status] || 'bg-gray-100 text-gray-600'}`}>
             {statusLabels[apt.status] || apt.status}
@@ -74,7 +76,7 @@ export function AppointmentDetailModal({
             <div className="bg-gray-50 rounded-xl p-3 cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => setEditingDateTime(true)}>
               <p className="text-xs text-gray-400 mb-0.5">Data {!editingDateTime && <span className="text-[10px]">✏️</span>}</p>
               {editingDateTime ? (
-                <input type="date" value={editDate} onChange={e => setEditDate(e.target.value)}
+                <input aria-label="Data" type="date" value={editDate} onChange={e => setEditDate(e.target.value)}
                   className="w-full text-sm font-semibold text-gray-900 bg-white border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-[#6666cc]" />
               ) : (
                 <p className="text-sm font-semibold text-gray-900">{new Date(apt.date + 'T12:00:00').toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' })}</p>
@@ -182,6 +184,6 @@ export function AppointmentDetailModal({
           </div>
         </div>
       </div>
-    </div>
+    </ModalFrame>
   );
 }

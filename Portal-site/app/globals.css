@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,14 +10,14 @@
     --card-foreground: 222 47% 7%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 7%;
-    --primary: 240 50% 60%;
+    --primary: 240 38% 53%;
     --primary-foreground: 0 0% 100%;
     --secondary: 184 47% 65%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary-foreground: 184 50% 18%;
     --muted: 220 14% 96%;
     --muted-foreground: 220 9% 46%;
-    --accent: 184 47% 65%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 240 33% 96%;
+    --accent-foreground: 240 35% 35%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 220 13% 91%;
@@ -43,7 +41,7 @@
     --primary: 240 50% 65%;
     --primary-foreground: 0 0% 100%;
     --secondary: 184 47% 65%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary-foreground: 184 50% 18%;
     --muted: 222 47% 14%;
     --muted-foreground: 220 9% 60%;
     --accent: 184 47% 65%;
@@ -72,7 +70,7 @@
 
 @layer utilities {
   .font-outfit {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', ui-sans-serif, system-ui, sans-serif;
   }
   .gradient-primary {
     background: #6666cc;
@@ -86,5 +84,58 @@
   }
   .gradient-accent {
     background: #7ccad0;
+  }
+}
+
+/* AppBello visual foundations: shared by public pages and the web app. */
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
+  body { -webkit-font-smoothing: antialiased; }
+  :where(button, a, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+  :where(button, input, select, textarea) { font: inherit; }
+  :where(button, a) { -webkit-tap-highlight-color: transparent; }
+  :where(h1, h2, h3) { text-wrap: balance; }
+  :where(img, svg) { flex-shrink: 0; }
+  :where(input, select, textarea) { min-width: 0; }
+  ::selection { background: #e6e6fa; color: #34346c; }
+}
+
+@layer components {
+  .app-shell { height: 100dvh; background: #f7f8fb; }
+  .app-shell main { width: 100%; min-width: 0; max-width: 1600px; margin-inline: auto; }
+  .app-shell :where(th) { white-space: nowrap; }
+  .app-shell :where(td) { font-variant-numeric: tabular-nums; }
+  .app-shell :where(.text-gray-400) { color: #6b7280; }
+  .app-shell :where(.fixed.inset-0) > :where(.bg-white) {
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .marketing-site > section { scroll-margin-top: 5rem; }
+  .marketing-site :where(h2) { letter-spacing: -0.025em; }
+  .marketing-site :where(.text-blue-600) { color: #5959b5; }
+  .marketing-site :where(.shadow-2xl, .shadow-xl) { box-shadow: 0 12px 32px -20px rgb(35 35 65 / 25%); }
+  .auth-shell :where(input) { background-color: #fafafd; }
+  .auth-shell :where(button[type="submit"]) { background: #5959b5 !important; }
+  .auth-shell :where(a) { text-underline-offset: 3px; }
+  .ui-fade { animation: ui-fade 200ms ease-out; }
+  @keyframes ui-fade { from { opacity: 0; } to { opacity: 1; } }
+}
+
+@media (max-width: 639px) {
+  /* Keep iOS from zooming into compact forms. */
+  input:not([type="checkbox"]):not([type="radio"]), select, textarea { font-size: 16px; }
+  .marketing-site > section.py-20, .marketing-site > section.py-24 { padding-block: 3.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -27,7 +27,7 @@ interface Subscription {
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
-const PLAN_PRICE: Record<string, number> = { starter: 79, pro: 149, premium: 249, trial: 0, cancelado: 0, expirado: 0 };
+const PLAN_PRICE: Record<string, number> = { starter: 49, pro: 99, premium: 0, trial: 0, cancelado: 0, expirado: 0 };
 
 function daysAgo(iso: string) {
   return Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000);
@@ -207,17 +207,30 @@ export default function AssinaturasPage() {
   const fetchData = async () => {
     setLoading(true);
     const supabase = createClient();
-    const { data } = await supabase.rpc('get_admin_establishments');
+    // Single server-side source of truth for trial/subscription status — the
+    // same formula the owner's own dashboard and the mobile app read.
+    const [{ data }, { data: accessRows }] = await Promise.all([
+      supabase.rpc('get_admin_establishments'),
+      (supabase as any).rpc('admin_list_establishment_access'),
+    ]);
     const rows: any[] = Array.isArray(data) ? data : [];
+    const accessById = new Map(((accessRows as any[]) ?? []).map((a: any) => [a.establishment_id, a]));
 
     const mapped: Subscription[] = rows.map(row => {
       const days = daysAgo(row.created_at);
-      const isTrial = days <= 30;
-      const plan: PlanId = isTrial ? 'trial' : row.professionals_count >= 5 ? 'pro' : 'starter';
-      const status: Subscription['status'] = row.active ? (isTrial ? 'trial' : 'ativo') : 'cancelado';
-      const trialEndsAt = isTrial ? addDays(row.created_at, 30) : null;
-      const trialDaysLeft = isTrial ? Math.max(0, 30 - days) : 0;
-      const nextBilling = !isTrial && row.active ? addDays(row.created_at, Math.ceil(days / 30) * 30) : null;
+      const access = accessById.get(row.id);
+      const isSubscribed = access?.status === 'subscription_active';
+      const plan: PlanId = isSubscribed ? ((access.plan_id as PlanId) || 'starter') : 'trial';
+      const status: Subscription['status'] = !row.active
+        ? 'cancelado'
+        : isSubscribed
+          ? 'ativo'
+          : access?.status === 'trial_expired'
+            ? 'expirado'
+            : 'trial';
+      const trialEndsAt = access?.trial_ends_at ?? null;
+      const trialDaysLeft = access?.trial_days_left ?? 0;
+      const nextBilling = isSubscribed ? (access?.trial_ends_at ?? null) : null;
 
       return {
         id: row.id,
@@ -229,7 +242,7 @@ export default function AssinaturasPage() {
         created_at: row.created_at,
         plan,
         status,
-        mrr: isTrial ? 0 : PLAN_PRICE[plan],
+        mrr: isSubscribed ? PLAN_PRICE[plan] : 0,
         daysUsing: days,
         nextBilling,
         trialEndsAt,

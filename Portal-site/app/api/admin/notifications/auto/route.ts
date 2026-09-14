@@ -109,9 +109,6 @@ export async function GET(req: NextRequest) {
       .in('key', ['notifications', 'geral']);
 
     const notifSettings = (settingsRows?.find(r => r.key === 'notifications')?.value ?? {}) as Record<string, boolean>;
-    const geralSettings = (settingsRows?.find(r => r.key === 'geral')?.value ?? { trialDays: 30 }) as { trialDays?: number };
-    const trialDays = geralSettings.trialDays ?? 30;
-
     // Carrega service account FCM
     const saRaw = process.env.FIREBASE_SERVICE_ACCOUNT;
     if (!saRaw) {
@@ -133,6 +130,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ ok: true, results: ['Nenhum estabelecimento ativo'] });
     }
 
+    // Single server-side source of truth for trial days remaining — replaces
+    // this route's own copy of the trial-length/extra-days formula.
+    const { data: accessRows } = await (supabase as any).rpc('admin_list_establishment_access');
+    const accessById = new Map(((accessRows as any[]) ?? []).map((a: any) => [a.establishment_id, a]));
+
     const ownerIds = establishments.map(e => e.owner_id);
     const { data: profiles } = await supabase
       .from('profiles')
@@ -152,13 +154,14 @@ export async function GET(req: NextRequest) {
       if (!pushToken && !webSub) continue;
 
       const plan = est.subscription_plan ?? 'trial';
+      const access = accessById.get(est.id);
+      const daysLeftShared = access?.status === 'trial' || access?.status === 'trial_expired'
+        ? access.trial_days_left ?? null
+        : null;
 
       // ── Trial expirando em 3 dias ──────────────────────────────────────
       if (notifSettings.trialReminder3 && plan === 'trial' && est.trial_started_at) {
-        const trialStart = new Date(est.trial_started_at);
-        const trialEnd = new Date(trialStart.getTime() + trialDays * 86400000);
-        trialEnd.setHours(0, 0, 0, 0);
-        const daysLeft = Math.round((trialEnd.getTime() - today.getTime()) / 86400000);
+        const daysLeft = daysLeftShared;
         if (daysLeft === 3) {
           await sendPush(sa, accessToken, pushToken,
             '⏳ Seu trial expira em 3 dias',
@@ -172,10 +175,7 @@ export async function GET(req: NextRequest) {
 
       // ── Trial expirando amanhã ─────────────────────────────────────────
       if (notifSettings.trialReminder1 && plan === 'trial' && est.trial_started_at) {
-        const trialStart = new Date(est.trial_started_at);
-        const trialEnd = new Date(trialStart.getTime() + trialDays * 86400000);
-        trialEnd.setHours(0, 0, 0, 0);
-        const daysLeft = Math.round((trialEnd.getTime() - today.getTime()) / 86400000);
+        const daysLeft = daysLeftShared;
         if (daysLeft === 1) {
           await sendPush(sa, accessToken, pushToken,
             '🚨 Último dia do seu trial!',

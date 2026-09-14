@@ -6,12 +6,12 @@ export const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho
 export const MONTHS_SHORT = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
 export const statusColors: Record<string, string> = {
-  confirmed: 'bg-green-500',
-  pending: 'bg-yellow-500',
-  cancelled: 'bg-red-500',
-  completed: 'bg-blue-500',
-  delayed: 'bg-orange-500',
-  no_show: 'bg-gray-500',
+  confirmed: 'bg-emerald-700',
+  pending: 'bg-amber-700',
+  cancelled: 'bg-red-700',
+  completed: 'bg-blue-700',
+  delayed: 'bg-orange-700',
+  no_show: 'bg-gray-600',
 };
 
 export const statusBadgeColors: Record<string, string> = {

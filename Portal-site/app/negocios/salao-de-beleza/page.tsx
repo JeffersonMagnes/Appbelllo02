@@ -2,27 +2,26 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import ProductPreview from '@/components/landing/ProductPreview';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import { ArrowRight, Add, Minus, Calendar, DollarCircle, Profile2User, Box, Card } from 'iconsax-react';
 import { Megaphone } from 'lucide-react';
 
 const TABS = [
-  { id: 'agenda', label: 'Agenda online', Icon: Calendar, title: 'Controle de agenda online para salões de beleza', subtitle: 'Você não precisa mais se preocupar em encaixar horários.', body: 'Simplifique o agendamento de serviços com um programa para salão de beleza online e fácil de usar. Você disponibiliza seus horários, seus clientes marcam o atendimento e você ainda tem total controle do salão.', image: 'https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'financeiro', label: 'Otimização financeira', Icon: DollarCircle, title: 'Gestão financeira completa para o seu salão', subtitle: 'Saiba exatamente para onde vai cada centavo do seu negócio.', body: 'Acompanhe receitas, despesas, comissões e lucro em tempo real. Relatórios visuais que facilitam a tomada de decisão.', image: 'https://images.pexels.com/photos/3943882/pexels-photo-3943882.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'clientes', label: 'Gestão de clientes', Icon: Profile2User, title: 'Fidelize seus clientes com facilidade', subtitle: 'Tenha o histórico completo de cada cliente na palma da mão.', body: 'Veja o histórico de serviços, preferências e frequência de cada cliente. Crie programas de fidelidade e mantenha seus melhores clientes sempre voltando.', image: 'https://images.pexels.com/photos/3065209/pexels-photo-3065209.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'estoque', label: 'Controle de estoque', Icon: Box, title: 'Nunca mais fique sem produto no momento errado', subtitle: 'Controle total dos seus produtos e insumos.', body: 'Gerencie entradas e saídas, receba alertas de estoque baixo e acompanhe o custo dos produtos utilizados em cada serviço.', image: 'https://images.pexels.com/photos/3997993/pexels-photo-3997993.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'marketing', label: 'Comunicação', Icon: Megaphone, title: 'Organize o relacionamento com clientes', subtitle: 'Histórico e informações reunidos para apoiar o atendimento.', body: 'Campanhas automáticas por WhatsApp e SMS ainda não estão disponíveis como serviço integrado.', image: 'https://images.pexels.com/photos/4056535/pexels-photo-4056535.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'pagamentos', label: 'Recebimentos', Icon: Card, title: 'Registre as formas de recebimento', subtitle: 'Pix, cartão e dinheiro informados no controle financeiro.', body: 'O sistema registra recebimentos; o processamento integrado por gateway ainda está em implantação.', image: 'https://images.pexels.com/photos/3764537/pexels-photo-3764537.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'agenda', label: 'Agenda online', Icon: Calendar, title: 'Cada horário no seu lugar', subtitle: 'Organize os atendimentos por profissional.', body: 'Consulte horários, bloqueios e status. Compartilhe o link público para receber solicitações de agendamento.', image: '/product/agenda.webp' },
+  { id: 'clientes', label: 'Clientes', Icon: Profile2User, title: 'Conheça quem volta ao seu negócio', subtitle: 'Informações que ajudam a preparar cada atendimento.', body: 'Reúna contatos e consulte o histórico disponível, aniversariantes e clientes que não retornam há algum tempo.', image: '/product/clientes.webp' },
+  { id: 'financeiro', label: 'Financeiro', Icon: DollarCircle, title: 'Entenda o movimento do seu negócio', subtitle: 'Entradas e despesas com contexto.', body: 'Consulte transações, formas de recebimento e saldo por período. Organize os registros do seu caixa.', image: '/product/financeiro.webp' },
+  { id: 'equipe', label: 'Equipe', Icon: Profile2User, title: 'Organize quem atende com você', subtitle: 'Profissionais e comissões cadastradas.', body: 'Cadastre profissionais, especialidades e valores de comissão. Consulte os atendimentos de cada profissional na agenda.', image: '/product/equipe.webp' },
 ];
 
-const BENEFITS = ['Atendimento por e-mail', 'Cadastro guiado', 'Sem cartão para criar a conta', 'Agenda online', 'Gestão de clientes', 'Atualizações da plataforma'];
+const BENEFITS = ['Cadastro guiado', 'Agenda online', 'Gestão de clientes', 'Cadastro de serviços', 'Gestão de equipe', 'Visão financeira'];
 
 const FAQS = [
-  { q: 'O Appbello é só para salões grandes ou também atende salões pequenos?', a: 'O Appbello atende salões de todos os tamanhos, desde profissionais autônomos até redes com múltiplas unidades.' },
-  { q: 'Como funciona o agendamento online para os meus clientes?', a: 'Seus clientes recebem um link personalizado do seu salão, escolhem o serviço, o profissional e o horário. Tudo sem você precisar atender ligações.' },
-  { q: 'Posso gerenciar mais de um profissional na mesma conta?', a: 'Sim! Você pode cadastrar toda sua equipe, com agendas independentes e controle de comissões automático.' },
-  { q: 'O sistema funciona no celular?', a: 'Sim, o Appbello funciona perfeitamente no celular, tablet e computador. Você gerencia seu salão de qualquer lugar.' },
+  { q: 'Posso organizar os atendimentos de uma equipe?', a: 'Sim. Cadastre os profissionais e filtre seus atendimentos na agenda. Os limites de equipe variam conforme o plano.' },
+  { q: 'Meus clientes podem solicitar horários online?', a: 'Sim. Compartilhe o link público do estabelecimento e acompanhe as solicitações na agenda.' },
+  { q: 'Consigo cadastrar meus serviços?', a: 'Sim. Informe nome, valor e duração para organizar o catálogo de serviços.' },
+  { q: 'Posso consultar o financeiro?', a: 'Sim. Consulte entradas, despesas e transações registradas, com filtros por período.' },
 ];
 
 export default function SalaoBelezaPage() {
@@ -32,7 +31,7 @@ export default function SalaoBelezaPage() {
   const ActiveIcon = active.Icon;
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="marketing-site min-h-screen bg-white">
       <Navbar />
 
       <section className="pt-24 pb-16 bg-white overflow-hidden">
@@ -53,7 +52,7 @@ export default function SalaoBelezaPage() {
               <div className="relative">
                 <div className="absolute -left-8 top-8 w-48 h-48 bg-pink-100 rounded-full -z-10" />
                 <div className="absolute -right-4 bottom-8 w-32 h-32 bg-rose-200 rounded-full -z-10" />
-                <div className="relative overflow-hidden shadow-2xl" style={{ borderRadius: '60% 40% 55% 45% / 50% 60% 40% 50%', width: '420px', height: '480px' }}>
+                <div className="relative overflow-hidden shadow-sm" style={{ borderRadius: '60% 40% 55% 45% / 50% 60% 40% 50%', width: 'min(420px, calc(100vw - 3rem))', aspectRatio: '7 / 8' }}>
                   <img src="https://images.pexels.com/photos/3065209/pexels-photo-3065209.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Salão de beleza" className="w-full h-full object-cover" />
                 </div>
                 <div className="absolute bottom-16 -right-4 bg-pink-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg">
@@ -71,7 +70,7 @@ export default function SalaoBelezaPage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative">
               <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-pink-100 rounded-full -z-10" />
-              <img src="https://images.pexels.com/photos/3997990/pexels-photo-3997990.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Sistema Appbello" className="rounded-3xl shadow-2xl w-full object-cover" style={{ aspectRatio: '4/3' }} />
+              <ProductPreview />
             </div>
             <div className="space-y-5">
               <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight">
@@ -113,7 +112,7 @@ export default function SalaoBelezaPage() {
                   <Link href="/cadastro" className="inline-flex items-center gap-1.5 text-pink-500 font-bold text-sm">Saiba mais <ArrowRight className="w-3.5 h-3.5"  variant="Outline" /></Link>
                 </div>
                 <div className="relative overflow-hidden" style={{ minHeight: '300px' }}>
-                  <img src={active.image} alt={active.title} className="w-full h-full object-cover absolute inset-0" />
+                  <img loading="lazy" decoding="async" src={active.image} alt={active.title} className="w-full h-full object-cover absolute inset-0" />
                 </div>
               </div>
             </div>
@@ -141,7 +140,7 @@ export default function SalaoBelezaPage() {
               </Link>
             </div>
             <div>
-              <img src="https://images.pexels.com/photos/3757952/pexels-photo-3757952.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Profissional" className="rounded-3xl shadow-xl w-full object-cover" style={{ aspectRatio: '3/4' }} />
+              <img loading="lazy" decoding="async" src="https://images.pexels.com/photos/3757952/pexels-photo-3757952.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Profissional" className="rounded-3xl shadow-sm w-full object-cover" style={{ aspectRatio: '3/4' }} />
             </div>
           </div>
         </div>
@@ -167,7 +166,7 @@ export default function SalaoBelezaPage() {
       <section>
         <div className="grid lg:grid-cols-2 min-h-[300px]">
           <div className="relative">
-            <img src="https://images.pexels.com/photos/3065209/pexels-photo-3065209.jpeg?auto=compress&cs=tinysrgb&w=900" alt="CTA" className="w-full h-full object-cover" style={{ minHeight: '300px' }} />
+            <img loading="lazy" decoding="async" src="https://images.pexels.com/photos/3065209/pexels-photo-3065209.jpeg?auto=compress&cs=tinysrgb&w=900" alt="CTA" className="w-full h-full object-cover" style={{ minHeight: '300px' }} />
             <div className="absolute inset-0 bg-black/30" />
           </div>
           <div className="bg-pink-500 flex flex-col justify-center px-10 py-14 space-y-4">

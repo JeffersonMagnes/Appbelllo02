@@ -1,0 +1,26 @@
+[
+  {
+    "file": "Portal-site/app/login/page.tsx",
+    "nonVisualBodyUnchanged": true
+  },
+  {
+    "file": "Portal-site/app/cadastro/page.tsx",
+    "nonVisualBodyUnchanged": true
+  },
+  {
+    "file": "Portal-site/app/dashboard/clientes/page.tsx",
+    "nonVisualBodyUnchanged": true
+  },
+  {
+    "file": "Portal-site/app/dashboard/financeiro/page.tsx",
+    "nonVisualBodyUnchanged": true
+  },
+  {
+    "file": "Portal-site/app/dashboard/produtos/page.tsx",
+    "nonVisualBodyUnchanged": true
+  },
+  {
+    "file": "Portal-site/app/p/[slug]/page.tsx",
+    "nonVisualBodyUnchanged": true
+  }
+]

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { Add, ArrowLeft2, ArrowRight2, User, Link2 } from 'iconsax-react';
 import { Ban } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -39,13 +40,13 @@ export function AgendaControls({
   setSelectedEmployee: (id: string) => void;
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex flex-col gap-3">
-      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-        <div className="flex items-center gap-2">
-          <button onClick={() => navigate(-1)} className="p-2 rounded-xl hover:bg-gray-50 text-gray-600">
+    <div className="bg-white rounded-2xl p-4 border border-gray-200 flex flex-col gap-3">
+      <div className="flex flex-col xl:flex-row gap-3 items-start xl:items-center justify-between">
+        <div className="flex w-full sm:w-auto items-center gap-1 sm:gap-2">
+          <button aria-label="Périodo anterior" onClick={() => navigate(-1)} className="p-2.5 rounded-xl hover:bg-gray-50 text-gray-600">
             <ArrowLeft2 className="w-5 h-5" variant="Outline" />
           </button>
-          <h2 className="font-bold text-gray-900 min-w-44 text-center text-sm">
+          <h2 className="font-semibold text-gray-900 min-w-0 flex-1 sm:flex-none text-center text-sm tabular-nums">
             {view === 'ano'
               ? `${currentDate.getFullYear()}`
               : view === 'mes'
@@ -54,7 +55,7 @@ export function AgendaControls({
               ? `${fmt(weekDays[0])} — ${fmt(weekDays[6])}`
               : fmt(currentDate)}
           </h2>
-          <button onClick={() => navigate(1)} className="p-2 rounded-xl hover:bg-gray-50 text-gray-600">
+          <button aria-label="Próximo período" onClick={() => navigate(1)} className="p-2.5 rounded-xl hover:bg-gray-50 text-gray-600">
             <ArrowRight2 className="w-5 h-5" variant="Outline" />
           </button>
           <Button variant="outline" size="sm" onClick={() => setCurrentDate(new Date())} className="rounded-xl text-xs">Hoje</Button>
@@ -63,9 +64,9 @@ export function AgendaControls({
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex bg-gray-100 rounded-xl p-1">
             {(['dia', 'semana', 'mes', 'ano'] as const).map(v => (
-              <button key={v} onClick={() => setView(v)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${view === v ? 'bg-white shadow text-[#6666cc]' : 'text-gray-500'}`}>
-                {v.charAt(0).toUpperCase() + v.slice(1)}
+              <button key={v} aria-pressed={view === v} onClick={() => setView(v)}
+                className={`px-3 py-2 rounded-lg text-xs font-semibold capitalize transition-all ${view === v ? 'bg-white shadow text-[#6666cc]' : 'text-gray-500'}`}>
+                {{ dia: 'Dia', semana: 'Semana', mes: 'Mês', ano: 'Ano' }[v]}
               </button>
             ))}
           </div>
@@ -86,7 +87,7 @@ export function AgendaControls({
           </Button>
 
           <Button onClick={onOpenNewApt} className="bg-[#6666cc] hover:bg-[#5555aa] text-white border-0 rounded-xl h-9 text-sm">
-            <Add className="w-4 h-4 mr-1" variant="Outline" /> Novo
+            <Add className="w-4 h-4 mr-1" variant="Outline" /> Novo agendamento
           </Button>
         </div>
       </div>
@@ -96,15 +97,15 @@ export function AgendaControls({
           <span className="text-xs text-gray-500 font-medium flex items-center gap-1">
             <User className="w-3.5 h-3.5" variant="Outline" /> Profissional:
           </span>
-          <button onClick={() => setSelectedEmployee('all')}
+          <button aria-pressed={selectedEmployee === 'all'} onClick={() => setSelectedEmployee('all')}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors ${selectedEmployee === 'all' ? 'bg-[#6666cc] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
             Todos
           </button>
           {employees.map(emp => (
-            <button key={emp.id} onClick={() => setSelectedEmployee(emp.id)}
+            <button key={emp.id} aria-pressed={selectedEmployee === emp.id} onClick={() => setSelectedEmployee(emp.id)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5 ${selectedEmployee === emp.id ? 'bg-[#6666cc] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
               {emp.avatar_url ? (
-                <img src={emp.avatar_url} alt="" className="w-5 h-5 rounded-full object-cover" />
+                <Image width={20} height={20} src={emp.avatar_url} alt="" className="w-5 h-5 rounded-full object-cover" />
               ) : (
                 <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${selectedEmployee === emp.id ? 'bg-white/20 text-white' : 'bg-[#6666cc] text-white'}`}>
                   {emp.name.charAt(0).toUpperCase()}

@@ -1,0 +1,299 @@
+[
+  {
+    "phase": "verified",
+    "route": "negocios/salao-de-beleza",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "negocios/salao-de-beleza",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "negocios/salao-de-beleza",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "negocios/barbearia",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "negocios/barbearia",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "negocios/barbearia",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "negocios/clinica-de-estetica",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "negocios/clinica-de-estetica",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "negocios/clinica-de-estetica",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "negocios/studios",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "negocios/studios",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "negocios/studios",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "cadastro",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "cadastro",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "cadastro",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "employee-login",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "employee-login",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "employee-login",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "recuperar-senha",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "recuperar-senha",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "recuperar-senha",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "nova-senha",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "nova-senha",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "nova-senha",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "privacidade",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "privacidade",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "privacidade",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "termos",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "termos",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "termos",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "admin-login",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "admin-login",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  },
+  {
+    "phase": "verified",
+    "route": "admin-login",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false,
+    "brokenImages": []
+  }
+]

@@ -354,9 +354,9 @@ export default function ProfilePage() {
                 <button key={s.id} onClick={() => openBooking(s)}
                   className="relative overflow-hidden aspect-square hover:opacity-90 transition-opacity">
                   <div className="absolute inset-0" style={{ background: `linear-gradient(${hues[idx % hues.length]})` }} />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/65 to-transparent px-2 py-1.5">
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-2">
                     <p className="text-white text-xs font-semibold leading-tight line-clamp-2">{s.name}</p>
-                    <p className="text-white/80 text-xs">{fmt(s.price)}</p>
+                    <p className="text-white text-xs">{fmt(s.price)}</p>
                   </div>
                 </button>
               );
@@ -374,19 +374,18 @@ export default function ProfilePage() {
               Mostrar tudo <ArrowRight2 className="w-3.5 h-3.5 text-gray-400 mt-0.5" variant="Outline" />
             </button>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {products.slice(0, 6).map(p => (
-              <button key={p.id} onClick={() => openProduct(p)} className="relative rounded-2xl overflow-hidden aspect-square bg-gray-100 hover:opacity-90 active:scale-95 transition-all">
-                {p.image_url
-                  ? <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
-                  : <div className="w-full h-full flex flex-col items-center justify-center p-2">
-                      <Box className="w-6 h-6 text-gray-300 mb-1" variant="Outline" />
-                      <p className="text-xs text-gray-400 text-center line-clamp-2">{p.name}</p>
-                    </div>
-                }
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/65 to-transparent p-2">
-                  <p className="text-white text-xs font-semibold line-clamp-1 leading-tight">{p.name}</p>
-                  <p className="text-white text-xs font-bold">{fmt(p.price)}</p>
+              <button key={p.id} onClick={() => openProduct(p)} className="min-w-0 overflow-hidden rounded-xl border border-gray-200 bg-white text-left transition-colors duration-200 hover:border-gray-400">
+                <div className="aspect-[4/3] bg-gray-50">
+                  {p.image_url
+                    ? <img src={p.image_url} alt="" loading="lazy" decoding="async" className="w-full h-full object-contain p-2" />
+                    : <div className="w-full h-full flex items-center justify-center"><Box className="w-8 h-8 text-gray-400" variant="Outline" aria-hidden="true" /></div>
+                  }
+                </div>
+                <div className="p-3">
+                  <p className="text-gray-900 text-sm font-medium line-clamp-2 leading-snug">{p.name}</p>
+                  <p className="mt-1 text-gray-600 text-sm tabular-nums">{fmt(p.price)}</p>
                 </div>
               </button>
             ))}
@@ -510,7 +509,7 @@ export default function ProfilePage() {
                     </button>
                   : <span className="text-base font-bold text-gray-900">Agendar</span>
                 }
-                <button onClick={closeBooking} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold">×</button>
+                <button aria-label="Fechar agendamento" onClick={closeBooking} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold">×</button>
               </div>
               <div className="flex gap-1.5">
                 {bookSteps.map((s, i) => (

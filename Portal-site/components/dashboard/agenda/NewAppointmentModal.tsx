@@ -1,5 +1,7 @@
 'use client';
 
+import { ModalFrame } from '@/components/ui/modal-frame';
+
 import { Add, CloseCircle } from 'iconsax-react';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -58,11 +60,11 @@ export function NewAppointmentModal({
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <ModalFrame title="Novo agendamento" onClose={onClose} className="max-w-md">
+      <div className="w-full">
         <div className="sticky top-0 bg-white p-5 border-b border-gray-100 flex justify-between items-center">
           <h3 className="font-bold text-gray-900">Novo Agendamento</h3>
-          <button onClick={onClose}><CloseCircle className="w-5 h-5 text-gray-400" variant="Outline" /></button>
+          <button aria-label="Fechar" className="p-2 rounded-lg hover:bg-gray-100" onClick={onClose}><CloseCircle className="w-5 h-5 text-gray-400" variant="Outline" /></button>
         </div>
         <div className="p-5 space-y-4">
           <div>
@@ -82,12 +84,12 @@ export function NewAppointmentModal({
                   placeholder="Telefone (opcional)"
                   className="w-full h-9 rounded-lg border border-gray-200 px-3 text-sm focus:outline-none focus:border-[#6666cc]" />
                 <Button onClick={onCreateInlineClient} disabled={creatingClient || !newClientName.trim()}
-                  className="w-full h-9 bg-[#0BBDB6] hover:bg-[#09a8a2] text-white text-sm rounded-lg border-0">
+                  className="w-full h-9 bg-[#5959b5] hover:bg-[#4d4d9c] text-white text-sm rounded-lg border-0">
                   {creatingClient ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Cadastrar e Selecionar'}
                 </Button>
               </div>
             )}
-            <select value={aptForm.client_id} onChange={e => setAptForm({ ...aptForm, client_id: e.target.value })}
+            <select aria-label="Cliente" value={aptForm.client_id} onChange={e => setAptForm({ ...aptForm, client_id: e.target.value })}
               className="mt-1 w-full h-10 rounded-xl border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:border-[#6666cc]">
               <option value="">Selecione (opcional)</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -95,7 +97,7 @@ export function NewAppointmentModal({
           </div>
           <div>
             <Label className="text-sm font-medium text-gray-700">Serviço *</Label>
-            <select value={aptForm.service_id} onChange={e => setAptForm({ ...aptForm, service_id: e.target.value })}
+            <select aria-label="Serviço" value={aptForm.service_id} onChange={e => setAptForm({ ...aptForm, service_id: e.target.value })}
               className="mt-1 w-full h-10 rounded-xl border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:border-[#6666cc]">
               <option value="">Selecione o serviço</option>
               {services.map(s => <option key={s.id} value={s.id}>{s.name} {s.price ? `- R$ ${Number(s.price).toFixed(2)}` : ''}</option>)}
@@ -103,7 +105,7 @@ export function NewAppointmentModal({
           </div>
           <div>
             <Label className="text-sm font-medium text-gray-700">Profissional</Label>
-            <select value={aptForm.employee_id} onChange={e => setAptForm({ ...aptForm, employee_id: e.target.value })}
+            <select aria-label="Profissional" value={aptForm.employee_id} onChange={e => setAptForm({ ...aptForm, employee_id: e.target.value })}
               className="mt-1 w-full h-10 rounded-xl border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:border-[#6666cc]">
               <option value="">Selecione (opcional)</option>
               {employees.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
@@ -112,7 +114,7 @@ export function NewAppointmentModal({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label className="text-sm font-medium text-gray-700">Data *</Label>
-              <input type="date" value={aptForm.date} onChange={e => setAptForm({ ...aptForm, date: e.target.value })}
+              <input aria-label="Data" type="date" value={aptForm.date} onChange={e => setAptForm({ ...aptForm, date: e.target.value })}
                 className="mt-1 w-full h-10 rounded-xl border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:border-[#6666cc]" />
             </div>
             <div>
@@ -136,6 +138,6 @@ export function NewAppointmentModal({
           </div>
         </div>
       </div>
-    </div>
+    </ModalFrame>
   );
 }

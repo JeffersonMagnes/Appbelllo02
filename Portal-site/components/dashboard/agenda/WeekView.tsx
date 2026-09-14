@@ -30,9 +30,11 @@ export function WeekView({
   onSlotClick: (date: Date, time: string) => void;
 }) {
   return (
-    <div>
-      <div className="grid grid-cols-8 border-b border-gray-100">
-        <div className="p-3 text-xs text-gray-400 font-medium" />
+    <div className="overflow-x-auto overscroll-x-contain" tabIndex={0} role="region" aria-label="Agenda semanal. Role horizontalmente para ver todos os dias.">
+      <p className="xl:hidden border-b border-gray-100 px-4 py-2 text-xs text-gray-500">Deslize para consultar os outros dias.</p>
+      <div className="min-w-[980px]">
+      <div className="grid grid-cols-[56px_repeat(7,minmax(0,1fr))] border-b border-gray-100">
+        <div className="p-3 text-xs text-gray-500 font-medium" />
         {weekDays.map((d, i) => {
           const isToday = d.toDateString() === new Date().toDateString();
           const count = getAptsForDay(d).length;
@@ -46,10 +48,10 @@ export function WeekView({
         })}
       </div>
       <div className="overflow-y-auto max-h-[600px]">
-        <div className="grid grid-cols-8">
+        <div className="grid grid-cols-[56px_repeat(7,minmax(0,1fr))]">
           <div className="relative" style={{ height: hours.length * HOUR_PX }}>
             {hours.map((hour, idx) => (
-              <div key={hour} className="absolute right-0 pr-3 text-xs text-gray-400 font-medium" style={{ top: idx * HOUR_PX + 4 }}>
+              <div key={hour} className="absolute right-0 pr-3 text-xs text-gray-500 font-medium" style={{ top: idx * HOUR_PX + 4 }}>
                 {hour}
               </div>
             ))}
@@ -72,6 +74,7 @@ export function WeekView({
             />
           ))}
         </div>
+      </div>
       </div>
     </div>
   );

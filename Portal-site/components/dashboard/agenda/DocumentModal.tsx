@@ -1,5 +1,7 @@
 'use client';
 
+import { ModalFrame } from '@/components/ui/modal-frame';
+
 import { X, FileText, Receipt, Printer } from 'lucide-react';
 import { statusLabels, fmtBRL, PAY_METHODS } from '@/lib/agenda-format';
 import type { Appointment } from '@/lib/supabase/types';
@@ -45,8 +47,8 @@ export function DocumentModal({
   const payLabel = PAY_METHODS.find(m => m.v === payMethod)?.l ?? payMethod;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <ModalFrame title="Documento do atendimento" onClose={onClose} className="max-w-lg">
+      <div className="w-full">
         {/* Modal header */}
         <div className="sticky top-0 bg-white flex items-center justify-between px-5 py-4 border-b border-gray-100 z-10">
           <div className="flex items-center gap-2">
@@ -63,7 +65,7 @@ export function DocumentModal({
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#6666cc] text-white text-xs font-semibold hover:bg-[#5555aa] transition-colors">
               <Printer className="w-3.5 h-3.5" /> Imprimir
             </button>
-            <button onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100 text-gray-400">
+            <button aria-label="Fechar" onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100 text-gray-400">
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -158,6 +160,6 @@ export function DocumentModal({
           </div>
         </div>
       </div>
-    </div>
+    </ModalFrame>
   );
 }

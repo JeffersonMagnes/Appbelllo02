@@ -67,21 +67,14 @@ export default function AssinaturaPage() {
       // Load saved referral from user metadata
       const savedReferral = user.user_metadata?.applied_referral_code as string | undefined;
       if (savedReferral) setAppliedReferralCode(savedReferral);
-      const { data } = await (supabase as any)
-        .from('establishments')
-        .select('subscription_plan, trial_started_at, extra_trial_days')
-        .eq('owner_id', user.id)
-        .maybeSingle();
-      if (data) {
-        setCurrentPlan(data.subscription_plan || 'trial');
-        if (data.trial_started_at) {
-          setTrialStarted(data.trial_started_at);
-          const totalTrialDays = 30 + (data.extra_trial_days ?? 0);
-          const started = new Date(data.trial_started_at);
-          const now = new Date();
-          const daysUsed = Math.floor((now.getTime() - started.getTime()) / (1000 * 60 * 60 * 24));
-          setTrialDaysLeft(Math.max(0, totalTrialDays - daysUsed));
-        }
+      // Single server-side source of truth for trial/subscription status —
+      // never computed from the device clock, and never read off the raw
+      // (client-writable-looking) establishments.subscription_plan column.
+      const { data: access } = await (supabase as any).rpc('get_my_establishment_access');
+      if (access) {
+        setCurrentPlan(access.status === 'subscription_active' ? (access.plan_id || 'trial') : 'trial');
+        setTrialStarted(access.trial_started_at ?? null);
+        setTrialDaysLeft(access.trial_days_left ?? 0);
       }
       setLoading(false);
     };

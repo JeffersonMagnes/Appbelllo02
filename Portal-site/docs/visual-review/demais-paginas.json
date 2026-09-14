@@ -1,0 +1,1262 @@
+[
+  {
+    "phase": "final",
+    "route": "admin/analytics",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/analytics",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/analytics",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/analytics",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/analytics",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/assinaturas",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/assinaturas",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/assinaturas",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/assinaturas",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/assinaturas",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/configuracoes",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/configuracoes",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/configuracoes",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/configuracoes",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/configuracoes",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/configuracoes-app",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/configuracoes-app",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/configuracoes-app",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/configuracoes-app",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/configuracoes-app",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/conteudo",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/conteudo",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/conteudo",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/conteudo",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/conteudo",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/equipe",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/equipe",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/equipe",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/equipe",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/equipe",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/email",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/email",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/email",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/email",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/email",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/mensagens",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/mensagens",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/mensagens",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/mensagens",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/mensagens",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/push",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/push",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/push",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/push",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/notificacoes/push",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/empresas",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/empresas",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/empresas",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/empresas",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/empresas",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/novo",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/novo",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/novo",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/novo",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/novo",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/relatorios",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/relatorios",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/relatorios",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/relatorios",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/parceiros/relatorios",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos/cupons",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos/cupons",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos/cupons",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos/cupons",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos/cupons",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos/financeiro",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos/financeiro",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos/financeiro",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos/financeiro",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos/financeiro",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/planos",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/usuarios",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/usuarios",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/usuarios",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/usuarios",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin/usuarios",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin-login",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin-login",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin-login",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin-login",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "admin-login",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "anamnese/[templateId]",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "anamnese/[templateId]",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "anamnese/[templateId]",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "anamnese/[templateId]",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "anamnese/[templateId]",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "cadastro",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "cadastro",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "cadastro",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "cadastro",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "cadastro",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-dashboard/clientes",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-dashboard/clientes",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-dashboard/clientes",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-dashboard/clientes",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-dashboard/clientes",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-dashboard",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-dashboard",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-dashboard",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-dashboard",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-dashboard",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-login",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-login",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-login",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-login",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "employee-login",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "login",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "login",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "login",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "login",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "login",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/barbearia",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/barbearia",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/barbearia",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/barbearia",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/barbearia",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/clinica-de-estetica",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/clinica-de-estetica",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/clinica-de-estetica",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/clinica-de-estetica",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/clinica-de-estetica",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/salao-de-beleza",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/salao-de-beleza",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/salao-de-beleza",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/salao-de-beleza",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/salao-de-beleza",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/studios",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/studios",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/studios",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/studios",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "negocios/studios",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "nova-senha",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "nova-senha",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "nova-senha",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "nova-senha",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "nova-senha",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "p/[slug]",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "p/[slug]",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "p/[slug]",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "p/[slug]",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "p/[slug]",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "privacidade",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "privacidade",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "privacidade",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "privacidade",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "privacidade",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "profissional",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "profissional",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "profissional",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "profissional",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "profissional",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "recuperar-senha",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "recuperar-senha",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "recuperar-senha",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "recuperar-senha",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "recuperar-senha",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "termos",
+    "width": 1440,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "termos",
+    "width": 1280,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "termos",
+    "width": 768,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "termos",
+    "width": 375,
+    "errors": [],
+    "overflow": false
+  },
+  {
+    "phase": "final",
+    "route": "termos",
+    "width": 430,
+    "errors": [],
+    "overflow": false
+  }
+]

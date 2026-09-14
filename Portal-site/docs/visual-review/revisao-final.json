@@ -1,0 +1,202 @@
+[
+  {
+    "phase": "verified",
+    "route": "p/[slug]",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "p/[slug]",
+    "width": 1280,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "p/[slug]",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "p/[slug]",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "p/[slug]",
+    "width": 430,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/agenda",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/agenda",
+    "width": 1280,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/agenda",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/agenda",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/agenda",
+    "width": 430,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/clientes",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/clientes",
+    "width": 1280,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/clientes",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/clientes",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/clientes",
+    "width": 430,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/financeiro",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/financeiro",
+    "width": 1280,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/financeiro",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/financeiro",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/financeiro",
+    "width": 430,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/produtos",
+    "width": 1440,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/produtos",
+    "width": 1280,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/produtos",
+    "width": 768,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/produtos",
+    "width": 375,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "route": "dashboard/produtos",
+    "width": 430,
+    "errors": [],
+    "styled": true,
+    "overflow": false
+  }
+]

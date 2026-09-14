@@ -1,0 +1,38 @@
+[
+  {
+    "phase": "verified",
+    "width": 1440,
+    "url": "http://localhost:3101/",
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "width": 1280,
+    "url": "http://localhost:3101/",
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "width": 768,
+    "url": "http://localhost:3101/",
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "width": 390,
+    "url": "http://localhost:3101/",
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "width": 375,
+    "url": "http://localhost:3101/",
+    "overflow": false
+  },
+  {
+    "phase": "verified",
+    "width": 430,
+    "url": "http://localhost:3101/",
+    "overflow": false
+  }
+]
