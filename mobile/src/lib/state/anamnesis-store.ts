@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Crypto from 'expo-crypto';
 
 export interface AnamnesisField {
   id: string;
@@ -569,7 +570,11 @@ export const useAnamnesisStore = create<AnamnesisState>()(
     const created: FilledAnamnesis = {
       ...anamnesis,
       id: `anamnesis-${Date.now()}`,
-      shareToken: `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`,
+      // Cryptographically strong (128-bit UUID v4) — this token is the only
+      // thing standing between a public storage bucket and someone else's
+      // health/anamnesis data. Date.now()+Math.random() (the previous scheme)
+      // is guessable; a UUID is not.
+      shareToken: Crypto.randomUUID(),
       filledAt: now,
       updatedAt: now,
     };

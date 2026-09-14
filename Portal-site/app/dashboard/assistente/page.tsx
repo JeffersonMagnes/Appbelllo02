@@ -5,6 +5,7 @@ import { FeatureGate } from '@/components/dashboard/FeatureGate';
 import { MagicStar, Send2, ArrowLeft2, RotateLeft, User } from 'iconsax-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 
 interface Message {
   id: string;
@@ -51,10 +52,17 @@ export default function AiAssistantPage() {
         .filter((m) => m.id !== assistantId)
         .map((m) => ({ role: m.role, content: m.content }));
 
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error('Sua sessão expirou. Entre novamente.');
+
       const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
       const response = await fetch(`${BACKEND_URL}/api/ai/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ messages: history }),
       });
 

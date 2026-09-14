@@ -5,6 +5,15 @@ import "./env";
 import { sampleRouter } from "./routes/sample";
 import { aiRouter } from "./routes/ai";
 import { logger } from "hono/logger";
+import { verifySupabaseUser, checkRateLimit } from "./lib/auth";
+
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024; // 10MB
+const ALLOWED_UPLOAD_MIME_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+]);
 
 const app = new Hono();
 
@@ -194,13 +203,27 @@ app.get("/", (c) => {
 </html>`);
 });
 
-// Upload endpoint
+// Upload endpoint — authenticated AppBello users only, bounded size/type.
 app.post("/api/upload", async (c) => {
+  const user = await verifySupabaseUser(c.req.header("authorization"));
+  if (!user) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+  if (!checkRateLimit(`upload:${user.id}`, 20, 5 * 60_000)) {
+    return c.json({ error: "Muitos uploads em pouco tempo. Aguarde alguns minutos." }, 429);
+  }
+
   const formData = await c.req.formData();
   const file = formData.get("file");
 
   if (!file || !(file instanceof File)) {
     return c.json({ error: "No file provided" }, 400);
+  }
+  if (file.size > MAX_UPLOAD_BYTES) {
+    return c.json({ error: "Arquivo excede o tamanho máximo de 10MB" }, 413);
+  }
+  if (!ALLOWED_UPLOAD_MIME_TYPES.has(file.type)) {
+    return c.json({ error: "Tipo de arquivo não permitido" }, 415);
   }
 
   const storageForm = new FormData();
@@ -220,8 +243,19 @@ app.post("/api/upload", async (c) => {
   return c.json({ data: result.file });
 });
 
-// Delete file endpoint
+// Delete file endpoint — authenticated AppBello users only. This proxy has no
+// database of its own, so file-to-owner mapping can't be verified here; the
+// residual risk (an authenticated user deleting another authenticated user's
+// file id) is documented rather than silently assumed away — see Fase 2 report.
 app.delete("/api/files/:id", async (c) => {
+  const user = await verifySupabaseUser(c.req.header("authorization"));
+  if (!user) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+  if (!checkRateLimit(`delete:${user.id}`, 20, 5 * 60_000)) {
+    return c.json({ error: "Muitas solicitações em pouco tempo. Aguarde alguns minutos." }, 429);
+  }
+
   const { id } = c.req.param();
 
   const response = await fetch(`https://storage.vibecodeapp.com/v1/files/${id}`, {

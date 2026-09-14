@@ -1,6 +1,19 @@
 import { createClient } from '@supabase/supabase-js';
-import { createSign } from 'crypto';
+import { createSign, timingSafeEqual } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
+
+// Fail-closed: this endpoint sends real push notifications and must reject
+// every request unless a correctly-configured secret is presented. A missing
+// CRON_SECRET is a misconfiguration, never an implicit "allow".
+function isAuthorizedCronRequest(req: NextRequest): boolean {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret) return false;
+  const authHeader = req.headers.get('authorization') ?? '';
+  const expected = Buffer.from(`Bearer ${cronSecret}`);
+  const provided = Buffer.from(authHeader);
+  if (provided.length !== expected.length) return false;
+  return timingSafeEqual(provided, expected);
+}
 
 // ─── Supabase admin (service role bypasses RLS) ────────────────────────────
 function adminSupabase() {
@@ -90,10 +103,13 @@ async function sendPush(
 
 // ─── Main handler ────────────────────────────────────────────────────────
 export async function GET(req: NextRequest) {
-  // Protege o endpoint: só Vercel Cron ou chamadas com CRON_SECRET
-  const authHeader = req.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (!process.env.CRON_SECRET) {
+    // Fail closed: no secret configured means the endpoint is unusable,
+    // never that it's open to anyone.
+    console.error('notifications/auto: CRON_SECRET is not configured; rejecting request');
+    return NextResponse.json({ error: 'Service unavailable' }, { status: 503 });
+  }
+  if (!isAuthorizedCronRequest(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

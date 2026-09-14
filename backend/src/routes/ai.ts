@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { streamSSE } from "hono/streaming";
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
+import { verifySupabaseUser, checkRateLimit } from "../lib/auth";
 
 const aiRouter = new Hono();
 
@@ -23,16 +24,31 @@ Você ajuda proprietários e funcionários com:
 Responda sempre em português brasileiro, de forma clara, prática e profissional.
 Quando der conselhos, seja específico e forneça exemplos concretos que podem ser aplicados imediatamente.`;
 
+// Bounded so a single request can't blow up Anthropic spend: a real
+// conversation in this assistant never needs more than a few dozen turns of
+// a few thousand characters each.
 const chatSchema = z.object({
   messages: z.array(
     z.object({
       role: z.enum(["user", "assistant"]),
-      content: z.string(),
+      content: z.string().min(1).max(4000),
     })
-  ).min(1),
+  ).min(1).max(40),
 });
 
+const RATE_LIMIT_MAX = 20;
+const RATE_LIMIT_WINDOW_MS = 5 * 60_000;
+
 aiRouter.post("/chat", async (c) => {
+  const user = await verifySupabaseUser(c.req.header("authorization"));
+  if (!user) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+
+  if (!checkRateLimit(`ai-chat:${user.id}`, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS)) {
+    return c.json({ error: "Muitas mensagens em pouco tempo. Aguarde alguns minutos." }, 429);
+  }
+
   let body: unknown;
   try {
     body = await c.req.json();
@@ -73,7 +89,7 @@ aiRouter.post("/chat", async (c) => {
 
       await stream.writeSSE({ data: "", event: "done" });
     } catch (err) {
-      console.error("Claude streaming error:", err);
+      console.error("Claude streaming error:", err instanceof Error ? err.message : "unknown error");
       await stream.writeSSE({
         data: JSON.stringify({ error: "Failed to generate response" }),
         event: "error",

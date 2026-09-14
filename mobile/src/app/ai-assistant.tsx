@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useRouter } from 'expo-router';
 import { ArrowLeft, Send2, MagicStar, RotateLeft } from 'iconsax-react-native';
 import { colors } from '@/lib/theme';
+import { supabase } from '@/lib/supabase';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_VIBECODE_BACKEND_URL ?? 'http://localhost:3000';
 
@@ -70,9 +71,15 @@ export default function AiAssistantScreen() {
           .filter((m) => m.id !== assistantId)
           .map((m) => ({ role: m.role, content: m.content }));
 
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) throw new Error('Sessão expirada. Faça login novamente.');
+
         const response = await fetch(`${BACKEND_URL}/api/ai/chat`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
           body: JSON.stringify({ messages: history }),
         });
 
