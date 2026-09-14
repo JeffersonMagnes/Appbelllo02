@@ -7,8 +7,33 @@ import { useSubscriptionStore } from '@/lib/state/subscription-store';
 import { useOnboardingStore } from '@/lib/state/onboarding-store';
 import { useSetupStore } from '@/lib/state/setup-store';
 
-// Sincroniza o trial com o created_at do estabelecimento no Supabase
+// Single server-side source of truth for trial/subscription access — the same
+// database function the web dashboard and admin panel read. This never trusts
+// the device clock or a locally cached value as authority; the RPC result is
+// cached in subscription-store purely so the UI has something to render
+// immediately, while every real data operation is still enforced by RLS.
 async function syncTrialWithSupabase(userId: string): Promise<void> {
+  try {
+    const { data, error } = await (supabase as any).rpc('get_my_establishment_access');
+    if (!error && data) {
+      useSubscriptionStore.getState().syncServerAccess({
+        hasAccess: data.has_access,
+        status: data.status,
+        planId: data.plan_id,
+        trialDaysLeft: data.trial_days_left,
+        reason: data.reason,
+        fetchedAt: new Date().toISOString(),
+      });
+      if (data.trial_started_at) {
+        useSubscriptionStore.getState().syncTrialStartDate(data.trial_started_at as string);
+      }
+      return;
+    }
+  } catch (error) {
+    console.error('syncTrialWithSupabase (RPC) failed, falling back to raw read:', error);
+  }
+  // Fallback (offline / RPC unavailable): keep the previous best-effort local
+  // estimate so the UI isn't empty. Never authoritative for access decisions.
   try {
     const { data } = await (supabase as any)
       .from('establishments')
@@ -20,7 +45,7 @@ async function syncTrialWithSupabase(userId: string): Promise<void> {
       useSubscriptionStore.getState().syncExtraTrialDays((data.extra_trial_days as number) ?? 0);
     }
   } catch (error) {
-    console.error('syncTrialWithSupabase failed:', error);
+    console.error('syncTrialWithSupabase (fallback) failed:', error);
   }
 }
 
@@ -241,6 +266,9 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: true,
         });
 
+        // Sincroniza o trial com a data real do Supabase
+        syncTrialWithSupabase(data.user.id);
+
         return { success: true };
       },
 
@@ -303,6 +331,9 @@ export const useAuthStore = create<AuthState>()(
         set({ currentUser: null, isAuthenticated: false, establishmentId: null, isDemoMode: false });
         useOnboardingStore.getState().resetOnboarding();
         useSetupStore.setState({ completedSteps: [], dismissed: false, lastShownAt: null });
+        // Stale trial/subscription state must never carry over to whoever logs
+        // in next on this device.
+        useSubscriptionStore.getState().resetSubscription();
       },
 
       loginAsEmployee: (pin) => {

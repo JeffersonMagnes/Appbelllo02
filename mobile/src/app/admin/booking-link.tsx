@@ -152,7 +152,10 @@ export default function BookingLinkScreen() {
     const newVal = !bookingEnabled;
     setBookingEnabled(newVal);
     if (estId) {
-      await supabase.from('establishments').update({ booking_enabled: newVal } as any).eq('id', estId);
+      // `active` is what get_public_storefront/create_public_booking actually
+      // check — matches the web toggle. The column `booking_enabled` referenced
+      // here previously does not exist in the schema; the write silently failed.
+      await supabase.from('establishments').update({ active: newVal } as any).eq('id', estId);
     }
   };
 

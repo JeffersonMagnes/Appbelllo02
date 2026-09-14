@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/lib/state/auth-store';
+import { useSubscriptionStore } from '@/lib/state/subscription-store';
 import { useSetupStore } from '@/lib/state/setup-store';
 import { registerPushToken, scheduleAppointmentReminders } from '@/lib/push-notifications';
 import { useNotificationSettings } from '@/lib/state/notification-settings-store';
@@ -292,6 +293,30 @@ function AuthGate() {
       }
     }
   }, [isAuthenticated, segments, sessionRestored, hasSeenOnboarding]);
+
+  // Single server-side source of truth for trial/subscription access. This
+  // only steers navigation back to the paywall — even if the user reaches
+  // another screen manually, every real operation there is still enforced by
+  // RLS, not by this redirect. Routes needed to actually resolve billing stay
+  // reachable while blocked.
+  const accessKnown = useSubscriptionStore(s => s.serverAccess !== null);
+  const hasServerAccess = useSubscriptionStore(s => s.serverAccess ? s.serverAccess.hasAccess : true);
+  useEffect(() => {
+    if (!sessionRestored || !isAuthenticated || !accessKnown) return;
+    const allowedWhileBlocked =
+      segments[0] === 'paywall' ||
+      segments[0] === 'billing' ||
+      segments[0] === 'login' ||
+      segments[0] === 'onboarding' ||
+      segments[0] === 'register' ||
+      segments[0] === 'reset-password' ||
+      segments[0] === 'new-password' ||
+      segments[0] === 'employee-login' ||
+      segments[0] === 'anamnesis-public';
+    if (!hasServerAccess && !allowedWhileBlocked) {
+      router.replace('/paywall');
+    }
+  }, [isAuthenticated, segments, sessionRestored, accessKnown, hasServerAccess]);
 
   // Tutorial antigo desativado — agora usa Walkthrough na tela principal
 

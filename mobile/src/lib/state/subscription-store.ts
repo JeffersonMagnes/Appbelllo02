@@ -52,17 +52,32 @@ export const PLANS: Plan[] = [
 
 export const TRIAL_DAYS = 30;
 
+// Server-computed entitlement (mirrors the SQL type public.establishment_access).
+// This is the ONLY authority for access decisions — it is cached here purely so
+// the UI has something to render before the RPC resolves or while offline.
+// Real enforcement always happens at the database (RLS), never on this cache.
+export interface ServerAccess {
+  hasAccess: boolean;
+  status: 'subscription_active' | 'trial' | 'trial_expired';
+  planId: string | null;
+  trialDaysLeft: number;
+  reason: string;
+  fetchedAt: string;
+}
+
 interface SubscriptionState {
   trialStartDate: string | null;
   extraTrialDays: number;
   subscriptionStatus: SubscriptionStatus;
   activePlan: PlanType | null;
   subscriptionEndDate: string | null;
+  serverAccess: ServerAccess | null;
 
   // Actions
   startTrial: () => void;
   syncTrialStartDate: (isoDate: string) => void;
   syncExtraTrialDays: (extra: number) => void;
+  syncServerAccess: (access: ServerAccess) => void;
   activateSubscription: (plan: PlanType) => void;
   getTrialDaysLeft: () => number;
   getTrialDaysElapsed: () => number;
@@ -81,6 +96,11 @@ export const useSubscriptionStore = create<SubscriptionState>()(
       subscriptionStatus: 'none',
       activePlan: null,
       subscriptionEndDate: null,
+      serverAccess: null,
+
+      syncServerAccess: (access) => {
+        set({ serverAccess: access });
+      },
 
       startTrial: () => {
         const { trialStartDate } = get();
@@ -118,7 +138,11 @@ export const useSubscriptionStore = create<SubscriptionState>()(
       },
 
       getTrialDaysLeft: () => {
-        const { trialStartDate, extraTrialDays } = get();
+        const { trialStartDate, extraTrialDays, serverAccess } = get();
+        if (serverAccess) return serverAccess.trialDaysLeft;
+        // Fallback while the server hasn't answered yet (first render / offline).
+        // Never treated as authoritative — the database enforces access
+        // regardless of what this local estimate says.
         if (!trialStartDate) return TRIAL_DAYS + extraTrialDays;
         const start = new Date(trialStartDate);
         const now = new Date();
@@ -141,18 +165,24 @@ export const useSubscriptionStore = create<SubscriptionState>()(
       },
 
       isTrialExpired: () => {
-        const { subscriptionStatus, getTrialDaysLeft } = get();
+        const { serverAccess, subscriptionStatus, getTrialDaysLeft } = get();
+        if (serverAccess) return serverAccess.status === 'trial_expired';
         if (subscriptionStatus !== 'trial') return false;
         return getTrialDaysLeft() <= 0;
       },
 
       isActive: () => {
-        const { subscriptionStatus } = get();
+        const { serverAccess, subscriptionStatus } = get();
+        if (serverAccess) return serverAccess.status === 'subscription_active';
         return subscriptionStatus === 'active';
       },
 
       hasAccess: () => {
-        const { subscriptionStatus, getTrialDaysLeft } = get();
+        // Authoritative when we have it. This only gates client navigation
+        // (e.g. redirecting to the paywall) — actual data access is enforced
+        // by the database regardless of this value.
+        const { serverAccess, subscriptionStatus, getTrialDaysLeft } = get();
+        if (serverAccess) return serverAccess.hasAccess;
         if (subscriptionStatus === 'active') return true;
         if (subscriptionStatus === 'trial') return getTrialDaysLeft() > 0;
         return false;
@@ -165,6 +195,7 @@ export const useSubscriptionStore = create<SubscriptionState>()(
           subscriptionStatus: 'none',
           activePlan: null,
           subscriptionEndDate: null,
+          serverAccess: null,
         });
       },
     }),
