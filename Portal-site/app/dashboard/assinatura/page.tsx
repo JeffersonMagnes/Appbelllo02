@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Crown, TickSquare, Shield, Star1, ArrowRight2, Tag, Gift, CloseCircle, Card, Clock } from 'iconsax-react';
 import { Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { useTrialClock } from '@/lib/hooks/use-trial-clock';
+import { TRIAL_DAY_MS, formatTrialRemaining, remainingFraction, remainingMs } from '@/lib/trial-remaining';
 
 const REFERRAL_DISCOUNT_PERCENT = 20;
 const REFERRALS_ENABLED = false;
@@ -45,7 +47,11 @@ export default function AssinaturaPage() {
   const [loading, setLoading] = useState(true);
   const [currentPlan, setCurrentPlan] = useState('trial');
   const [trialStarted, setTrialStarted] = useState<string | null>(null);
-  const [trialDaysLeft, setTrialDaysLeft] = useState(30);
+  const [trialAccess, setTrialAccess] = useState<{ endsAt: string | null; serverTime: string | null; daysLeft: number } | null>(null);
+  // Live countdown: ticks while the page is open and re-reads the server's expiry/time
+  // when the tab is shown again.
+  const accessRef = useRef<() => void>();
+  const { markRead, elapsed } = useTrialClock(() => accessRef.current?.());
   const [commercialNotice, setCommercialNotice] = useState('');
   const [checkoutPlan, setCheckoutPlan] = useState<string | null>(null);
 
@@ -74,9 +80,18 @@ export default function AssinaturaPage() {
       if (access) {
         setCurrentPlan(access.status === 'subscription_active' ? (access.plan_id || 'trial') : 'trial');
         setTrialStarted(access.trial_started_at ?? null);
-        setTrialDaysLeft(access.trial_days_left ?? 0);
+        setTrialAccess({ endsAt: access.trial_ends_at ?? null, serverTime: access.server_time ?? null, daysLeft: access.trial_days_left ?? 0 });
+        markRead();
       }
       setLoading(false);
+    };
+    accessRef.current = async () => {
+      const supabase = createClient();
+      const { data: access } = await (supabase as any).rpc('get_my_establishment_access');
+      if (access) {
+        setTrialAccess({ endsAt: access.trial_ends_at ?? null, serverTime: access.server_time ?? null, daysLeft: access.trial_days_left ?? 0 });
+        markRead();
+      }
     };
     load();
   }, []);
@@ -178,26 +193,31 @@ export default function AssinaturaPage() {
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 -mt-12 space-y-5 pb-8">
 
         {/* Trial banner */}
-        {isTrial && (
-          <div className={`bg-white rounded-2xl border-2 shadow-sm p-5 ${trialDaysLeft > 7 ? 'border-green-300' : trialDaysLeft > 0 ? 'border-amber-400' : 'border-red-400'}`}>
+        {isTrial && (() => {
+          // Effective expiry + server reference; never rounded up to a whole day.
+          const t = formatTrialRemaining(trialAccess ? (remainingMs(trialAccess.endsAt, trialAccess.serverTime, elapsed()) ?? trialAccess.daysLeft * TRIAL_DAY_MS) : null);
+          const tone = t.expired ? 'red' : t.ms > 7 * TRIAL_DAY_MS ? 'green' : 'amber';
+          return (
+          <div className={`bg-white rounded-2xl border-2 shadow-sm p-5 ${tone === 'green' ? 'border-green-300' : tone === 'amber' ? 'border-amber-400' : 'border-red-400'}`}>
             <div className="flex items-center gap-3 mb-3">
-              <Star1 className={`w-6 h-6 ${trialDaysLeft > 7 ? 'text-green-600' : trialDaysLeft > 0 ? 'text-amber-500' : 'text-red-500'}`} variant="Outline" />
+              <Star1 className={`w-6 h-6 ${tone === 'green' ? 'text-green-600' : tone === 'amber' ? 'text-amber-500' : 'text-red-500'}`} variant="Outline" />
               <div>
                 <p className="font-bold text-gray-900">
-                  {trialDaysLeft > 0 ? `${trialDaysLeft} dias restantes no trial` : 'Trial expirado'}
+                  {t.expired ? 'Trial expirado' : `${t.label} no trial`}
                 </p>
                 <p className="text-xs text-gray-500">Início: {trialStarted ? new Date(trialStarted).toLocaleDateString('pt-BR') : 'não informado'}</p>
               </div>
             </div>
             <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full transition-all ${trialDaysLeft > 7 ? 'bg-green-500' : trialDaysLeft > 0 ? 'bg-amber-400' : 'bg-red-500'}`}
-                style={{ width: `${Math.min(100, (trialDaysLeft / 30) * 100)}%` }}
+                className={`h-full rounded-full transition-all ${tone === 'green' ? 'bg-green-500' : tone === 'amber' ? 'bg-amber-400' : 'bg-red-500'}`}
+                style={{ width: `${remainingFraction(t.ms) * 100}%` }}
               />
             </div>
-            <p className="text-xs text-gray-400 mt-1">Trial ativo &middot; {trialDaysLeft} dias restantes</p>
+            <p className="text-xs text-gray-400 mt-1">{t.expired ? 'Trial expirado' : `Trial ativo \u00b7 ${t.label}`}</p>
           </div>
-        )}
+          );
+        })()}
 
         {/* Plans */}
         {commercialNotice && (

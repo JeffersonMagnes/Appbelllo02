@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Calendar, Profile2User, DollarCircle, Scissor, Clock, Crown, TrendUp,
   Chart, ClipboardText, MagicStar, ShoppingBag, ProfileCircle, Box,
@@ -10,6 +10,8 @@ import { BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { Loader2 } from 'lucide-react';
 import Header from '@/components/dashboard/Header';
 import { createClient } from '@/lib/supabase/client';
+import { useTrialClock } from '@/lib/hooks/use-trial-clock';
+import { TRIAL_DAY_MS, formatTrialExpiresIn, formatTrialRemaining, remainingFraction, remainingMs } from '@/lib/trial-remaining';
 import type { Appointment } from '@/lib/supabase/types';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -67,7 +69,11 @@ export default function DashboardPage() {
   const [chartData, setChartData] = useState<ChartDay[]>([]);
   const [weekTotal, setWeekTotal] = useState(0);
   const [monthlyGoal, setMonthlyGoal] = useState(0);
-  const [trialDaysLeft, setTrialDaysLeft] = useState<number | null>(null);
+  const [trialAccess, setTrialAccess] = useState<{ endsAt: string | null; serverTime: string | null; daysLeft: number } | null>(null);
+  // Live countdown: ticks while the page is open and re-reads the server's expiry/time
+  // when the tab is shown again.
+  const accessRef = useRef<() => void>();
+  const { markRead, elapsed } = useTrialClock(() => accessRef.current?.());
   const [estName, setEstName] = useState('');
   const [estLogoUrl, setEstLogoUrl] = useState('');
   const [setupProgress, setSetupProgress] = useState<{ hasName: boolean; hasAddress: boolean; hasLogo: boolean; hasHours: boolean; hasProfessional: boolean; hasService: boolean } | null>(null);
@@ -107,10 +113,17 @@ export default function DashboardPage() {
 
       // Single server-side source of truth for trial/subscription status —
       // never computed from the device clock.
-      const { data: access } = await (supabase as any).rpc('get_my_establishment_access');
-      if (access) {
-        setTrialDaysLeft(access.status === 'subscription_active' ? null : (access.trial_days_left ?? 0));
-      }
+      const loadAccess = async () => {
+        const { data: access } = await (supabase as any).rpc('get_my_establishment_access');
+        if (access) {
+          setTrialAccess(access.status === 'subscription_active'
+            ? null
+            : { endsAt: access.trial_ends_at ?? null, serverTime: access.server_time ?? null, daysLeft: access.trial_days_left ?? 0 });
+          markRead();
+        }
+      };
+      accessRef.current = loadAccess;
+      await loadAccess();
 
       const today = new Date();
       const todayStr = today.toISOString().split('T')[0];
@@ -270,34 +283,41 @@ export default function DashboardPage() {
       <main className="flex-1 p-4 sm:p-6 space-y-6">
 
         {/* Trial banner */}
-        {trialDaysLeft !== null && trialDaysLeft === 0 && (
-          <div className="rounded-2xl p-4 flex items-center gap-3 border bg-red-50 border-red-200">
-            <Crown className="w-5 h-5 flex-shrink-0 text-red-500" variant="Outline" />
-            <div className="flex-1">
-              <p className="text-sm font-bold text-red-800">Seu período gratuito expirou!</p>
-              <p className="text-xs text-red-600 mt-0.5">Assine um plano para continuar usando todas as funcionalidades.</p>
-            </div>
-            <Link href="/dashboard/assinatura" className="text-xs font-bold px-4 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors">
-              Assinar agora
-            </Link>
-          </div>
-        )}
-        {trialDaysLeft !== null && trialDaysLeft > 0 && (
-          <div className={`rounded-2xl p-4 flex items-center gap-3 border ${trialDaysLeft <= 7 ? 'bg-amber-50 border-amber-200' : 'bg-brand-primary/5 border-brand-primary/20'}`}>
-            <Crown className={`w-5 h-5 flex-shrink-0 ${trialDaysLeft <= 7 ? 'text-amber-500' : 'text-brand-primary'}`} variant="Outline" />
-            <div className="flex-1">
-              <p className={`text-sm font-bold ${trialDaysLeft <= 7 ? 'text-amber-800' : 'text-brand-primary'}`}>
-                {trialDaysLeft <= 7 ? `Trial expira em ${trialDaysLeft} dia${trialDaysLeft !== 1 ? 's' : ''}!` : `Teste gratuito · ${trialDaysLeft} dias restantes`}
-              </p>
-              <div className="h-1.5 bg-white rounded-full mt-1.5 overflow-hidden">
-                <div className={`h-full rounded-full transition-all ${trialDaysLeft <= 7 ? 'bg-amber-400' : 'bg-brand-primary'}`} style={{ width: `${Math.min(100, ((30 - Math.min(trialDaysLeft, 30)) / 30) * 100)}%` }} />
+        {trialAccess && (() => {
+          // Effective expiry + server reference; never rounded up to a whole day.
+          const t = formatTrialRemaining(remainingMs(trialAccess.endsAt, trialAccess.serverTime, elapsed()) ?? trialAccess.daysLeft * TRIAL_DAY_MS);
+          if (t.expired) {
+            return (
+              <div className="rounded-2xl p-4 flex items-center gap-3 border bg-red-50 border-red-200">
+                <Crown className="w-5 h-5 flex-shrink-0 text-red-500" variant="Outline" />
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-red-800">Seu período gratuito expirou!</p>
+                  <p className="text-xs text-red-600 mt-0.5">Assine um plano para continuar usando todas as funcionalidades.</p>
+                </div>
+                <Link href="/dashboard/assinatura" className="text-xs font-bold px-4 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors">
+                  Assinar agora
+                </Link>
               </div>
+            );
+          }
+          const hot = t.ms <= 7 * TRIAL_DAY_MS;
+          return (
+            <div className={`rounded-2xl p-4 flex items-center gap-3 border ${hot ? 'bg-amber-50 border-amber-200' : 'bg-brand-primary/5 border-brand-primary/20'}`}>
+              <Crown className={`w-5 h-5 flex-shrink-0 ${hot ? 'text-amber-500' : 'text-brand-primary'}`} variant="Outline" />
+              <div className="flex-1">
+                <p className={`text-sm font-bold ${hot ? 'text-amber-800' : 'text-brand-primary'}`}>
+                  {hot ? `${formatTrialExpiresIn(t)}!` : `Teste gratuito · ${t.label}`}
+                </p>
+                <div className="h-1.5 bg-white rounded-full mt-1.5 overflow-hidden">
+                  <div className={`h-full rounded-full transition-all ${hot ? 'bg-amber-400' : 'bg-brand-primary'}`} style={{ width: `${(1 - remainingFraction(t.ms)) * 100}%` }} />
+                </div>
+              </div>
+              <Link href="/dashboard/assinatura" className={`text-xs font-bold px-3 py-1.5 rounded-xl ${hot ? 'bg-amber-500 text-white' : 'bg-brand-primary text-white'}`}>
+                Assinar
+              </Link>
             </div>
-            <Link href="/dashboard/assinatura" className={`text-xs font-bold px-3 py-1.5 rounded-xl ${trialDaysLeft <= 7 ? 'bg-amber-500 text-white' : 'bg-brand-primary text-white'}`}>
-              Assinar
-            </Link>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Birthday Alerts */}
         {birthdayClients.length > 0 && (

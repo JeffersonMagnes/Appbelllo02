@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SearchNormal1, Sms, Eye, CloseCircle, Copy, Clock, Profile2User, Buildings2, Calendar, Refresh2, Lock as LockIcon } from 'iconsax-react';
 import { Ban, ExternalLink } from 'lucide-react';
 import AdminTopbar from '@/components/admin/AdminTopbar';
@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input';
 import StatusBadge from '@/components/admin/StatusBadge';
 import ExtendTrialModal, { type ExtendTrialTarget } from '@/components/admin/ExtendTrialModal';
 import { createClient } from '@/lib/supabase/client';
+import { useTrialClock } from '@/lib/hooks/use-trial-clock';
+import { TRIAL_DAY_MS, formatTrialRemaining, remainingFraction, remainingMs } from '@/lib/trial-remaining';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
 type AdminUser = {
@@ -32,6 +34,7 @@ type AdminUser = {
   status: string;
   trialDaysLeft: number;
   trialEndsAt: string | null;
+  serverTime: string | null;
   trialExpired: boolean;
 };
 
@@ -99,8 +102,13 @@ export default function UsuariosPage() {
   const [extendTarget, setExtendTarget] = useState<ExtendTrialTarget | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
 
-  const fetchUsers = async () => {
-    setLoading(true);
+  // Live "time remaining": ticks while the page is open and re-reads the server's
+  // expiry/time when the tab is shown again (silent reload, no spinner).
+  const fetchRef = useRef<(silent?: boolean) => void>();
+  const { markRead, elapsed } = useTrialClock(() => fetchRef.current?.(true));
+
+  const fetchUsers = async (silent = false) => {
+    if (!silent) setLoading(true);
     setError(null);
     const supabase = createClient();
     const [{ data, error: err }, { data: accessRows }] = await Promise.all([
@@ -124,6 +132,7 @@ export default function UsuariosPage() {
       const trialDaysLeft = access?.trial_days_left ?? 0;
       const trialEndsAt: string | null = access?.trial_ends_at ?? null;
       const trialExpired = access?.status === 'trial_expired';
+      const serverTime: string | null = access?.server_time ?? null;
       return {
         ...row,
         extra_trial_days: row.extra_trial_days ?? 0,
@@ -133,13 +142,16 @@ export default function UsuariosPage() {
         status,
         trialDaysLeft,
         trialEndsAt,
+        serverTime,
         trialExpired,
       };
     });
     setUsers(mapped);
+    markRead();
     setLastRefresh(new Date());
     setLoading(false);
   };
+  fetchRef.current = fetchUsers;
 
   useEffect(() => { fetchUsers(); }, []);
 
@@ -202,7 +214,7 @@ export default function UsuariosPage() {
             </p>
           </div>
           <button
-            onClick={fetchUsers}
+            onClick={() => fetchUsers()}
             disabled={loading}
             className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50"
           >
@@ -402,19 +414,25 @@ export default function UsuariosPage() {
                       <td className="px-4 py-3.5">
                         <div className="flex flex-col gap-1">
                           <StatusBadge status={u.status} />
-                          {u.status === 'trial' && (
-                            <div>
-                              <div className="h-1 bg-gray-100 rounded-full w-20 mb-0.5">
-                                <div
-                                  className={`h-full rounded-full ${u.trialDaysLeft <= 5 ? 'bg-red-400' : 'bg-[#6666cc]'}`}
-                                  style={{ width: `${(u.trialDaysLeft / (30 + u.extra_trial_days)) * 100}%` }}
-                                />
+                          {u.status === 'trial' && (() => {
+                            // Effective expiry + server reference; never rounded up to "1 day".
+                            const left = remainingMs(u.trialEndsAt, u.serverTime, elapsed());
+                            const t = formatTrialRemaining(left ?? u.trialDaysLeft * TRIAL_DAY_MS);
+                            const hot = t.expired || t.ms <= 5 * TRIAL_DAY_MS;
+                            return (
+                              <div>
+                                <div className="h-1 bg-gray-100 rounded-full w-20 mb-0.5">
+                                  <div
+                                    className={`h-full rounded-full ${hot ? 'bg-red-400' : 'bg-[#6666cc]'}`}
+                                    style={{ width: `${remainingFraction(t.ms, 30 + u.extra_trial_days) * 100}%` }}
+                                  />
+                                </div>
+                                <span className={`text-xs font-semibold ${hot ? 'text-red-500' : 'text-gray-400'}`}>
+                                  {t.label}{!t.expired && u.extra_trial_days > 0 ? ` (+${u.extra_trial_days}d)` : ''}
+                                </span>
                               </div>
-                              <span className={`text-xs font-semibold ${u.trialDaysLeft <= 5 ? 'text-red-500' : 'text-gray-400'}`}>
-                                {u.trialDaysLeft}d restantes{u.extra_trial_days > 0 ? ` (+${u.extra_trial_days})` : ''}
-                              </span>
-                            </div>
-                          )}
+                            );
+                          })()}
                         </div>
                       </td>
 
@@ -609,7 +627,7 @@ export default function UsuariosPage() {
             setExtendTarget(null);
             setSelectedUsers(new Set());
           }}
-          onChanged={fetchUsers}
+          onChanged={() => fetchUsers(true)}
         />
       )}
     </>

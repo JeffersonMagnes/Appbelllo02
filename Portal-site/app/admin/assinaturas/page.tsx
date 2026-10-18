@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SearchNormal1, Refresh2, CloseCircle, Card, Clock, DollarCircle, TrendUp as TrendingUp, Profile2User, Calendar, ArrowDown2, Sms, Buildings2 } from 'iconsax-react';
 import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
 import AdminTopbar from '@/components/admin/AdminTopbar';
 import { createClient } from '@/lib/supabase/client';
+import { useTrialClock } from '@/lib/hooks/use-trial-clock';
+import { TRIAL_DAY_MS, formatTrialRemaining, remainingFraction, remainingMs } from '@/lib/trial-remaining';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
 type PlanId = 'trial' | 'starter' | 'pro' | 'premium' | 'cancelado' | 'expirado';
@@ -23,6 +25,7 @@ interface Subscription {
   daysUsing: number;
   nextBilling: string | null;
   trialEndsAt: string | null;
+  serverTime: string | null;
   trialDaysLeft: number;
 }
 
@@ -204,8 +207,13 @@ export default function AssinaturasPage() {
   const [detail, setDetail]         = useState<Subscription | null>(null);
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
-  const fetchData = async () => {
-    setLoading(true);
+  // Live "time remaining": ticks while the page is open and re-reads the server's
+  // expiry/time when the tab is shown again (silent reload, no spinner).
+  const fetchRef = useRef<(silent?: boolean) => void>();
+  const { markRead, elapsed } = useTrialClock(() => fetchRef.current?.(true));
+
+  const fetchData = async (silent = false) => {
+    if (!silent) setLoading(true);
     const supabase = createClient();
     // Single server-side source of truth for trial/subscription status — the
     // same formula the owner's own dashboard and the mobile app read.
@@ -246,14 +254,20 @@ export default function AssinaturasPage() {
         daysUsing: days,
         nextBilling,
         trialEndsAt,
+        serverTime: access?.server_time ?? null,
         trialDaysLeft,
       };
     });
 
     setSubs(mapped);
+    markRead();
     setLastRefresh(new Date());
     setLoading(false);
   };
+  fetchRef.current = fetchData;
+
+  // Remaining time from the effective expiry + server reference (never rounded up to a day).
+  const leftOf = (s: Subscription) => remainingMs(s.trialEndsAt, s.serverTime, elapsed()) ?? s.trialDaysLeft * TRIAL_DAY_MS;
 
   useEffect(() => { fetchData(); }, []);
 
@@ -270,7 +284,7 @@ export default function AssinaturasPage() {
   const mrr          = subs.filter(s => s.status === 'ativo').reduce((a, s) => a + s.mrr, 0);
   const trials       = subs.filter(s => s.status === 'trial').length;
   const ativos       = subs.filter(s => s.status === 'ativo').length;
-  const expirando3d  = subs.filter(s => s.status === 'trial' && s.trialDaysLeft <= 3).length;
+  const expirando3d  = subs.filter(s => s.status === 'trial' && leftOf(s) <= 3 * TRIAL_DAY_MS).length;
 
   return (
     <>
@@ -283,7 +297,7 @@ export default function AssinaturasPage() {
             <h1 className="text-xl font-bold text-gray-900">Assinaturas</h1>
             <p className="text-sm text-gray-400 mt-0.5">Gestão de planos e pagamentos dos clientes</p>
           </div>
-          <button onClick={fetchData} disabled={loading}
+          <button onClick={() => fetchData()} disabled={loading}
             className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50">
             <Refresh2 className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`}  variant="Outline" /> Atualizar
           </button>
@@ -411,22 +425,26 @@ export default function AssinaturasPage() {
 
                       {/* Trial / vencimento */}
                       <td className="px-4 py-3.5">
-                        {sub.status === 'trial' ? (
+                        {sub.status === 'trial' ? (() => {
+                          const t = formatTrialRemaining(leftOf(sub));
+                          const hot = t.expired || t.ms <= 3 * TRIAL_DAY_MS;
+                          return (
                           <div>
                             <div className="flex items-center gap-1.5 mb-1">
-                              {sub.trialDaysLeft <= 3
+                              {hot
                                 ? <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
                                 : <Clock className="w-3.5 h-3.5 text-amber-400"  variant="Outline" />}
-                              <span className={`text-xs font-bold ${sub.trialDaysLeft <= 3 ? 'text-red-500' : 'text-amber-600'}`}>
-                                {sub.trialDaysLeft}d restantes
+                              <span className={`text-xs font-bold ${hot ? 'text-red-500' : 'text-amber-600'}`}>
+                                {t.label}
                               </span>
                             </div>
                             <div className="h-1 bg-gray-100 rounded-full w-20">
-                              <div className={`h-full rounded-full transition-all ${sub.trialDaysLeft <= 3 ? 'bg-red-400' : 'bg-amber-400'}`}
-                                style={{ width: `${Math.min(100, ((30 - sub.trialDaysLeft) / 30) * 100)}%` }} />
+                              <div className={`h-full rounded-full transition-all ${hot ? 'bg-red-400' : 'bg-amber-400'}`}
+                                style={{ width: `${(1 - remainingFraction(t.ms)) * 100}%` }} />
                             </div>
                           </div>
-                        ) : (
+                          );
+                        })() : (
                           <span className="text-xs text-gray-400">{fmtDate(sub.trialEndsAt)}</span>
                         )}
                       </td>
@@ -475,14 +493,14 @@ export default function AssinaturasPage() {
         </div>
 
         {/* Alertas — trials expirando */}
-        {subs.filter(s => s.status === 'trial' && s.trialDaysLeft <= 5).length > 0 && (
+        {subs.filter(s => s.status === 'trial' && leftOf(s) <= 5 * TRIAL_DAY_MS).length > 0 && (
           <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
             <div className="flex items-center gap-2 mb-3">
               <AlertTriangle className="w-4 h-4 text-amber-600" />
               <p className="text-sm font-bold text-amber-800">Trials expirando nos próximos 5 dias</p>
             </div>
             <div className="space-y-2">
-              {subs.filter(s => s.status === 'trial' && s.trialDaysLeft <= 5).map(s => (
+              {subs.filter(s => s.status === 'trial' && leftOf(s) <= 5 * TRIAL_DAY_MS).map(s => (
                 <div key={s.id} className="flex items-center justify-between bg-white rounded-xl border border-amber-100 px-4 py-2.5">
                   <div className="flex items-center gap-3">
                     <Avatar logo={s.logo_url} name={s.establishment_name} size={30} />
@@ -492,8 +510,8 @@ export default function AssinaturasPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${s.trialDaysLeft <= 1 ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-amber-600'}`}>
-                      {s.trialDaysLeft === 0 ? 'Hoje!' : `${s.trialDaysLeft}d`}
+                    <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${leftOf(s) <= TRIAL_DAY_MS ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-amber-600'}`}>
+                      {formatTrialRemaining(leftOf(s)).short}
                     </span>
                     <a href={`mailto:${s.owner_email}`}
                       className="px-3 py-1 rounded-lg bg-[#7C6EFA] text-white text-xs font-semibold hover:bg-[#6B5FE8] transition-colors">

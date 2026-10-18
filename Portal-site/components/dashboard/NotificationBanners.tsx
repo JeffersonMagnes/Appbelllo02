@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X, AlertTriangle, Clock } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { useTrialClock } from '@/lib/hooks/use-trial-clock';
+import { TRIAL_DAY_MS, formatTrialRemaining, remainingMs } from '@/lib/trial-remaining';
 
 type Banner = {
   id: string;
@@ -13,9 +15,16 @@ type Banner = {
   action?: { label: string; href: string };
 };
 
+type TrialAccess = { endsAt: string | null; serverTime: string | null; daysLeft: number };
+
 export default function NotificationBanners() {
-  const [banners, setBanners] = useState<Banner[]>([]);
+  const [access, setAccess] = useState<TrialAccess | null>(null);
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
+
+  // Live countdown: ticks while the page is open and re-reads the server's
+  // expiry/time when the tab is shown again.
+  const loadRef = useRef<() => void>();
+  const { markRead, elapsed } = useTrialClock(() => loadRef.current?.());
 
   useEffect(() => {
     const load = async () => {
@@ -37,50 +46,18 @@ export default function NotificationBanners() {
         const { data: access } = await (supabase as any).rpc('get_my_establishment_access');
         if (!access) return;
 
-        const plan = access.status === 'subscription_active' ? 'active' : 'trial';
-        const daysLeft = access.trial_days_left ?? 0;
-
-        const found: Banner[] = [];
-
-        // ── Trial expirando ──────────────────────────────────────────────
-        if (plan === 'trial') {
-          if (daysLeft <= 0) {
-            found.push({
-              id: 'trial-expired',
-              type: 'danger',
-              icon: <Clock className="w-4 h-4" />,
-              title: 'Seu trial encerrou',
-              message: 'Assine um plano para continuar usando o AppBello.',
-              action: { label: 'Ver planos', href: '/dashboard/assinatura' },
-            });
-          } else if (daysLeft === 1) {
-            found.push({
-              id: 'trial-1',
-              type: 'danger',
-              icon: <Clock className="w-4 h-4" />,
-              title: 'Último dia do seu trial!',
-              message: 'Seu período gratuito termina hoje. Assine agora e não perca seus dados.',
-              action: { label: 'Assinar agora', href: '/dashboard/assinatura' },
-            });
-          } else if (daysLeft <= 3) {
-            found.push({
-              id: 'trial-3',
-              type: 'warning',
-              icon: <Clock className="w-4 h-4" />,
-              title: `Seu trial expira em ${daysLeft} dias`,
-              message: 'Assine agora para continuar usando o AppBello sem interrupção.',
-              action: { label: 'Ver planos', href: '/dashboard/assinatura' },
-            });
-          }
-        }
-
-        setBanners(found);
+        setAccess(access.status === 'subscription_active'
+          ? null
+          : { endsAt: access.trial_ends_at ?? null, serverTime: access.server_time ?? null, daysLeft: access.trial_days_left ?? 0 });
+        markRead();
       } catch (error) {
         console.error('NotificationBanners load failed:', error);
       }
     };
 
+    loadRef.current = load;
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Recupera dismissed da sessão
@@ -102,6 +79,40 @@ export default function NotificationBanners() {
       console.error('Failed to persist dismissed_banners:', error);
     }
   };
+
+  // Effective expiry + server reference; never rounded up to a whole day.
+  const banners: Banner[] = [];
+  if (access) {
+    const t = formatTrialRemaining(remainingMs(access.endsAt, access.serverTime, elapsed()) ?? access.daysLeft * TRIAL_DAY_MS);
+    if (t.expired) {
+      banners.push({
+        id: 'trial-expired',
+        type: 'danger',
+        icon: <Clock className="w-4 h-4" />,
+        title: 'Seu trial encerrou',
+        message: 'Assine um plano para continuar usando o AppBello.',
+        action: { label: 'Ver planos', href: '/dashboard/assinatura' },
+      });
+    } else if (t.ms < TRIAL_DAY_MS) {
+      banners.push({
+        id: 'trial-1',
+        type: 'danger',
+        icon: <Clock className="w-4 h-4" />,
+        title: 'Último dia do seu trial!',
+        message: `Seu período gratuito termina em ${t.ms < 60_000 ? 'menos de 1 min' : t.short}. Assine agora e não perca seus dados.`,
+        action: { label: 'Assinar agora', href: '/dashboard/assinatura' },
+      });
+    } else if (t.ms <= 3 * TRIAL_DAY_MS) {
+      banners.push({
+        id: 'trial-3',
+        type: 'warning',
+        icon: <Clock className="w-4 h-4" />,
+        title: `Seu trial expira em ${t.short}`,
+        message: 'Assine agora para continuar usando o AppBello sem interrupção.',
+        action: { label: 'Ver planos', href: '/dashboard/assinatura' },
+      });
+    }
+  }
 
   const visible = banners.filter(b => !dismissed.has(b.id));
   if (!visible.length) return null;
