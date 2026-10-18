@@ -262,12 +262,14 @@ export default function UsuariosPage() {
             </span>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setExtendTarget({
-                  ids: Array.from(selectedUsers),
-                  name: `${selectedUsers.size} estabelecimentos`,
-                  currentEndsAt: null,
-                  expired: false,
-                })}
+                onClick={() => {
+                  const ids = Array.from(selectedUsers);
+                  // A single selected row behaves exactly like the per-row button.
+                  const only = ids.length === 1 ? users.find((x) => x.id === ids[0]) : undefined;
+                  setExtendTarget(only
+                    ? { ids, name: only.establishment_name, currentEndsAt: only.trialEndsAt, expired: only.trialExpired }
+                    : { ids, name: `${ids.length} estabelecimentos`, currentEndsAt: null, expired: false });
+                }}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#6666cc] text-white text-sm font-semibold hover:bg-[#5555aa] transition-colors"
               >
                 <Clock className="w-4 h-4" variant="Outline" />

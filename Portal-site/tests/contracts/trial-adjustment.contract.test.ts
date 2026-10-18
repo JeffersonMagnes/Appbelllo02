@@ -119,6 +119,8 @@ describe('source contracts', () => {
     expect(page).not.toContain('admin_bulk_extend_trial');
     expect(page).toContain('ExtendTrialModal');
     expect(page).toContain('trial_ends_at');
+    // one selected row must behave like the per-row button (with its current expiry)
+    expect(page).toContain('ids.length === 1 ? users.find');
   });
 
   test('success is shown only after the server answered without error and returned rows', () => {
