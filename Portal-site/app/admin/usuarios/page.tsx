@@ -6,6 +6,7 @@ import { Ban, ExternalLink } from 'lucide-react';
 import AdminTopbar from '@/components/admin/AdminTopbar';
 import { Input } from '@/components/ui/input';
 import StatusBadge from '@/components/admin/StatusBadge';
+import ExtendTrialModal, { type ExtendTrialTarget } from '@/components/admin/ExtendTrialModal';
 import { createClient } from '@/lib/supabase/client';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
@@ -30,6 +31,8 @@ type AdminUser = {
   plan: string;
   status: string;
   trialDaysLeft: number;
+  trialEndsAt: string | null;
+  trialExpired: boolean;
 };
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
@@ -93,13 +96,8 @@ export default function UsuariosPage() {
   const [viewUser, setViewUser] = useState<AdminUser | null>(null);
   const [banId, setBanId] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState(new Date());
-  const [extendUserId, setExtendUserId] = useState<string | null>(null);
-  const [extendUserName, setExtendUserName] = useState('');
-  const [extendCurrentExtra, setExtendCurrentExtra] = useState(0);
-  const [extendDays, setExtendDays] = useState('');
-  const [extendLoading, setExtendLoading] = useState(false);
+  const [extendTarget, setExtendTarget] = useState<ExtendTrialTarget | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
-  const [bulkExtend, setBulkExtend] = useState(false);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -124,6 +122,8 @@ export default function UsuariosPage() {
       const status = !row.active ? 'bloqueado' : access?.status === 'subscription_active' ? 'ativo' : 'trial';
       const plan = access?.status === 'subscription_active' ? (access.plan_id || 'pro') : 'trial';
       const trialDaysLeft = access?.trial_days_left ?? 0;
+      const trialEndsAt: string | null = access?.trial_ends_at ?? null;
+      const trialExpired = access?.status === 'trial_expired';
       return {
         ...row,
         extra_trial_days: row.extra_trial_days ?? 0,
@@ -132,6 +132,8 @@ export default function UsuariosPage() {
         plan,
         status,
         trialDaysLeft,
+        trialEndsAt,
+        trialExpired,
       };
     });
     setUsers(mapped);
@@ -160,35 +162,6 @@ export default function UsuariosPage() {
     await (supabase.from('establishments') as any).update({ active: !target.active }).eq('id', banId);
     setBanId(null);
     fetchUsers();
-  };
-
-  const handleExtendTrial = async () => {
-    const days = parseInt(extendDays);
-    if (!days || days <= 0) return;
-    setExtendLoading(true);
-    try {
-      const supabase = createClient();
-      if (bulkExtend) {
-        await (supabase as any).rpc('admin_bulk_extend_trial', {
-          est_ids: Array.from(selectedUsers),
-          extra_days: days,
-        });
-      } else if (extendUserId) {
-        await (supabase as any).rpc('admin_extend_trial', {
-          est_id: extendUserId,
-          extra_days: days,
-        });
-      }
-      setExtendUserId(null);
-      setBulkExtend(false);
-      setSelectedUsers(new Set());
-      setExtendDays('');
-      fetchUsers();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setExtendLoading(false);
-    }
   };
 
   const [resetPasswordId, setResetPasswordId] = useState<string | null>(null);
@@ -289,7 +262,12 @@ export default function UsuariosPage() {
             </span>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => { setBulkExtend(true); setExtendDays(''); }}
+                onClick={() => setExtendTarget({
+                  ids: Array.from(selectedUsers),
+                  name: `${selectedUsers.size} estabelecimentos`,
+                  currentEndsAt: null,
+                  expired: false,
+                })}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#6666cc] text-white text-sm font-semibold hover:bg-[#5555aa] transition-colors"
               >
                 <Clock className="w-4 h-4" variant="Outline" />
@@ -452,12 +430,12 @@ export default function UsuariosPage() {
                           </button>
                           {u.status === 'trial' && (
                             <button
-                              onClick={() => {
-                                setExtendUserId(u.id);
-                                setExtendUserName(u.establishment_name);
-                                setExtendCurrentExtra(u.extra_trial_days);
-                                setExtendDays('');
-                              }}
+                              onClick={() => setExtendTarget({
+                                ids: [u.id],
+                                name: u.establishment_name,
+                                currentEndsAt: u.trialEndsAt,
+                                expired: u.trialExpired,
+                              })}
                               title="Estender Trial"
                               className="p-1.5 rounded-lg text-gray-400 hover:text-amber-500 hover:bg-amber-50 transition-colors"
                             >
@@ -622,42 +600,15 @@ export default function UsuariosPage() {
       )}
 
       {/* Modal: Estender Trial */}
-      {(extendUserId || bulkExtend) && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => { setExtendUserId(null); setBulkExtend(false); }}>
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6" onClick={e => e.stopPropagation()}>
-            <h2 className="font-bold text-lg text-gray-900 mb-1">Estender Trial</h2>
-            <p className="text-sm text-gray-500 mb-4">
-              {bulkExtend
-                ? `Adicionar dias extras para ${selectedUsers.size} usuário(s)`
-                : `Adicionar dias extras para ${extendUserName}`}
-            </p>
-            {!bulkExtend && (
-              <p className="text-xs text-gray-400 mb-3">Dias extras atuais: {extendCurrentExtra}</p>
-            )}
-            <input
-              type="number" min="1" max="365"
-              value={extendDays}
-              onChange={e => setExtendDays(e.target.value)}
-              placeholder="Número de dias extras"
-              className="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm mb-4"
-            />
-            <div className="flex gap-3">
-              <button
-                onClick={() => { setExtendUserId(null); setBulkExtend(false); setSelectedUsers(new Set()); }}
-                className="flex-1 h-11 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleExtendTrial}
-                disabled={extendLoading || !extendDays}
-                className="flex-1 h-11 rounded-xl bg-[#6666cc] hover:bg-[#5555aa] text-white font-semibold text-sm disabled:opacity-50 transition-colors"
-              >
-                {extendLoading ? 'Salvando...' : 'Confirmar'}
-              </button>
-            </div>
-          </div>
-        </div>
+      {extendTarget && (
+        <ExtendTrialModal
+          target={extendTarget}
+          onClose={() => {
+            setExtendTarget(null);
+            setSelectedUsers(new Set());
+          }}
+          onChanged={fetchUsers}
+        />
       )}
     </>
   );
