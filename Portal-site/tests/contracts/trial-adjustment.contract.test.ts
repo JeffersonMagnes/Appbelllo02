@@ -62,32 +62,49 @@ describe('ExtendTrialModal', () => {
     return renderToStaticMarkup(React.createElement(Modal, { target, onClose: () => {}, onChanged: () => {} }));
   };
 
-  test('expired trial: shows the current expiry in Brasília time and defaults to "from now"', async () => {
+  test('shows quantity, a visible Minutos/Horas/Dias selector, current and new expiry, Cancelar and Confirmar', async () => {
     const html = await render({ ids: ['e1'], name: 'Jefferson Maciel', currentEndsAt: '2026-07-27T16:03:25.539958+00:00', expired: true });
     expect(html).toContain('Jefferson Maciel');
-    expect(html).toContain('27/07/2026 13:03:25 (Brasília, UTC−3)');
-    expect(html).toContain('já vencido');
-    expect(html).toContain('A partir de agora');
-    expect(html).toContain('(recomendado)');
-    expect(html).toMatch(/name="trial-mode"[^>]*checked=""[^>]*\/><span class="text-sm"><b>A partir de agora/);
-    expect(html).toContain('Minutos');
-    expect(html).toContain('Horas');
-    expect(html).toContain('Dias');
     expect(html).toContain('Quantidade');
+    expect(html).toContain('type="number"');
+    expect(html).toContain('Unidade');
+    for (const unit of ['Minutos', 'Horas', 'Dias']) expect(html).toMatch(new RegExp(`role="radio"[^>]*>${unit}</button>`));
+    expect((html.match(/role="radio"/g) ?? []).length).toBe(3);
+    expect(html).not.toContain('<select');
+    expect(html).toContain('Vencimento atual');
+    expect(html).toContain('27/07/2026 13:03:25 (Brasília, UTC−3)');
+    expect(html).toContain('Novo vencimento');
+    expect(html).toContain('Informe a quantidade para ver o novo vencimento.');
+    expect(html).toContain('>Cancelar</button>');
+    expect(html).toContain('>Confirmar</button>');
   });
 
-  test('active trial defaults to adding to the current expiry', async () => {
+  test('expired trial counts from now by default; adding to the old expiry is a secondary link in plain words', async () => {
+    const html = await render({ ids: ['e1'], name: 'X', currentEndsAt: '2026-07-27T16:03:25Z', expired: true });
+    expect(html).toContain('O novo prazo conta a partir de agora.');
+    expect(html).toContain('>Somar ao vencimento atual</button>');
+    expect(html).not.toContain('extend');
+    expect(html).not.toContain('from_now');
+    expect(html).not.toContain('type="radio"');
+  });
+
+  test('active trial adds to the current expiry by default', async () => {
     const html = await render({ ids: ['e2'], name: 'Studio', currentEndsAt: '2026-12-01T12:00:00Z', expired: false });
-    expect(html).toMatch(/name="trial-mode"[^>]*checked=""[^>]*\/><span class="text-sm"><b>Somar ao vencimento atual/);
-    expect(html).not.toContain('já vencido');
+    expect(html).toContain('O novo prazo é somado ao vencimento atual.');
+    expect(html).toContain('>Contar a partir de agora</button>');
+    expect(html).not.toContain('>vencido<');
     expect(html).toContain('01/12/2026 09:00:00 (Brasília, UTC−3)');
   });
 
-  test('bulk mode hides the single-establishment expiry and explains atomicity', async () => {
+  test('bulk mode has the same fields, hides single-establishment expiry and explains atomicity', async () => {
     const html = await render({ ids: ['a', 'b', 'c'], name: '3', currentEndsAt: null, expired: false });
     expect(html).toContain('3 estabelecimentos selecionados');
-    expect(html).not.toContain('Vencimento atual (');
+    expect(html).toContain('Quantidade');
+    expect((html.match(/role="radio"/g) ?? []).length).toBe(3);
+    expect(html).not.toContain('Vencimento atual');
+    expect(html).not.toContain('Novo vencimento');
     expect(html).toContain('nenhum é alterado');
+    expect(html).toContain('>Confirmar</button>');
   });
 });
 
@@ -120,7 +137,7 @@ describe('source contracts', () => {
   });
 
   test('shortening an active trial needs an explicit confirmation sent to the server', () => {
-    expect(modal).toContain('preview.shortens');
+    expect(modal).toContain('preview?.shortens');
     expect(modal).toContain('p_allow_shorten: allowShorten');
     expect(modal).toContain('(!preview?.shortens || allowShorten)');
   });
